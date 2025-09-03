@@ -266,7 +266,7 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .sheet-images { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 12px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: #3a4050 #242833; scroll-snap-type: x mandatory; }
 .sheet-images::-webkit-scrollbar { height: 6px; }
 .sheet-images::-webkit-scrollbar-thumb { background-color: #3a4050; border-radius: 3px; }
-.sheet-images img { height: 160px; width: auto; border-radius: 8px; object-fit: cover; scroll-snap-align: start; }
+.sheet-images img { display: block; width: auto; height: 320px; max-height: 60vh; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 8px; scroll-snap-align: start; }
 .sheet-images:empty { display: none; }
 
 /* ============== STYLE ALAMAT BARU ============== */
@@ -566,157 +566,63 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
   --marker-glow: 0 0 0 8px rgba(211,84,0,0.32), 0 0 16px 4px rgba(211,84,0,0.18);
 }
 
-/* Enforce portrait (9:16) images in bottom-sheet gallery */
+/* --- Unified bottom-sheet gallery image sizing (single source of truth) --- */
+/* Remove any other ".sheet-images img" rules elsewhere to avoid conflicts. */
 .sheet-images img {
+  display: block;
   width: auto;
-  height: 320px;            /* desktop default portrait height */
-  aspect-ratio: 9 / 16;
+  /* prefer fixed height but allow responsive cap */
+  height: 320px;
+  max-height: 60vh;
+  aspect-ratio: 9 / 16;        /* enforce portrait 9:16 by default */
   object-fit: cover;
   border-radius: 8px;
-  scroll-snap-align: start;
 }
 
-/* responsive portrait sizing */
-@media (max-width: 768px) {
-  .sheet-images img {
-    height: calc(50vw);    /* keep portrait on smaller screens */
-  }
-}
-
-@media (max-width: 768px) {
-  .search-box { width: 90%; max-width: 300px; } .search-box input { width: 100%; }
-  .map-legend { bottom: 70px; left: 10px; padding: 8px; }
-  .location-label { font-size: 11px; max-width: 120px; }
-  .bottom-sheet.half { height: 55%; }
-  .bottom-sheet.full { height: 80%; }
-  .show-header-btn { display: flex; }
-  .leaflet-routing-container { width: calc(100% - 20px) !important; left: 10px !important; right: 10px !important; bottom: 90px !important; }
-  .gps-permission-content { width: 85%; padding: 20px; }
-  .permission-buttons { flex-direction: column; }
-}
-
-/* Highlight karakter yang cocok saat mengetik (glow) */
-/* warna teks default untuk huruf non-matched sedikit diredupkan */
-.search-result-item .result-name span { color: #9ea8b6; transition: color 0.18s ease, text-shadow 0.18s ease, transform 0.18s ease; }
-
-/* defaults for types (can be overridden by inline --match-color from JS) */
-.search-result-item.type-jantur { 
-  --match-color: #5dade2;
-  --glow-1: rgba(93,173,226,0.95);
-  --glow-2: rgba(52,152,219,0.20);
-  --glow-3: rgba(52,152,219,0.08);
-}
-.search-result-item.type-danau {
-  --match-color: #58d68d;
-  --glow-1: rgba(88,214,141,0.95);
-  --glow-2: rgba(46,204,113,0.20);
-  --glow-3: rgba(46,204,113,0.08);
-}
-.search-result-item.type-pulau {
-  --match-color: #ec7063;
-  --glow-1: rgba(236,112,99,0.95);
-  --glow-2: rgba(231,76,60,0.20);
-  --glow-3: rgba(231,76,60,0.08);
-}
-.search-result-item.type-sungai {
-  --match-color: #48C9B0;
-  --glow-1: rgba(72,201,176,0.95);
-  --glow-2: rgba(26,188,156,0.20);
-  --glow-3: rgba(26,188,156,0.08);
-}
-/* fallback default */
-.search-result-item { 
-  --match-color: #ffd166;
-  --glow-1: rgba(255,209,102,0.95);
-  --glow-2: rgba(255,149,0,0.20);
-  --glow-3: rgba(255,102,102,0.08);
-}
-
-/* matched substring styling uses the variables above */
-.search-result-item .result-name .char-match {
-  color: var(--match-color);
-  font-weight: 700; /* make matched letters bold */
-  text-shadow:
-    0 0 8px var(--glow-1),
-    0 0 18px var(--glow-2),
-    0 0 36px var(--glow-3);
-  transform: translateY(-1px);
-  animation: char-glow 0.9s ease-out both;
-}
-
-/* keyframes use the variables so glow color matches type */
-@keyframes char-glow {
-  0% {
-    text-shadow: 0 0 0 rgba(0,0,0,0);
-    transform: translateY(0);
-  }
-  40% {
-    text-shadow:
-      0 0 12px var(--glow-1),
-      0 0 28px var(--glow-2),
-      0 0 48px var(--glow-3);
-    transform: translateY(-1px);
-  }
-  100% {
-    text-shadow:
-      0 0 8px var(--glow-1),
-      0 0 18px var(--glow-2),
-      0 0 36px var(--glow-3);
-    transform: translateY(-1px);
-  }
-}
-
-/* Tombol clear (×) di dalam search-box */
-/* .search-box .search-clear-btn {
-  margin-left: 8px;
-  display: none; /* ditoggle oleh JS */
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255,255,255,0.06);
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background 0.18s ease, transform 0.12s ease;
-  padding: 0;
-  line-height: 1;
-}
-.search-box .search-clear-btn:hover {
-  background: rgba(255,255,255,0.12);
-  transform: scale(1.03);
-} */
-
-/* Untuk tampilan fleksibel di search-box */
-.search-box { display: flex; align-items: center; gap: 8px; }
-/* Gallery khusus untuk Gunung S di bottom-sheet */
+/* Gallery khusus untuk Gunung S (grid + responsive scroll on small screens) */
 .gallery {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  max-width: 800px;
-  margin: 6px auto 12px;
+  max-width: 900px;
+  margin: auto;
 }
 .gallery img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
   display: block;
 }
-.gallery .big {
+/* Gunung1 besar kiri (rasio 3:4) */
+.big {
   grid-row: span 2;
-  aspect-ratio: 3 / 4; /* besar kiri sedikit lebih tinggi */
+  aspect-ratio: 3 / 4;
 }
-.gallery .tall {
-  aspect-ratio: 9 / 16; /* portrait */
+/* Gunung2 & Gunung3 kanan (rasio 9:16) */
+.tall {
+  aspect-ratio: 9 / 16;
 }
 
-/* fallback: jika device kecil, atur ulang agar tetap proporsional */
-@media (max-width: 520px) {
-  .gallery { grid-template-columns: 1fr; }
-  .gallery .big { grid-row: auto; aspect-ratio: 3 / 4; }
-  .gallery .tall { aspect-ratio: 9 / 16; }
+/* Mobile: switch gallery to horizontal scroll (snap) */
+@media (max-width: 600px) {
+  .gallery {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 10px;
+  }
+  .gallery img {
+    flex: 0 0 auto;
+    scroll-snap-align: center;
+  }
+  .big {
+    aspect-ratio: 3 / 4;
+    width: 70vw;
+  }
+  .tall {
+    aspect-ratio: 9 / 16;
+    width: 70vw;
+  }
 }
