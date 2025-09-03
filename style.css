@@ -644,8 +644,8 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .sheet-images img {
   display: block;
   width: auto;
-  height: 320px;
-  max-height: 60vh;
+  max-width: 240px; /* 3:4 aspect ratio width for height 320px */
+  aspect-ratio: 3 / 4;
   object-fit: cover;
   border-radius: 8px;
 }
