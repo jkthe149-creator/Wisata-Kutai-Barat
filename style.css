@@ -329,38 +329,33 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
   z-index: 1000 !important;
 }
 
-/* Animasi glow muncul */
-@keyframes marker-glow-fadein {
-  0% { box-shadow: 0 0 0 0 rgba(0,0,0,0); }
-  100% { box-shadow: var(--marker-glow); }
+/* Remove marker glow: ensure active markers do not get animated box-shadow */
+.custom-marker.active > div {
+  /* disable any glow animation or box-shadow */
+  animation: none !important;
+  box-shadow: none !important;
 }
 
-.custom-marker.active > div {
-  animation: marker-glow-fadein 0.35s cubic-bezier(0.22,0.61,0.36,1);
-  box-shadow: var(--marker-glow);
+/* Remove per-type active glow variables/rules
+   (If there are specific .custom-marker.active.<type> > div rules earlier,
+    delete or neutralize them. Below are overrides to be certain.) */
+.custom-marker.active.jantur > div,
+.custom-marker.active.danau > div,
+.custom-marker.active.pulau > div,
+.custom-marker.active.sungai > div,
+.custom-marker.active.gunung > div,
+.custom-marker.active.rekreasi > div,
+.custom-marker.active.budaya > div {
+  --marker-glow: none;
+  box-shadow: none !important;
+  animation: none !important;
 }
-.custom-marker.active.jantur > div {
-  --marker-glow: 0 0 0 8px rgba(93,173,226,0.32), 0 0 16px 4px rgba(52,152,219,0.18);
-}
-.custom-marker.active.danau > div {
-  --marker-glow: 0 0 0 8px rgba(88,214,141,0.32), 0 0 16px 4px rgba(46,204,113,0.18);
-}
-.custom-marker.active.pulau > div {
-  --marker-glow: 0 0 0 8px rgba(236,112,99,0.32), 0 0 16px 4px rgba(231,76,60,0.18);
-}
-.custom-marker.active.sungai > div {
-  --marker-glow: 0 0 0 8px rgba(26,188,156,0.32), 0 0 16px 4px rgba(72,201,176,0.18);
-}
-.custom-marker.active.gunung > div {
-  --marker-glow: 0 0 0 8px rgba(155,89,182,0.32), 0 0 16px 4px rgba(155,89,182,0.18);
-}
-.custom-marker.active.rekreasi > div {
-  --marker-glow: 0 0 0 8px rgba(241,196,15,0.32), 0 0 16px 4px rgba(243,156,18,0.18);
-}
+
+/* If @keyframes marker-glow-fadein exists elsewhere, it can be left but won't be used.
+   Optionally remove that keyframes block from the file to clean up. */
 
 /* Warna label dan glow untuk Gunung & Alun-Alun (rekreasi) */
 .location-label.gunung { color: #9b59b6; }
-.custom-marker.gunung > .marker-inner svg { /* opsional: pastikan stroke/ikon terlihat baik */ }
 
 .custom-marker.active.gunung > div,
 .custom-marker.active.gunung > .marker-inner {
@@ -368,8 +363,6 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 }
 
 .location-label.rekreasi { color: #f1c40f; }
-.custom-marker.rekreasi > .marker-inner svg { /* opsional */ }
-
 .custom-marker.active.rekreasi > div,
 .custom-marker.active.rekreasi > .marker-inner {
   --marker-glow: 0 0 0 8px rgba(241,196,15,0.32), 0 0 16px 4px rgba(243,156,18,0.18);

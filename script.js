@@ -270,11 +270,6 @@ let firstMarkerDelay = false;
   coords: [-0.1274239236856152, 115.45937210881907],
   desc: "Gunung S, yang juga dikenal sebagai Gunung Es, adalah sebuah destinasi wisata alam yang terletak di Kabupaten Kutai Barat, Kalimantan Timur, tepatnya di antara Kampung Tutung dan Kampung Intu Lingau di kawasan Sendawar. Gunung ini populer karena pemandangan alamnya yang indah, terutama saat matahari terbit dan terbenam, serta suasana \"Negeri di Atas Awan\" yang diciptakannya oleh hamparan awan di puncaknya. Selain itu, Gunung S juga menjadi lokasi favorit untuk olahraga paralayang.",
   type: "gunung",
-  images: [
-    "Gunung1.jpeg",
-    "Gunung2.jpeg",
-    "Gunung3.jpeg"
-  ],
   address: "Gunung S, Kutai Barat, Kalimantan Timur",
   labelColor: "#9b59b6"
 },
@@ -906,6 +901,18 @@ searchInput.addEventListener('keydown', (e) => {
   const routeBtn = document.getElementById('route-btn');
 
   routeBtn.addEventListener('click', () => {
+    // HIDE any overlays that might block the map or interactions before showing route UI
+    ['search-overlay','map-mode-modal','gps-permission-modal','landing-overlay'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('show');
+        // ensure hidden regardless of how each overlay was implemented
+        el.style.display = 'none';
+        el.style.opacity = '0';
+        el.style.visibility = 'hidden';
+      }
+    });
+
     if (routeActive) {
       if (routingControl) map.removeControl(routingControl);
       routingControl = null;
@@ -1076,40 +1083,16 @@ searchInput.addEventListener('keydown', (e) => {
   function showSheet(loc) {
     sheetImages.innerHTML = '';
 
-    // Special gallery layout for Gunung S (use grid: big left image + two portrait images right)
-    if ((loc.name === "Gunung S" || loc.type === "gunung") && Array.isArray(loc.images) && loc.images.length >= 3) {
-      const galleryHtml = document.createElement('div');
-      galleryHtml.className = 'gallery';
-      // big left
-      const imgBig = document.createElement('img');
-      imgBig.src = loc.images[0];
-      imgBig.alt = `${loc.name} 1`;
-      imgBig.className = 'big';
-      galleryHtml.appendChild(imgBig);
-      // right top
-      const img2 = document.createElement('img');
-      img2.src = loc.images[1];
-      img2.alt = `${loc.name} 2`;
-      img2.className = 'tall';
-      galleryHtml.appendChild(img2);
-      // right bottom
-      const img3 = document.createElement('img');
-      img3.src = loc.images[2];
-      img3.alt = `${loc.name} 3`;
-      img3.className = 'tall';
-      galleryHtml.appendChild(img3);
-
-      sheetImages.appendChild(galleryHtml);
-    } else {
-      if (loc.images && loc.images.length > 0) {
-        loc.images.forEach(imgUrl => {
-          const img = document.createElement('img');
-          img.src = imgUrl;
-          img.alt = `Gambar ${loc.name}`;
-          sheetImages.appendChild(img);
-        });
-      }
+    // Generic image handling only (no special gallery for Gunung S)
+    if (loc.images && loc.images.length > 0) {
+      loc.images.forEach(imgUrl => {
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.alt = `Gambar ${loc.name}`;
+        sheetImages.appendChild(img);
+      });
     }
+    // if no images, sheetImages remains empty
 
     if (loc.address) {
       sheetAddress.textContent = loc.address;
