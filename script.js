@@ -1,6 +1,33 @@
+// --- Animasi ikon mode peta hanya jika klik tombol Jelajahi ---
+document.addEventListener('DOMContentLoaded', function() {
+  const exploreBtn = document.querySelector('.explore-btn');
+  if (exploreBtn) {
+    exploreBtn.addEventListener('mouseenter', function() {
+      this.style.background = 'linear-gradient(45deg, #FF6B6B, #FF9A3D)';
+    });
+    exploreBtn.addEventListener('mouseleave', function() {
+      this.style.background = 'linear-gradient(45deg, #FF9A3D, #FF6B6B)';
+    });
+    exploreBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const overlay = document.getElementById('landing-overlay');
+      overlay.style.opacity = 0;
+      overlay.style.visibility = 'hidden';
+      setTimeout(() => overlay.style.display = 'none', 600);
+      // Trigger animasi ikon mode peta
+      window._triggeredByExploreBtn = true;
+      showMapModeModal();
+    });
+  }
+});
 document.addEventListener('DOMContentLoaded', function() {
 
+
   // ================== MAP INIT ==================
+  // Sembunyikan tombol GPS dan marker wisata saat awal
+  const gpsBtn = document.getElementById('gps-btn');
+  gpsBtn.style.display = 'none';
+  let wisataMarkersVisible = false;
   const indonesiaBounds = [[-11.0, 94.0], [6.0, 141.0]];
   const map = L.map('map', {
     center: [-0.2, 115.6],
@@ -13,26 +40,97 @@ document.addEventListener('DOMContentLoaded', function() {
     zoomAnimationThreshold: 4
   });
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+
+  // --- Map Layers ---
+  // --- Map Layers ---
+  const defaultLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
+  });
 
   const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     attribution: 'Tiles © Esri'
   });
+
+  // --- Dark Mode Layer ---
+  const darkLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19
+  });
+
   const labels = L.tileLayer('https://cartodb-basemaps-a.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a> & Carto',
     pane: 'shadowPane'
   }).addTo(map);
 
-  L.control.layers({
-    "Default": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
-    "Satelit": satellite
-  }, {
+  // Layer group for control
+  const baseLayers = {
+    "Default": defaultLayer,
+    "Satelit": satellite,
+    "Mode Gelap": darkLayer
+  };
+
+  defaultLayer.addTo(map);
+
+  const layerControl = L.control.layers(baseLayers, {
     "Label Jalan & Lokasi": labels
   }, {
     position: 'topright'
   }).addTo(map);
+
+  // Saat ganti mode peta, sembunyikan semua marker lalu animasikan satu per satu jika marker memang boleh tampil
+  map.on('baselayerchange', async function(e) {
+    if (wisataMarkersVisible) {
+      hideAllMarkers();
+      await showMarkersAnimated();
+    }
+  });
+
+  // --- Map Mode Modal Logic ---
+  const mapModeModal = document.getElementById('map-mode-modal');
+  let mapModeSelected = false;
+let firstMarkerDelay = false;
+  function showMapModeModal() {
+    mapModeModal.style.display = 'flex';
+    // Remove previous selection
+    document.querySelectorAll('.map-mode-option.selected').forEach(el => el.classList.remove('selected'));
+    // Hanya animasi jika dipanggil dari klik tombol Jelajahi
+    if (window._triggeredByExploreBtn) {
+      setTimeout(() => mapModeModal.classList.add('show'), 10);
+      window._triggeredByExploreBtn = false;
+    }
+  }
+  function hideMapModeModal() {
+  mapModeModal.classList.remove('show');
+  setTimeout(() => { mapModeModal.style.display = 'none'; }, 350);
+  }
+  // Pilih mode peta saat klik
+
+  document.querySelectorAll('.map-mode-option').forEach(opt => {
+    opt.addEventListener('click', async function() {
+      document.querySelectorAll('.map-mode-option').forEach(o => o.classList.remove('selected'));
+      this.classList.add('selected');
+      const mode = this.getAttribute('data-mode');
+      // Ganti layer
+      if (mode === 'default') {
+        map.eachLayer(l => { if (l !== labels && map.hasLayer(l)) map.removeLayer(l); });
+        defaultLayer.addTo(map);
+      } else if (mode === 'satellite') {
+        map.eachLayer(l => { if (l !== labels && map.hasLayer(l)) map.removeLayer(l); });
+        satellite.addTo(map);
+      } else if (mode === 'dark') {
+        map.eachLayer(l => { if (l !== labels && map.hasLayer(l)) map.removeLayer(l); });
+        darkLayer.addTo(map);
+      }
+      hideMapModeModal();
+      mapModeSelected = true;
+  firstMarkerDelay = true;
+      // Tampilkan tombol GPS setelah mode peta dipilih
+      gpsBtn.style.display = 'flex';
+      createAllMarkers();
+  await showMarkersAnimated();
+    });
+  });
 
   // ================== DATA WISATA ==================
   const wisata = [{
@@ -145,17 +243,6 @@ document.addEventListener('DOMContentLoaded', function() {
     address: "VCCG+JJJ, Lakan Bilem, Nyuatan, West Kutai Regency, East Kalimantan 75776",
     labelColor: "#48C9B0"
   }, {
-    name: "Wisata Air Hemaq Beniung",
-    coords: [-0.165157, 115.681563],
-    desc: "Wisata Air Hemaq Beniung menyajikan pesona danau yang menyegarkan di tengah kawasan alam Kutai Barat. Tempat ini kerap digunakan untuk rekreasi mendayung dan menjadi destinasi yang menyenangkan untuk menikmati suasana sekitar.",
-    type: "danau",
-    images: [
-      "https://i.imgur.com/ePwKLCh.jpeg",
-      "https://i.imgur.com/S1grXiO.jpeg"
-    ],
-    address: "RMMJ+VJ4, Juaq Asa, Barong Tongkok, West Kutai Regency, East Kalimantan 75776",
-    labelColor: "#58d68d"
-  }, {
     name: "Danau Tajan",
     coords: [-0.069131, 115.670522],
     desc: "Danau Tajan adalah danau alami dengan suasan yang menenangkan dan udara segar. Tempat ini populer untuk memancing dan menikmati keindahan alam serta ketenangan di sekitarnya.",
@@ -177,7 +264,44 @@ document.addEventListener('DOMContentLoaded', function() {
     ],
     address: "MGH8+R34, Sentalar, Nyuatan, West Kutai Regency, East Kalimantan",
     labelColor: "#58d68d"
-  }];
+  },
+{
+  name: "Gunung S",
+  coords: [-0.1274239236856152, 115.45937210881907],
+  desc: "Gunung S, yang juga dikenal sebagai Gunung Es, adalah sebuah destinasi wisata alam yang terletak di Kabupaten Kutai Barat, Kalimantan Timur, tepatnya di antara Kampung Tutung dan Kampung Intu Lingau di kawasan Sendawar. Gunung ini populer karena pemandangan alamnya yang indah, terutama saat matahari terbit dan terbenam, serta suasana \"Negeri di Atas Awan\" yang diciptakannya oleh hamparan awan di puncaknya. Selain itu, Gunung S juga menjadi lokasi favorit untuk olahraga paralayang.",
+  type: "gunung",
+  images: [
+    "Gunung1.jpeg",
+    "Gunung2.jpeg",
+    "Gunung3.jpeg"
+  ],
+  address: "Gunung S, Kutai Barat, Kalimantan Timur",
+  labelColor: "#9b59b6"
+},
+{
+  name: "Alun-Alun ITHO",
+  coords: [-0.23860145193244478, 115.6962525687145],
+  desc: "Terletak di samping Kantor Bupati Kutai Barat, Alun-Alun Itho menjadi pusat kegiatan masyarakat sekaligus ruang terbuka hijau favorit warga. Setiap akhir pekan, alun-alun ramai dikunjungi untuk olahraga, bersantai, maupun menikmati kuliner UMKM lokal. Suasananya semakin hidup dengan pedagang kaki lima yang menjajakan camilan tradisional seperti jagung rebus, kacang rebus, hingga minuman segar. Tempat ini cocok untuk rekreasi keluarga, berkumpul bersama teman, atau sekadar menikmati sore di jantung kota Kutai Barat.",
+  type: "rekreasi",
+  images: [
+    // optional
+  ],
+  address: "Barong Tongkok, West Kutai Regency, East Kalimantan 75777",
+  labelColor: "#f1c40f"
+},
+{
+  name: "Taman Budaya Sendawar",
+  coords: [-0.22178726715731004, 115.70467486649088],
+  desc: "Dikenal sebagai “Lamin Enam Etnis,” TBS merupakan pusat budaya Kutai Barat yang menampilkan enam lamin (rumah adat) dari Dayak Ahoeng, Benuaq, Tanjung, Kenyah, dan etnis Melayu. Bangunan berbentuk huruf U ini didominasi kayu ulin dengan ukiran khas tiap etnis, menjadikannya destinasi wisata budaya yang memukau dan penuh nilai sejarah.",
+  type: "budaya",
+  images: [
+    "Tbs1.jpg",
+    "Tbs2.jpg",
+    "Tbs3.jpg"
+  ],
+  address: "QPH3+5VV, Jl. Sendawar Raya, Barong Tongkok, Kec. Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur 75777",
+  labelColor: "#d35400"
+}];
 
   function clearAllHighlights() {
     if (activeMarker) {
@@ -196,46 +320,82 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function createIconHTML(type) {
-    let html, bgColor, iconColor;
-    switch (type) {
-      case "jantur":
-        html = "🌊";
-        bgColor = "#3498db";
-        iconColor = "#5dade2";
-        break;
-      case "danau":
-        html = "🏞️";
-        bgColor = "#2ecc71";
-        iconColor = "#58d68d";
-        break;
-      case "pulau":
-        html = "🏝️";
-        bgColor = "#e74c3c";
-        iconColor = "#ec7063";
-        break;
-      case "sungai":
-        html = "🛶";
-        bgColor = "#48C9B0";
-        iconColor = "#48C9B0";
-        break;
-      default:
-        html = "📍";
-        bgColor = "#95a5a6";
-        iconColor = "#fff";
-        break;
-    }
-    return `<div style="background-color: ${bgColor}; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; border: 2px solid #242833; --icon-color: ${iconColor};">${html}</div>`;
-  }
-  
-  function createCustomIcon(type) {
-    const iconHTML = createIconHTML(type);
-    return L.divIcon({
-      className: 'custom-marker',
-      html: iconHTML,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16]
-    });
-  }
+	let iconColor, svgIcon;
+	switch (type) {
+		case "jantur":
+			iconColor = "#3498db";
+			svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="janturG" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#5dade2"/><stop offset="100%" stop-color="#3498db"/></radialGradient></defs><path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#janturG)" stroke="#242833" stroke-width="2"/><text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff">🌊</text></svg>`;
+			break;
+		case "danau":
+			iconColor = "#2ecc71";
+			svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="danauG" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#58d68d"/><stop offset="100%" stop-color="#2ecc71"/></radialGradient></defs><path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#danauG)" stroke="#242833" stroke-width="2"/><text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff">🏞️</text></svg>`;
+			break;
+		case "pulau":
+			iconColor = "#e74c3c";
+			svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="pulauG" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#ec7063"/><stop offset="100%" stop-color="#e74c3c"/></radialGradient></defs><path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#pulauG)" stroke="#242833" stroke-width="2"/><text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff">🏝️</text></svg>`;
+			break;
+		case "sungai":
+			iconColor = "#48C9B0";
+			svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="sungaiG" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#48C9B0"/><stop offset="100%" stop-color="#1abc9c"/></radialGradient></defs><path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#sungaiG)" stroke="#242833" stroke-width="2"/><text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff">🛶</text></svg>`;
+			break;
+		case "gunung":
+			iconColor = "#9b59b6";
+			svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<defs>
+					<radialGradient id="gunungG" cx="50%" cy="40%" r="60%">
+						<stop offset="0%" stop-color="#b39ddb"/>
+						<stop offset="100%" stop-color="#9b59b6"/>
+					</radialGradient>
+				</defs>
+				<path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#gunungG)" stroke="#242833" stroke-width="2"/>
+				<text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff">🏔️</text>
+			</svg>`;
+			break;
+		case "rekreasi":
+			iconColor = "#f1c40f";
+			svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+				<defs>
+					<radialGradient id="rekreasiG" cx="50%" cy="40%" r="60%">
+						<stop offset="0%" stop-color="#f1c40f"/>
+						<stop offset="100%" stop-color="#f39c12"/>
+					</radialGradient>
+				</defs>
+				<path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#rekreasiG)" stroke="#242833" stroke-width="2"/>
+				<text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff">🌳</text>
+			</svg>`;
+			break;
+		case "budaya":
+			iconColor = "#d35400";
+			svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="budayaG" cx="50%" cy="40%" r="60%">
+        <stop offset="0%" stop-color="#f39c12"/>
+        <stop offset="100%" stop-color="#d35400"/>
+      </radialGradient>
+    </defs>
+    <path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#budayaG)" stroke="#242833" stroke-width="2"/>
+    <text x="16" y="22" text-anchor="middle" font-size="14" fill="#fff">🏛️</text>
+  </svg>`;
+			break;
+		default:
+			iconColor = "#95a5a6";
+			svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="defaultG" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#95a5a6"/></radialGradient></defs><path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#defaultG)" stroke="#242833" stroke-width="2"/><text x="16" y="22" text-anchor="middle" font-size="16" fill="#242833">📍</text></svg>`;
+			break;
+	}
+	// tambahkan kelas inner-type agar preview hasil pencarian tetap menampilkan warna yang benar
+	return `<div class="marker-inner marker-${type}" style="width:32px;height:40px;">${svgIcon}</div>`;
+}
+
+function createCustomIcon(type) {
+	const iconHTML = createIconHTML(type);
+	return L.divIcon({
+		// pastikan className menyertakan tipe agar CSS .custom-marker.gunung / .custom-marker.rekreasi berlaku
+		className: `custom-marker ${type}`,
+		html: iconHTML,
+		iconSize: [32, 32],
+		iconAnchor: [16, 16]
+	});
+}
 
   function repositionTooltip(marker) {
     setTimeout(() => {
@@ -305,99 +465,271 @@ document.addEventListener('DOMContentLoaded', function() {
   map.on('moveend', updateVisibility);
 
   // Buat marker dan tooltip untuk setiap wisata
-  wisata.forEach((loc, index) => {
-    const marker = L.marker(loc.coords, {
-      icon: createCustomIcon(loc.type)
-    });
 
-    marker._locData = loc;
-    markers.push(marker);
-
-    const labelDirection = determineLabelDirection(loc.coords, index);
-    const offsetX = labelDirection === 'left' ? -20 : 20;
-
-    marker.bindTooltip(loc.name, {
-      permanent: true,
-      direction: labelDirection,
-      offset: [offsetX, 0],
-      className: `location-label ${loc.type}`,
-      opacity: 1
-    });
-
-    marker.on("click", (e) => {
-      L.DomEvent.stopPropagation(e);
-      clearAllHighlights();
-
-      const clickedMarker = e.target;
-      clickedMarker._icon.classList.add('active');
-      const tooltip = clickedMarker.getTooltip();
-      if (tooltip && tooltip.getElement()) {
-        tooltip.getElement().classList.add('active');
-        tooltip.getElement().style.setProperty('--label-active-color', clickedMarker._locData.labelColor);
-      }
-      activeMarker = clickedMarker;
-
-      map.flyTo(loc.coords, Math.max(map.getZoom(), 14), {
-        duration: 1.2
+  function createAllMarkers() {
+    markers.forEach(m => { if (map.hasLayer(m)) map.removeLayer(m); });
+    markers = [];
+    wisata.forEach((loc, index) => {
+      const marker = L.marker(loc.coords, {
+        icon: createCustomIcon(loc.type)
       });
-      showSheet(loc);
-    });
-
-    if (map.getZoom() >= markerZoomThreshold) {
-      marker.addTo(map);
-    }
-
-    setTimeout(() => {
-      const tooltip = marker.getTooltip();
-      if (tooltip && tooltip.getElement()) {
-        const element = tooltip.getElement();
-        if (labelDirection === 'left') {
-          element.style.transform = 'translateX(-10px)';
-          element.style.marginLeft = '-8px';
-        } else {
-          element.style.transform = 'translateX(10px)';
-          element.style.marginRight = '-8px';
+      marker._locData = loc;
+      markers.push(marker);
+      const labelDirection = determineLabelDirection(loc.coords, index);
+      const offsetX = labelDirection === 'left' ? -20 : 20;
+      marker.bindTooltip(loc.name, {
+        permanent: true,
+        direction: labelDirection,
+        offset: [offsetX, 0],
+        className: `location-label ${loc.type}`,
+        opacity: 1
+      });
+      marker.on("click", (e) => {
+        L.DomEvent.stopPropagation(e);
+        clearAllHighlights();
+        const clickedMarker = e.target;
+        clickedMarker._icon.classList.add('active');
+        const tooltip = clickedMarker.getTooltip();
+        if (tooltip && tooltip.getElement()) {
+          tooltip.getElement().classList.add('active');
+          tooltip.getElement().style.setProperty('--label-active-color', clickedMarker._locData.labelColor);
         }
-        
-        if (map.getZoom() >= labelZoomThreshold) {
-          element.style.display = 'block';
-        } else {
-          element.style.display = 'none';
+        activeMarker = clickedMarker;
+        map.flyTo(loc.coords, Math.max(map.getZoom(), 14), {
+          duration: 1.2
+        });
+        showSheet(loc);
+      });
+    });
+  // Tidak ada marker yang permanen, semua ikut animasi
+  }
+
+  function hideAllMarkers() {
+    // Semua marker dihapus dari peta, tooltip juga ikut hilang
+    markers.forEach(m => {
+      if (map.hasLayer(m)) map.removeLayer(m);
+      // Hilangkan tooltip manual jika masih ada di DOM
+      const tooltip = m.getTooltip && m.getTooltip();
+      if (tooltip && tooltip.getElement()) {
+        tooltip.getElement().style.display = 'none';
+      }
+    });
+  }
+
+  async function showMarkersAnimated() {
+    // Semua marker dihapus dari peta sebelum animasi
+    markers.forEach(m => {
+      if (map.hasLayer(m)) map.removeLayer(m);
+      // Hilangkan tooltip manual jika masih ada di DOM
+      const tooltip = m.getTooltip && m.getTooltip();
+      if (tooltip && tooltip.getElement()) {
+        tooltip.getElement().style.display = 'none';
+      }
+    });
+    for (let i = 0; i < markers.length; i++) {
+      if (map.getZoom() >= markerZoomThreshold) {
+        markers[i].addTo(map);
+        repositionTooltip(markers[i]);
+        // Tampilkan tooltip jika label memang seharusnya muncul
+        const tooltip = markers[i].getTooltip && markers[i].getTooltip();
+        if (tooltip && tooltip.getElement() && map.getZoom() >= labelZoomThreshold) {
+          tooltip.getElement().style.display = 'block';
         }
       }
-    }, 100);
-  });
+      // Jika ini pertama kali setelah pilih mode peta, delay 2 detik untuk marker pertama
+      if (i === 0 && firstMarkerDelay) {
+        await new Promise(res => setTimeout(res, 2000));
+        firstMarkerDelay = false;
+      } else {
+        await new Promise(res => setTimeout(res, 120));
+      }
+    }
+    updateVisibility();
+  }
 
-  updateVisibility();
 
   const searchInput = document.getElementById('search-input'),
     searchOverlay = document.getElementById('search-overlay'),
     closeSearchBtn = document.getElementById('search-overlay-close'),
     resultsList = document.getElementById('search-results-list');
 
+  // tambahkan tombol "×" untuk menghapus teks pencarian di sebelah kanan input
+  const searchBoxEl = document.querySelector('.search-box');
+  let clearSearchBtn = null;
+  if (searchBoxEl) {
+    clearSearchBtn = document.createElement('button');
+    clearSearchBtn.type = 'button';
+    clearSearchBtn.className = 'search-clear-btn';
+    clearSearchBtn.innerText = '×';
+    clearSearchBtn.setAttribute('aria-label', 'Hapus pencarian');
+    // hidden by default; visibility toggled by JS
+    clearSearchBtn.style.display = 'none';
+    // append after the input
+    if (searchInput) {
+      searchInput.insertAdjacentElement('afterend', clearSearchBtn);
+    }
+
+    clearSearchBtn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      searchInput.value = '';
+      populateSearchResults();
+      searchInput.focus();
+      if (clearSearchBtn) clearSearchBtn.style.display = 'none';
+    });
+  }
+
+  let lastSelectedSearchName = null;
+
+  // Escape HTML safe
+function escapeHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Highlight only exact substring(s) that match the query (case-insensitive).
+function highlightMatches(name, query) {
+  // only highlight when query is a prefix (starts from beginning)
+  if (!query) return escapeHtml(name);
+  const q = query.toLowerCase();
+  const lower = name.toLowerCase();
+  if (!lower.startsWith(q)) {
+    // no prefix match -> return escaped original (should be filtered out already)
+    return escapeHtml(name);
+  }
+  // split prefix and remainder
+  const prefix = name.slice(0, q.length);
+  const rest = name.slice(q.length);
+  return `<span class="char-match">${escapeHtml(prefix)}</span>${escapeHtml(rest)}`;
+}
+
   function populateSearchResults() {
     resultsList.innerHTML = '';
-    wisata.forEach(loc => {
+    // Order results so the last selected item (if any) is first
+    const ordered = [...wisata];
+    if (lastSelectedSearchName) {
+      const idx = ordered.findIndex(w => w.name === lastSelectedSearchName);
+      if (idx > 0) ordered.unshift(ordered.splice(idx, 1)[0]);
+    }
+
+    const query = (searchInput.value || '').trim();
+    const qLower = query.toLowerCase();
+
+    ordered.forEach(loc => {
+      // Filter: only keep items that start with the query (when query present)
+      if (query && !loc.name.toLowerCase().startsWith(qLower)) return;
       const item = document.createElement('div');
-      item.className = 'search-result-item';
-      item.innerHTML = `<div class="icon-container">${createIconHTML(loc.type)}</div><span>${loc.name}</span>`;
+      // mark item with its type so CSS can style .char-match per type
+      item.className = `search-result-item type-${loc.type}`;
+      // if a labelColor is provided in data, expose it to CSS as --match-color
+      if (loc.labelColor) {
+        item.style.setProperty('--match-color', loc.labelColor);
+      }
+      const nameHtml = highlightMatches(loc.name, query);
+      item.innerHTML = `<div class="icon-container">${createIconHTML(loc.type)}</div><span class="result-name">${nameHtml}</span>`;
       item.addEventListener('click', () => {
+        // Remember this selection so it appears on top next time
+        lastSelectedSearchName = loc.name;
+        // Move this item to the top of the results immediately (visual feedback while map animates)
+        resultsList.prepend(item);
         const targetMarker = markers.find(m => m._locData.name === loc.name);
-        if (targetMarker) {
-          targetMarker.fire('click');
-        }
+        if (targetMarker) targetMarker.fire('click');
         hideSearchOverlay();
       });
       resultsList.appendChild(item);
     });
   }
 
+// Update highlights as user types
+searchInput.addEventListener('input', () => {
+  populateSearchResults();
+  // toggle tombol clear
+  if (clearSearchBtn) {
+    clearSearchBtn.style.display = searchInput.value.trim() ? 'block' : 'none';
+  }
+});
+
+// If user presses Enter (desktop or mobile Done), and the query equals a wisata name,
+// zoom to that wisata and open the bottom sheet.
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.keyCode === 13) {
+    e.preventDefault();
+    const query = (searchInput.value || '').trim();
+    if (!query) return;
+    const dest = wisata.find(w => w.name.toLowerCase() === query.toLowerCase());
+    if (dest) {
+      // ensure markers exist
+      if (markers.length === 0) createAllMarkers();
+      const targetMarker = markers.find(m => m._locData.name === dest.name);
+      if (targetMarker) {
+        // trigger marker click which handles flyTo and showSheet
+        targetMarker.fire('click');
+      } else {
+        // fallback: directly show sheet & flyTo
+        map.flyTo(dest.coords, Math.max(map.getZoom(), 14), { duration: 1.0 });
+        showSheet(dest);
+      }
+      hideSearchOverlay();
+      searchInput.blur();
+      if (clearSearchBtn) clearSearchBtn.style.display = 'none';
+    }
+  }
+});
+
   function showSearchOverlay() {
+    // Rebuild results so lastSelectedSearchName gets priority
+    populateSearchResults();
+
+    // update visibility tombol clear saat overlay dibuka
+    if (clearSearchBtn) {
+      clearSearchBtn.style.display = searchInput.value.trim() ? 'block' : 'none';
+    }
+
+    // Pastikan overlay tidak menutupi input pencarian:
+    // posisikan overlay tepat di bawah input dan atur tingginya.
+    try {
+      const rect = searchInput.getBoundingClientRect();
+      const gap = 8; // jarak sedikit antar input dan overlay
+      const topPx = Math.max(Math.round(rect.bottom + gap), 0); // dalam px relatif viewport
+
+      searchOverlay.style.position = 'fixed';
+      searchOverlay.style.left = '0';
+      searchOverlay.style.right = '0';
+      searchOverlay.style.top = topPx + 'px';
+      searchOverlay.style.height = `calc(100% - ${topPx}px)`;
+      searchOverlay.style.zIndex = '1200';
+
+      // Pastikan input pencarian terlihat di atas overlay
+      if (getComputedStyle(searchInput).position === 'static') {
+        searchInput.style.position = 'relative';
+      }
+      searchInput.style.zIndex = '1300';
+    } catch (err) {
+      // fallback: jika terjadi error, biarkan kelas .show saja
+      console.warn('Gagal mengatur posisi overlay pencarian', err);
+    }
+
     searchOverlay.classList.add('show');
+    // fokuskan input agar pengguna dapat langsung mengetik
+    searchInput.focus();
   }
 
   function hideSearchOverlay() {
     searchOverlay.classList.remove('show');
+
+    // sembunyikan tombol clear saat overlay ditutup
+    if (clearSearchBtn) clearSearchBtn.style.display = 'none';
+
+    // Reset style yang diubah supaya tidak mempengaruhi tata letak lain
+    searchOverlay.style.position = '';
+    searchOverlay.style.left = '';
+    searchOverlay.style.right = '';
+    searchOverlay.style.top = '';
+    searchOverlay.style.height = '';
+    searchOverlay.style.zIndex = '';
+
+    if (searchInput) {
+      searchInput.style.zIndex = '';
+      // jangan ubah position kembali agar tidak mengganggu layout if intentionally set elsewhere
+    }
   }
 
   searchInput.addEventListener('click', showSearchOverlay);
@@ -405,15 +737,22 @@ document.addEventListener('DOMContentLoaded', function() {
   populateSearchResults();
 
   // ================== FUNGSI GPS ==================
-  const gpsBtn = document.getElementById('gps-btn');
+  // const gpsBtn = document.getElementById('gps-btn'); // Sudah dideklarasikan di atas
   const permissionModal = document.getElementById('gps-permission-modal');
   const allowGpsBtn = document.getElementById('allow-gps');
-  const denyGpsBtn = document.getElementById('deny-gps');
+
+  // Sembunyikan marker wisata saat awal (belum ada izin)
+  hideAllMarkers();
+  wisataMarkersVisible = false;
 
   window.addEventListener('load', () => {
-    setTimeout(() => {
-      permissionModal.style.display = 'flex';
-    }, 1000);
+    permissionModal.style.display = 'flex';
+    // Disable zoom saat modal izin GPS tampil
+    map.scrollWheelZoom.disable();
+    map.touchZoom.disable();
+    map.doubleClickZoom.disable();
+    map.boxZoom.disable();
+    map.keyboard.disable();
   });
 
   function requestLocationPermission() {
@@ -424,10 +763,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     permissionModal.style.display = 'none';
     gpsBtn.classList.add('loading');
+    // Enable zoom kembali setelah modal izin GPS ditutup
+    map.scrollWheelZoom.enable();
+    map.touchZoom.enable();
+    map.doubleClickZoom.enable();
+    map.boxZoom.enable();
+    map.keyboard.enable();
 
     navigator.geolocation.getCurrentPosition(
       () => {
         startWatchingPosition();
+        // Setelah izin diberikan, baru tampilkan marker wisata
+        wisataMarkersVisible = true;
+        createAllMarkers();
+        showMarkersAnimated();
       },
       (error) => {
         gpsBtn.classList.remove('loading');
@@ -439,9 +788,24 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     );
   }
-
+  // Setelah izin, tampilkan modal mode peta
+  showMapModeModal();
+  // Disable zoom saat modal mode peta tampil
+  map.scrollWheelZoom.disable();
+  map.touchZoom.disable();
+  map.doubleClickZoom.disable();
+  map.boxZoom.disable();
+  map.keyboard.disable();
   function startWatchingPosition() {
     if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+
+
+    // Enable zoom kembali setelah modal mode peta ditutup
+    map.scrollWheelZoom.enable();
+    map.touchZoom.enable();
+    map.doubleClickZoom.enable();
+    map.boxZoom.enable();
+    map.keyboard.enable();
 
     const options = {
       enableHighAccuracy: true,
@@ -454,6 +818,11 @@ document.addEventListener('DOMContentLoaded', function() {
     gpsActive = true;
     gpsBtn.classList.remove('loading');
     gpsBtn.classList.add('active');
+
+    // Tampilkan modal pilih mode peta hanya sekali setelah GPS aktif
+    if (!mapModeSelected) {
+      setTimeout(showMapModeModal, 600);
+    }
   }
 
   function handlePositionUpdate(position) {
@@ -532,9 +901,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   allowGpsBtn.addEventListener('click', requestLocationPermission);
-  denyGpsBtn.addEventListener('click', () => {
-    permissionModal.style.display = 'none';
-  });
 
   // ================== FUNGSI RUTE ==================
   const routeBtn = document.getElementById('route-btn');
@@ -628,6 +994,12 @@ document.addEventListener('DOMContentLoaded', function() {
     header.classList.add('hidden');
     headerManuallyClosed = true;
     showHeaderBtn.style.display = 'flex';
+    // Clear any typed search when header close is clicked
+    if (searchInput) {
+      searchInput.value = '';
+      populateSearchResults();
+      try { searchInput.blur(); } catch (err) {}
+    }
   });
   document.getElementById('show-header-btn').addEventListener('click', function() {
     header.classList.remove('hidden');
@@ -666,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function setBounds() {
     const windowH = getWindowH();
     maxTranslate = {
-      [sheetStates.HALF]: windowH - (windowH * 0.5),
+  [sheetStates.HALF]: windowH - (windowH * 0.42),
       [sheetStates.MINI]: windowH - parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--mini-height")),
       [sheetStates.FULL]: 0
     };
@@ -674,40 +1046,69 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function setSheetState(state) {
     sheet.classList.remove('mini', 'half', 'full', 'show');
-    
     switch(state) {
       case sheetStates.MINI:
         sheet.classList.add('show', 'mini');
         sheet.style.transform = `translateY(calc(100% - var(--mini-height)))`;
+        sheet.style.visibility = 'visible';
         break;
       case sheetStates.HALF:
         sheet.classList.add('show', 'half');
         sheet.style.transform = "translateY(0)";
-        sheet.style.height = "50%";
+        sheet.style.height = "42%";
+        sheet.style.visibility = 'visible';
         break;
       case sheetStates.FULL:
         sheet.classList.add('show', 'full');
         sheet.style.transform = "translateY(0)";
         sheet.style.height = "85%";
+        sheet.style.visibility = 'visible';
         break;
       case sheetStates.HIDDEN:
         sheet.style.transform = "translateY(100%)";
+        sheet.style.visibility = 'hidden';
         break;
     }
-    
     currentSheetState = state;
     setBounds();
   }
 
   function showSheet(loc) {
     sheetImages.innerHTML = '';
-    if (loc.images && loc.images.length > 0) {
-      loc.images.forEach(imgUrl => {
-        const img = document.createElement('img');
-        img.src = imgUrl;
-        img.alt = `Gambar ${loc.name}`;
-        sheetImages.appendChild(img);
-      });
+
+    // Special gallery layout for Gunung S (use grid: big left image + two portrait images right)
+    if ((loc.name === "Gunung S" || loc.type === "gunung") && Array.isArray(loc.images) && loc.images.length >= 3) {
+      const galleryHtml = document.createElement('div');
+      galleryHtml.className = 'gallery';
+      // big left
+      const imgBig = document.createElement('img');
+      imgBig.src = loc.images[0];
+      imgBig.alt = `${loc.name} 1`;
+      imgBig.className = 'big';
+      galleryHtml.appendChild(imgBig);
+      // right top
+      const img2 = document.createElement('img');
+      img2.src = loc.images[1];
+      img2.alt = `${loc.name} 2`;
+      img2.className = 'tall';
+      galleryHtml.appendChild(img2);
+      // right bottom
+      const img3 = document.createElement('img');
+      img3.src = loc.images[2];
+      img3.alt = `${loc.name} 3`;
+      img3.className = 'tall';
+      galleryHtml.appendChild(img3);
+
+      sheetImages.appendChild(galleryHtml);
+    } else {
+      if (loc.images && loc.images.length > 0) {
+        loc.images.forEach(imgUrl => {
+          const img = document.createElement('img');
+          img.src = imgUrl;
+          img.alt = `Gambar ${loc.name}`;
+          sheetImages.appendChild(img);
+        });
+      }
     }
 
     if (loc.address) {
@@ -819,9 +1220,9 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   map.on('click', function(e) {
-  // Hanya sembunyikan sheet jika bukan klik pada marker
+  // Jika klik peta (bukan marker) dan sheet sedang tampil, turunkan ke mode mini
   if (!e.originalEvent.propagatedFromMarker && sheet.classList.contains('show')) {
-    hideSheet();
+    setSheetState(sheetStates.MINI);
   }
 });
 

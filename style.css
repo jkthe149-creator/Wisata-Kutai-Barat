@@ -1,3 +1,123 @@
+/* Modal Pilih Mode Peta */
+.map-mode-modal {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.7);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.map-mode-content {
+  background: #242833;
+  border-radius: 18px;
+  padding: 32px 24px 28px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  color: #fff;
+  min-width: 320px;
+  max-width: 90vw;
+  text-align: center;
+}
+.map-mode-content h2 {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 1.5rem;
+}
+.map-mode-options {
+  display: flex;
+  gap: 22px;
+  justify-content: center;
+}
+.map-mode-option {
+  background: #23272f;
+  border-radius: 12px;
+  padding: 18px 12px 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+  min-width: 90px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  border: 2px solid transparent;
+}
+.map-mode-option:hover, .map-mode-option.selected {
+  background: #2d3340;
+  box-shadow: 0 4px 16px rgba(52,152,219,0.18);
+  border: 2px solid #3498db;
+  transform: translateY(-2px) scale(1.04);
+}
+.map-mode-option span {
+  margin-top: 10px;
+  font-size: 1.08rem;
+  font-weight: 600;
+}
+.map-mode-illustration {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  margin-bottom: 2px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.map-mode-illustration.default {
+  background: linear-gradient(135deg, #b7eaff 60%, #eaf6ff 100%);
+  border: 2px solid #3498db;
+  position: relative;
+}
+.map-mode-illustration.default::after {
+  content: '\1F30D'; /* globe emoji */
+  font-size: 2rem;
+  position: absolute;
+  left: 50%; top: 50%; transform: translate(-50%,-50%);
+}
+.map-mode-illustration.satellite {
+  background: linear-gradient(135deg, #b6b6b6 60%, #eaeaea 100%);
+  border: 2px solid #888;
+  position: relative;
+}
+.map-mode-illustration.satellite::after {
+  content: '\1F30E'; /* earth americas emoji */
+  font-size: 2rem;
+  position: absolute;
+  left: 50%; top: 50%; transform: translate(-50%,-50%);
+}
+.map-mode-illustration.dark {
+  background: linear-gradient(135deg, #23272f 60%, #444 100%);
+  border: 2px solid #222;
+  position: relative;
+}
+.map-mode-illustration.dark::after {
+  content: '\1F319'; /* crescent moon emoji */
+  font-size: 2rem;
+  position: absolute;
+  left: 50%; top: 50%; transform: translate(-50%,-50%);
+}
+/* Tombol Tampilkan Rute lebih berwarna dan menarik */
+.route-btn {
+  background: linear-gradient(45deg, #78FFFB, #0047ab) !important;
+  color: #fff !important;
+  border: none;
+  border-radius: 50px !important;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  text-transform: none;
+  box-shadow: 0 5px 15px rgba(63, 167, 255, 0.25);
+  padding: 12px 32px !important;
+  transition: all 0.3s cubic-bezier(0.22,0.61,0.36,1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.route-btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(120, 255, 251, 0.35);
+  background: linear-gradient(45deg, #0047ab, #78FFFB) !important;
+}
 :root{
   --mini-height: 84px; /* tinggi sheet saat mini */
   --half-height: 50%; /* tinggi sheet saat 50% */
@@ -11,8 +131,8 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .header h1 { margin: 0; font-size: 18px; font-weight: 600; text-align: center; padding: 0 50px; }
 .close-btn { position: absolute; right: 15px; background: rgba(255, 255, 255, 0.2); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.2s ease; }
 .close-btn:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.1); }
-.search-box { position:absolute; top:70px; left:50%; transform:translateX(-50%); z-index:1100; background:rgba(0,0,0,0.7); border-radius:20px; padding:8px 15px; transition: top 0.3s ease; display: flex; align-items: center; backdrop-filter: blur(5px); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-.search-box input { border:none; outline:none; width:260px; background:transparent; color:white; font-size:14px; cursor: pointer;}
+.search-box { position:absolute; top:70px; left:50%; transform:translateX(-50%); z-index:1100; background:rgba(0,0,0,0.7); border-radius:20px; padding:8px 40px 8px 15px; transition: top 0.3s ease; display: flex; align-items: center; backdrop-filter: blur(5px); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+.search-box input { border:none; outline:none; flex:1; background:transparent; color:white; font-size:14px; cursor: pointer;}
 .search-box input::placeholder { color:#ccc; }
 .search-icon { color: white; margin-right: 8px; }
 .gps-btn { position:absolute; bottom:20px; right:20px; z-index:1100; background:rgba(0,0,0,0.7); color:white; border-radius:50%; cursor:pointer; transition: all 0.3s ease; user-select:none; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; font-size: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
@@ -108,14 +228,13 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .sheet-close-btn:hover { background: rgba(255, 255, 255, 0.2); }
 .sheet-expand-btn { position: absolute; top: 12px; left: 12px; width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255, 255, 255, 0.1); color: #fff; font-size: 14px; cursor: pointer; display: none; align-items: center; justify-content: center; transition: background 0.2s ease; }
 .sheet-expand-btn:hover { background: rgba(255, 255, 255, 0.2); }
-.bottom-sheet.mini .sheet-expand-btn { display: flex; }
+.bottom-sheet.mini .sheet-expand-btn { display: none !important; }
 
 /* Konten berdasarkan state */
 .bottom-sheet.mini #sheet-desc, 
-.bottom-sheet.mini .route-btn, 
-.bottom-sheet.mini .sheet-images, 
-.bottom-sheet.mini .location-address-container { 
-  display:none; 
+.bottom-sheet.mini #sheet-desc,
+.bottom-sheet.mini .sheet-images {
+  display: none;
 }
 
 .bottom-sheet.half .sheet-images {
@@ -153,8 +272,8 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 /* ============== STYLE ALAMAT BARU ============== */
 .location-address-container {
   margin-top: 15px;
-  padding-top: 15px;
-  border-top: 2px solid #3a4050;
+  padding-top: 0;
+  border-top: none;
   position: relative;
   display: flex;
   align-items: center;
@@ -181,16 +300,79 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 }
 
 /* Marker custom (Ikon Wisata) */
-.custom-marker { transition: transform 0.3s ease; cursor: pointer; }
+.custom-marker {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  overflow: visible; /* agar efek glow tidak terpotong dan tidak membentuk kotak */
+}
 .custom-marker > div {
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  transition: box-shadow 0.3s cubic-bezier(0.22,0.61,0.36,1), transform 0.3s cubic-bezier(0.22,0.61,0.36,1);
+  box-shadow: none;
+  background: transparent;
+  border-radius: 50%;
+  overflow: visible;
+}
+.custom-marker.jantur > div {
+  box-shadow: none;
+}
+.custom-marker.danau > div {
+  box-shadow: none;
+}
+.custom-marker.pulau > div {
+  box-shadow: none;
+}
+.custom-marker.sungai > div {
+  box-shadow: none;
 }
 .custom-marker.active {
-    transform: scale(1.15);
-    z-index: 1000 !important;
+  transform: scale(1.15);
+  z-index: 1000 !important;
 }
+
+/* Animasi glow muncul */
+@keyframes marker-glow-fadein {
+  0% { box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+  100% { box-shadow: var(--marker-glow); }
+}
+
 .custom-marker.active > div {
-    box-shadow: 0 0 14px 4px var(--icon-color, #fff);
+  animation: marker-glow-fadein 0.35s cubic-bezier(0.22,0.61,0.36,1);
+  box-shadow: var(--marker-glow);
+}
+.custom-marker.active.jantur > div {
+  --marker-glow: 0 0 0 8px rgba(93,173,226,0.32), 0 0 16px 4px rgba(52,152,219,0.18);
+}
+.custom-marker.active.danau > div {
+  --marker-glow: 0 0 0 8px rgba(88,214,141,0.32), 0 0 16px 4px rgba(46,204,113,0.18);
+}
+.custom-marker.active.pulau > div {
+  --marker-glow: 0 0 0 8px rgba(236,112,99,0.32), 0 0 16px 4px rgba(231,76,60,0.18);
+}
+.custom-marker.active.sungai > div {
+  --marker-glow: 0 0 0 8px rgba(26,188,156,0.32), 0 0 16px 4px rgba(72,201,176,0.18);
+}
+.custom-marker.active.gunung > div {
+  --marker-glow: 0 0 0 8px rgba(155,89,182,0.32), 0 0 16px 4px rgba(155,89,182,0.18);
+}
+.custom-marker.active.rekreasi > div {
+  --marker-glow: 0 0 0 8px rgba(241,196,15,0.32), 0 0 16px 4px rgba(243,156,18,0.18);
+}
+
+/* Warna label dan glow untuk Gunung & Alun-Alun (rekreasi) */
+.location-label.gunung { color: #9b59b6; }
+.custom-marker.gunung > .marker-inner svg { /* opsional: pastikan stroke/ikon terlihat baik */ }
+
+.custom-marker.active.gunung > div,
+.custom-marker.active.gunung > .marker-inner {
+  --marker-glow: 0 0 0 8px rgba(155,89,182,0.32), 0 0 16px 4px rgba(155,89,182,0.18);
+}
+
+.location-label.rekreasi { color: #f1c40f; }
+.custom-marker.rekreasi > .marker-inner svg { /* opsional */ }
+
+.custom-marker.active.rekreasi > div,
+.custom-marker.active.rekreasi > .marker-inner {
+  --marker-glow: 0 0 0 8px rgba(241,196,15,0.32), 0 0 16px 4px rgba(243,156,18,0.18);
 }
 
 .location-label {
@@ -219,6 +401,9 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .location-label.danau { color: #58d68d; }
 .location-label.pulau { color: #ec7063; }
 .location-label.sungai { color: #48C9B0; }
+.location-label.gunung { color: #9b59b6; }
+.location-label.rekreasi { color: #f1c40f; }
+.location-label.budaya { color: #d35400; }
 
 .leaflet-tooltip.location-label {
     transform: translateX(10px);
@@ -269,6 +454,32 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
   font-size: 18px;
   display: flex;
   align-items: center;
+  position: relative; /* allow absolute child without altering layout */
+}
+
+/* Clear button placed inside the search icon (absolute overlay).
+   This prevents any layout shift — it does not change the icon size or position. */
+.search-icon .search-clear-btn {
+  position: absolute;
+  inset: 0; /* cover the icon area exactly */
+  display: none; /* toggled by JS */
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: none;
+  background: transparent; /* keep icon visible underneath if needed */
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+/* Hover effect that does not change layout */
+.search-icon .search-clear-btn:hover {
+  background: rgba(255,255,255,0.06);
 }
 
 /* Pastikan input search bisa diklik */
@@ -344,6 +555,34 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .permission-btn.deny { background: rgba(255, 255, 255, 0.1); color: white; }
 .permission-btn.deny:hover { background: rgba(255, 255, 255, 0.2); }
 
+/* TBS gallery background helpers (optional, user-supplied files Tbs1.jpg etc.) */
+.tbs1 { background-image: url("Tbs1.jpg"); background-size: cover; background-position: center; }
+.tbs2 { background-image: url("Tbs2.jpg"); background-size: cover; background-position: center; }
+.tbs3 { background-image: url("Tbs3.jpg"); background-size: cover; background-position: center; }
+
+/* Label color & active glow for budaya (Taman Budaya Sendawar) */
+.location-label.budaya { color: #d35400; }
+.custom-marker.active.budaya > div {
+  --marker-glow: 0 0 0 8px rgba(211,84,0,0.32), 0 0 16px 4px rgba(211,84,0,0.18);
+}
+
+/* Enforce portrait (9:16) images in bottom-sheet gallery */
+.sheet-images img {
+  width: auto;
+  height: 320px;            /* desktop default portrait height */
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  border-radius: 8px;
+  scroll-snap-align: start;
+}
+
+/* responsive portrait sizing */
+@media (max-width: 768px) {
+  .sheet-images img {
+    height: calc(50vw);    /* keep portrait on smaller screens */
+  }
+}
+
 @media (max-width: 768px) {
   .search-box { width: 90%; max-width: 300px; } .search-box input { width: 100%; }
   .map-legend { bottom: 70px; left: 10px; padding: 8px; }
@@ -354,4 +593,130 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
   .leaflet-routing-container { width: calc(100% - 20px) !important; left: 10px !important; right: 10px !important; bottom: 90px !important; }
   .gps-permission-content { width: 85%; padding: 20px; }
   .permission-buttons { flex-direction: column; }
+}
+
+/* Highlight karakter yang cocok saat mengetik (glow) */
+/* warna teks default untuk huruf non-matched sedikit diredupkan */
+.search-result-item .result-name span { color: #9ea8b6; transition: color 0.18s ease, text-shadow 0.18s ease, transform 0.18s ease; }
+
+/* defaults for types (can be overridden by inline --match-color from JS) */
+.search-result-item.type-jantur { 
+  --match-color: #5dade2;
+  --glow-1: rgba(93,173,226,0.95);
+  --glow-2: rgba(52,152,219,0.20);
+  --glow-3: rgba(52,152,219,0.08);
+}
+.search-result-item.type-danau {
+  --match-color: #58d68d;
+  --glow-1: rgba(88,214,141,0.95);
+  --glow-2: rgba(46,204,113,0.20);
+  --glow-3: rgba(46,204,113,0.08);
+}
+.search-result-item.type-pulau {
+  --match-color: #ec7063;
+  --glow-1: rgba(236,112,99,0.95);
+  --glow-2: rgba(231,76,60,0.20);
+  --glow-3: rgba(231,76,60,0.08);
+}
+.search-result-item.type-sungai {
+  --match-color: #48C9B0;
+  --glow-1: rgba(72,201,176,0.95);
+  --glow-2: rgba(26,188,156,0.20);
+  --glow-3: rgba(26,188,156,0.08);
+}
+/* fallback default */
+.search-result-item { 
+  --match-color: #ffd166;
+  --glow-1: rgba(255,209,102,0.95);
+  --glow-2: rgba(255,149,0,0.20);
+  --glow-3: rgba(255,102,102,0.08);
+}
+
+/* matched substring styling uses the variables above */
+.search-result-item .result-name .char-match {
+  color: var(--match-color);
+  font-weight: 700; /* make matched letters bold */
+  text-shadow:
+    0 0 8px var(--glow-1),
+    0 0 18px var(--glow-2),
+    0 0 36px var(--glow-3);
+  transform: translateY(-1px);
+  animation: char-glow 0.9s ease-out both;
+}
+
+/* keyframes use the variables so glow color matches type */
+@keyframes char-glow {
+  0% {
+    text-shadow: 0 0 0 rgba(0,0,0,0);
+    transform: translateY(0);
+  }
+  40% {
+    text-shadow:
+      0 0 12px var(--glow-1),
+      0 0 28px var(--glow-2),
+      0 0 48px var(--glow-3);
+    transform: translateY(-1px);
+  }
+  100% {
+    text-shadow:
+      0 0 8px var(--glow-1),
+      0 0 18px var(--glow-2),
+      0 0 36px var(--glow-3);
+    transform: translateY(-1px);
+  }
+}
+
+/* Tombol clear (×) di dalam search-box */
+/* .search-box .search-clear-btn {
+  margin-left: 8px;
+  display: none; /* ditoggle oleh JS */
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.12s ease;
+  padding: 0;
+  line-height: 1;
+}
+.search-box .search-clear-btn:hover {
+  background: rgba(255,255,255,0.12);
+  transform: scale(1.03);
+} */
+
+/* Untuk tampilan fleksibel di search-box */
+.search-box { display: flex; align-items: center; gap: 8px; }
+/* Gallery khusus untuk Gunung S di bottom-sheet */
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  max-width: 800px;
+  margin: 6px auto 12px;
+}
+.gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+}
+.gallery .big {
+  grid-row: span 2;
+  aspect-ratio: 3 / 4; /* besar kiri sedikit lebih tinggi */
+}
+.gallery .tall {
+  aspect-ratio: 9 / 16; /* portrait */
+}
+
+/* fallback: jika device kecil, atur ulang agar tetap proporsional */
+@media (max-width: 520px) {
+  .gallery { grid-template-columns: 1fr; }
+  .gallery .big { grid-row: auto; aspect-ratio: 3 / 4; }
+  .gallery .tall { aspect-ratio: 9 / 16; }
 }

@@ -161,15 +161,15 @@
   
   <button id="show-header-btn" class="show-header-btn">☰</button>
   <button id="gps-btn" class="gps-btn">📍</button>
-  <button id="route-btn" class="route-btn">🗺️ Tampilkan Rute</button>
+  <button id="route-btn" class="route-btn">Tampilkan Rute</button>
   
   <div class="bottom-sheet" id="bottom-sheet">
     <div class="expand-handle"></div>
     <div class="bottom-sheet-header" id="sheet-header">
-      <div class="drag-handle"></div>
-      <button class="sheet-expand-btn">↕️</button>
-      <h2 id="sheet-title">Nama Tempat</h2>
-      <button id="sheet-close-btn" class="sheet-close-btn">×</button>
+  <div class="drag-handle"></div>
+  <button class="sheet-expand-btn">↕️</button>
+  <h2 id="sheet-title" style="margin:0; text-align:left; font-size:20px; font-weight:700; position:absolute; left:24px; top:18px; right:auto; width:auto; max-width:60%; z-index:1;">Nama Tempat</h2>
+  <button id="sheet-close-btn" class="sheet-close-btn">×</button>
     </div>
     <div class="bottom-sheet-content">
       <div class="sheet-images" id="sheet-images"></div>
@@ -178,7 +178,7 @@
         <i class="fas fa-map-marker-alt"></i>
         <span class="location-address" id="sheet-address"></span>
       </div>
-      <button id="route-btn" class="route-btn">🗺️ Tampilkan Rute</button>
+  <button id="route-btn" class="route-btn">Tampilkan Rute</button>
     </div>
   </div>
   
@@ -195,8 +195,28 @@
       <h2>Akses Lokasi</h2>
       <p>Izinkan akses lokasi untuk menampilkan posisi Anda di peta dan memberikan rute terbaik ke destinasi wisata.</p>
       <div class="permission-buttons">
-        <button id="allow-gps" class="permission-btn allow">Izinkan</button>
-        <button id="deny-gps" class="permission-btn deny">Nanti</button>
+  <button id="allow-gps" class="permission-btn allow">Izinkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Pilih Mode Peta -->
+  <div class="map-mode-modal" id="map-mode-modal" style="display:none;">
+    <div class="map-mode-content">
+      <h2>Pilih Mode Peta</h2>
+      <div class="map-mode-options">
+        <div class="map-mode-option" data-mode="default">
+          <img src="Images/Putih.jpeg" alt="Peta Putih" width="60" style="border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.18);border:2px solid #3498db;">
+          <span>Default</span>
+        </div>
+        <div class="map-mode-option" data-mode="satellite">
+          <img src="Images/Satelit.jpeg" alt="Peta Satelit" width="60" style="border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.18);border:2px solid #888;">
+          <span>Satelit</span>
+        </div>
+        <div class="map-mode-option" data-mode="dark">
+          <img src="Images/Gelap.jpeg" alt="Peta Gelap" width="60" style="border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.18);border:2px solid #222;">
+          <span>Mode Gelap</span>
+        </div>
       </div>
     </div>
   </div>
