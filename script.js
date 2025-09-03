@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
     images: [
       "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Inar1.jpg",
       "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Inar2.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Inar3.jpg"
+      "https://jkthe149-creator.github.o/Wisata-Kutai-Barat/Inar3.jpg"
     ],
     address: "PG2X+85V, Terajuk, Nyuatan, West Kutai Regency, East Kalimantan 75777",
     labelColor: "#5dade2"
@@ -897,7 +897,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // ================== FUNGSI RUTE ==================
-  const routeBtn = document.getElementById('route-btn');
+  const routeBtn = document.querySelector('#bottom-sheet #route-btn');
 
   routeBtn.addEventListener('click', () => {
     // HIDE any overlays that might block the map or interactions before showing route UI
