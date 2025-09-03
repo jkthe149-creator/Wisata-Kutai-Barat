@@ -170,7 +170,7 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .bottom-sheet.show { visibility: visible; }
 .bottom-sheet.half { 
   transform: translateY(0);
-  height: var(--half-height);
+  height: 42%;
 }
 .bottom-sheet.full { 
   transform: translateY(0);
@@ -266,7 +266,15 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .sheet-images { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 12px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: #3a4050 #242833; scroll-snap-type: x mandatory; }
 .sheet-images::-webkit-scrollbar { height: 6px; }
 .sheet-images::-webkit-scrollbar-thumb { background-color: #3a4050; border-radius: 3px; }
-.sheet-images img { display: block; width: auto; height: 320px; max-height: 60vh; aspect-ratio: 9 / 16; object-fit: cover; border-radius: 8px; scroll-snap-align: start; }
+.sheet-images img { 
+  display: block; 
+  width: auto; 
+  height: 320px; 
+  max-height: 60vh; 
+  object-fit: cover; 
+  border-radius: 8px; 
+  scroll-snap-align: start; 
+}
 .sheet-images:empty { display: none; }
 
 /* ============== STYLE ALAMAT BARU ============== */
@@ -424,19 +432,97 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .leaflet-top.leaflet-right { top: 130px !important; transition: top 0.3s ease; }
 .header.hidden + #map .leaflet-top.leaflet-right { top: 80px !important; }
 
-/* Search Overlay */
-.search-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #242833; z-index: 1500; display: flex; flex-direction: column; color: white; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.22,0.61,0.36,1); }
-.search-overlay.show { transform: translateY(0); }
-.search-overlay-header { padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #3a4050; }
-.search-overlay-header h2 { margin: 0; font-size: 18px; }
-.search-overlay-close { background: rgba(255, 255, 255, 0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; }
-.search-results-list { flex: 1; overflow-y: auto; }
-.search-result-item { display: flex; align-items: center; padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #3a4050; transition: background-color 0.2s ease; }
-.search-result-item:hover { background-color: #3a4050; }
-.search-result-item .icon-container { margin-right: 15px; flex-shrink: 0; }
-.search-result-item span { font-size: 16px; }
-.search-results-list::-webkit-scrollbar { width: 8px; }
-.search-results-list::-webkit-scrollbar-thumb { background: #3a4050; border-radius: 8px; }
+/* Search Overlay - Default (untuk mobile) */
+.search-overlay { 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
+  background: #242833; 
+  z-index: 1500; 
+  display: flex; 
+  flex-direction: column; 
+  color: white; 
+  transform: translateY(100%); 
+  transition: transform 0.3s cubic-bezier(0.22,0.61,0.36,1); 
+}
+
+/* Hanya terapkan untuk mobile */
+@media (max-width: 768px) {
+  .search-overlay.show {
+    transform: translateY(0);
+  }
+}
+
+/* ============== DESKTOP SEARCH OVERLAY ============== */
+/* Untuk overlay pencarian desktop dengan ukuran dan posisi bottom sheet */
+@media (min-width: 769px) {
+  .search-overlay.desktop {
+    position: fixed;
+    top: auto !important;
+    bottom: 20px;
+    right: 20px;
+    left: auto;
+    width: 400px;
+    height: 50%; /* Tinggi langsung penuh seperti half mode */
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.4);
+    transform: translateY(0);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s cubic-bezier(0.22,0.61,0.36,1), 
+                visibility 0.3s cubic-bezier(0.22,0.61,0.36,1);
+    pointer-events: none;
+  }
+  
+  .search-overlay.desktop.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  
+  /* Header overlay pencarian desktop */
+  .search-overlay.desktop .search-overlay-header {
+    border-radius: 16px 16px 0 0;
+    padding-top: 20px; /* Space untuk drag handle */
+  }
+  
+  /* Drag handle untuk overlay pencarian desktop */
+  .search-overlay.desktop .drag-handle {
+    width: 50px;
+    height: 6px;
+    background: #7b8190;
+    border-radius: 3px;
+    margin: 6px auto 0;
+    opacity: 0.9;
+  }
+  
+  /* Tombol tutup untuk overlay pencarian desktop */
+  .search-overlay.desktop .search-overlay-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+  }
+  
+  .search-overlay.desktop .search-overlay-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
 /* Tambahan & perbaikan CSS interaksi */
 /* Pastikan pointer pada ikon pencarian */
 .search-icon {
@@ -548,26 +634,18 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .permission-btn.deny { background: rgba(255, 255, 255, 0.1); color: white; }
 .permission-btn.deny:hover { background: rgba(255, 255, 255, 0.2); }
 
-/* TBS gallery background helpers (optional, user-supplied files Tbs1.jpg etc.) */
-.tbs1 { background-image: url("Tbs1.jpg"); background-size: cover; background-position: center; }
-.tbs2 { background-image: url("Tbs2.jpg"); background-size: cover; background-position: center; }
-.tbs3 { background-image: url("Tbs3.jpg"); background-size: cover; background-position: center; }
-
-/* Label color & active glow for budaya (Taman Budaya Sendawar) */
+/* Label color & active glow untuk budaya (Taman Budaya Sendawar) */
 .location-label.budaya { color: #d35400; }
 .custom-marker.active.budaya > div {
   --marker-glow: 0 0 0 8px rgba(211,84,0,0.32), 0 0 16px 4px rgba(211,84,0,0.18);
 }
 
 /* --- Unified bottom-sheet gallery image sizing (single source of truth) --- */
-/* Remove any other ".sheet-images img" rules elsewhere to avoid conflicts. */
 .sheet-images img {
   display: block;
   width: auto;
-  /* prefer fixed height but allow responsive cap */
   height: 320px;
   max-height: 60vh;
-  aspect-ratio: 9 / 16;        /* enforce portrait 9:16 by default */
   object-fit: cover;
   border-radius: 8px;
 }
@@ -617,5 +695,184 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
   .tall {
     aspect-ratio: 9 / 16;
     width: 70vw;
+  }
+}
+
+/* ============== RESPONSIVE BOTTOM SHEET ============== */
+/* Untuk layar mobile (lebar ≤ 768px) */
+@media (max-width: 768px) {
+  .bottom-sheet {
+    width: 100%; /* Lebar penuh di mobile */
+    left: 0;
+    right: 0;
+  }
+}
+
+/* Untuk layar desktop (lebar ≥ 769px) */
+@media (min-width: 769px) {
+  .bottom-sheet {
+    width: 400px; /* Lebar mirip mobile di desktop */
+    left: auto; /* Hapus left:50% */
+    right: 20px; /* Tambahkan right untuk posisi pojok kanan */
+    transform: translateY(100%); /* Hapus translateX(-50%) */
+  }
+  
+  .bottom-sheet.half { 
+    transform: translateY(0); /* Hapus translateX(-50%) */
+  }
+  
+  .bottom-sheet.full { 
+    transform: translateY(0); /* Hapus translateX(-50%) */
+  }
+  
+  .bottom-sheet.mini { 
+    transform: translateY(calc(100% - var(--mini-height))); /* Hapus translateX(-50%) */
+  }
+
+  /* Hide the small up/down bar and drag handle when bottom-sheet is in default (half) on desktop */
+  .bottom-sheet.half .expand-handle,
+  .bottom-sheet.half .expand-handle::after,
+  .bottom-sheet.half .drag-handle {
+    display: none !important;
+    visibility: hidden !important;
+  }
+}
+
+/* Override: clean close button for search overlay (mobile + desktop),
+   pinned to the far right, no solid white shape — just icon text with subtle hover */
+.search-overlay .search-overlay-close,
+.search-overlay.desktop .search-overlay-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;               /* slightly larger tappable area */
+  height: 36px;
+  padding: 0;
+  border: none;
+  background: transparent;   /* CLEAN: no white shape */
+  color: #ffffff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.18s ease, transform 0.12s ease, color 0.18s ease;
+  z-index: 5;
+  outline: none;
+}
+
+/* subtle hover (no solid white) */
+.search-overlay .search-overlay-close:hover,
+.search-overlay.desktop .search-overlay-close:hover {
+  background: rgba(255,255,255,0.04);
+  transform: scale(1.03);
+}
+
+/* keyboard focus visible */
+.search-overlay .search-overlay-close:focus,
+.search-overlay.desktop .search-overlay-close:focus {
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.06);
+}
+
+/* Ensure the search overlay header provides enough vertical space so results
+   (icons) don't sit higher than the close button. Keep header clean. */
+.search-overlay .search-overlay-header {
+  min-height: 56px; /* reserve vertical space for the close icon */
+  padding: 10px 16px 6px 16px; /* top right bottom left */
+  box-sizing: border-box;
+}
+
+/* Default results list spacing (mobile & general) */
+.search-results-list {
+  padding: 8px 12px 16px 12px; /* give breathing room from top and left */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Each result: keep icon and name away from left edge and spaced nicely */
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(58,64,80,0.6);
+  box-sizing: border-box;
+}
+
+/* Icon container fixed width so icon never touches left edge */
+.search-result-item .icon-container {
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 2px; /* small left offset from list padding */
+}
+
+/* Ensure name has left padding and does not collapse to the edge */
+.search-result-item .result-name {
+  flex: 1 1 auto;
+  padding-left: 4px;
+  word-break: break-word;
+}
+
+/* Matched character styling (search overlay). Color taken from --match-color set by JS */
+.search-result-item .char-match {
+  color: var(--match-color, #ffffff);
+  font-weight: 800;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: color 0.18s ease, text-shadow 0.18s ease, transform 0.12s ease;
+  text-decoration: none;
+}
+
+/* pulse keyframes used only when .match-animate is applied */
+@keyframes match-pulse {
+  0% {
+    text-shadow: 0 0 0 rgba(0,0,0,0);
+    transform: translateY(0);
+    font-weight: 700;
+  }
+  40% {
+    text-shadow: 0 0 10px var(--match-color, #fff), 0 0 18px rgba(0,0,0,0.06);
+    transform: translateY(-1px);
+    font-weight: 900;
+  }
+  100% {
+    text-shadow: 0 0 0 rgba(0,0,0,0);
+    transform: translateY(0);
+    font-weight: 700;
+  }
+}
+
+/* only run animation when JS adds .match-animate */
+.search-result-item .char-match.match-animate {
+  animation: match-pulse 900ms ease 0s 1;
+  /* ensure bold during animation */
+  font-weight: 900;
+}
+
+/* Desktop: push results further down so they never overlap with close button,
+   and add a touch more left padding for desktop layout */
+@media (min-width: 769px) {
+  .search-overlay.desktop .search-results-list {
+    padding-top: 72px; /* ensure results start well below the close icon */
+    padding-left: 16px;
+    padding-right: 12px;
+  }
+
+  /* slightly larger icon container on desktop for visual balance */
+  .search-overlay.desktop .search-result-item .icon-container {
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+  }
+
+  .search-overlay.desktop .search-result-item {
+    padding-left: 8px; /* extra left breathing room */
+    padding-right: 12px;
   }
 }

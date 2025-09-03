@@ -139,10 +139,9 @@ let firstMarkerDelay = false;
     desc: "Air Terjun Jantur Mapan terletak sekitar 10 km dari Melak Kubar di Kampung Linggang Mapan, mudah diakses dari jalan utama Barong Tongkok-Linggang Bigung. Air terjun tingginya kurang dari 10 meter dengan volume air besar, dikelilingi pepohonan rindang dan sejuk. Terdapat dua paviliun istirahat, toilet, ruang ganti, dua ayunan kecil dengan bangku, dan produk budaya Dayak seperti anyaman keranjang (anjat) serta topi pelindung (seraung). Tiket masuk Rp5.000 per orang.",
     type: "jantur",
     images: [
-      "https://i.imgur.com/HqFQ3wv.jpeg",
-      "https://i.imgur.com/UHt1guU.jpeg",
-      "https://i.imgur.com/Rsf5UF0.jpeg",
-      "https://i.imgur.com/YdAKSu6.jpeg"
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Mapan1.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Mapan2.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Mapan3.jpg"
     ],
     address: "RJFF+WVM, Jalan Sengkereaq Lacaaq Kampung, Linggang Mapan, Kec. Linggang Bigung, Kabupaten Kutai Barat, Kalimantan Timur 75776",
     labelColor: "#5dade2"
@@ -152,9 +151,9 @@ let firstMarkerDelay = false;
     desc: "Jantur Sengkulai adalah air terjun alami yang dikelilingi hutan tropis asri. Tempat ini menawarkan suasana sejuk dan pemandangan yang menenangkan, cocok bagi pengunjung yang ingin menikmati keindahan alam.",
     type: "jantur",
     images: [
-      "https://i.imgur.com/k7oXZ5p.jpeg",
-      "https://i.imgur.com/JHKoztR.jpeg",
-      "https://i.imgur.com/HMbIXBj.jpeg"
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Sengkulai1.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Sengkulai2.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Sengkulai3.jpg"
     ],
     address: "PG2X+85V, Terajuk, Nyuatan, West Kutai Regency, East Kalimantan 75777",
     labelColor: "#5dade2"
@@ -164,9 +163,9 @@ let firstMarkerDelay = false;
     desc: "Air Terjun Jantur Dora memiliki ketinggian sedang dengan aliran air yang cukup deras. Dikelilingi oleh pepohonan hijau yang rimbun, tempat ini cocok untuk wisata alam dan fotografi dengan suasana alami yang masih terjaga.",
     type: "jantur",
     images: [
-      "https://i.imgur.com/Ss7xj52.jpeg",
-      "https://i.imgur.com/3m41r4Y.jpeg",
-      "https://i.imgur.com/BwlJ0YG.jpeg"
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Dora1.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Dora2.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Dora3.jpg"
     ],
     address: "QH8R+JX, Balok, Kec. Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur",
     labelColor: "#5dade2"
@@ -176,8 +175,8 @@ let firstMarkerDelay = false;
     desc: "Jantur Tabalas merupakan air terjun di tengah hutan tropis yang lebat dan alami. Tempat ini menonjolkan keindahan alam dan sesuai untuk pengunjung yang menyukai petualangan dan kegiatan outdoor.",
     type: "jantur",
     images: [
-      "https://i.imgur.com/NlIdDcA.jpeg",
-      "https://i.imgur.com/1bd3hd2.jpeg"
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Tabalas1.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Tabalas2.jpg"
     ],
     address: "RHHC+658, Jl. Poros Tenggarong Melak, Juhan Asa, Kec. Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur 75776",
     labelColor: "#5dade2"
@@ -187,10 +186,9 @@ let firstMarkerDelay = false;
     desc: "Air Terjun Jantur Inar adalah air terjun tinggi di Kutai Barat dengan hutan tropis masih asli, menawarkan pengalaman alam yang menenangkan dan petualangan. Tempat ini juga memiliki nilai budaya penting terkait kisah seorang gadis Dayak bangsawan.",
     type: "jantur",
     images: [
-      "https://i.imgur.com/b7lliKA.jpeg",
-      "https://i.imgur.com/XeNYscp.jpeg",
-      "https://i.imgur.com/9fikPcl.jpeg",
-      "https://i.imgur.com/avoXz5e.jpeg"
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Inar1.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Inar2.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Inar3.jpg"
     ],
     address: "PG2X+85V, Terajuk, Nyuatan, West Kutai Regency, East Kalimantan 75777",
     labelColor: "#5dade2"
@@ -200,9 +198,9 @@ let firstMarkerDelay = false;
     desc: "Danau Aco seluas 4 hektare terletak di Kampung Linggang Melapeh, Kecamatan Linggang Bigung, sekitar 20 km dari Sendawar. Nama 'Aco' berarti 'memberi' dalam bahasa Dayak Tunjung dialek Rentenuukng, danau ini dianggap sebagai pemberian alam akibat bencana di masa lalu.",
     type: "danau",
     images: [
-      "https://i.imgur.com/IPZZtlj.jpeg",
-      "https://i.imgur.com/6AoGuJk.jpeg",
-      "https://i.imgur.com/RQaIsSO.jpeg"
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/aco1.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/aco2.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/aco3.jpg"
     ],
     address: "RGMV+7QQ, Linggang Melapeh, Linggang Bigung, West Kutai Regency, East Kalimantan",
     labelColor: "#58d68d"
@@ -212,9 +210,9 @@ let firstMarkerDelay = false;
     desc: "Danau Jempang merupakan danau alami terbesar di sepanjang Sungai Mahakam dengan luas sekitar 15.000 hektare dan kedalaman 7-8 meter, terletak di Kecamatan Jempang. Di danau ini bisa ditemukan berbagai burung dan ikan endemik. Di sekitar danau terdapat desa tradisional Tanjung Isuy yang masih menjaga kearifan lokal dan budaya adat istiadat.",
     type: "danau",
     images: [
-      "https://i.imgur.com/GxAUIWR.jpeg",
-      "https://i.imgur.com/oLuFUhe.jpeg",
-      "https://i.imgur.com/OeVQTqP.jpeg"
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Jempang1.jpeg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Jempang2.jpeg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Jempang3.jpeg"
     ],
     address: "F4RX+5QQ, Tanjung Isuy, Jempang, West Kutai Regency, East Kalimantan 75773",
     labelColor: "#58d68d"
@@ -224,9 +222,9 @@ let firstMarkerDelay = false;
     desc: "Pulau Lanting adalah pulau kecil dengan pemandangan laut yang indah dan suasana pantai yang tenang. Pulau ini menawarkan pengalaman menikmati alam pantai yang masih alami dan cocok untuk aktivitas santai seperti berenang.",
     type: "pulau",
     images: [
-      "https://i.imgur.com/rjWnkxR.jpeg",
-      "https://i.imgur.com/29XMDU4.jpeg",
-      "https://i.imgur.com/xWnxWNO.jpeg"
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Lanting1.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Lanting2.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Lanting3.jpg"
     ],
     address: "Jempang, West Kutai Regency, East Kalimantan",
     labelColor: "#ec7063"
@@ -236,9 +234,9 @@ let firstMarkerDelay = false;
     desc: "Batuq Bura Lakan Bilem merupakan formasi batuan unik di tengah alam yang asri. Tempat ini juga menjadi lokasi kegiatan budaya dan tradisional masyarakat setempat, memberikan nilai historis dan kultural selain keindahan alamnya.",
     type: "sungai",
     images: [
-      "https://i.imgur.com/fWjQZrn.jpeg",
-      "https://i.imgur.com/h1l3bki.jpeg",
-      "https://i.imgur.com/MFcF5Vp.jpeg"
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Batuq1.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Batuq2.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Batuq3.jpg"
     ],
     address: "VCCG+JJJ, Lakan Bilem, Nyuatan, West Kutai Regency, East Kalimantan 75776",
     labelColor: "#48C9B0"
@@ -248,8 +246,9 @@ let firstMarkerDelay = false;
     desc: "Danau Tajan adalah danau alami dengan suasan yang menenangkan dan udara segar. Tempat ini populer untuk memancing dan menikmati keindahan alam serta ketenangan di sekitarnya.",
     type: "danau",
     images: [
-      "https://i.imgur.com/kJbFiKg.jpeg",
-      "https://i.imgur.com/kJbFiKg.jpeg"
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Tajan1.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Tajan2.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Tajan3.jpg"
     ],
     address: "WMJC+76, Jelemuq, Tering, West Kutai Regency, East Kalimantan",
     labelColor: "#58d68d"
@@ -259,8 +258,8 @@ let firstMarkerDelay = false;
     desc: "Danau Beluq berlokasi di kampung Dempar dengan luas sekitar 25 hektare dan dikelilingi berbagai jenis kayu dan akar-akar. Jaraknya sekitar 30 km dari ibu kota Kutai Barat. Danau ini memiliki legenda suku Dayak Benuaq yang menjadi asal usul terbentuknya danau.",
     type: "danau",
     images: [
-      "https://i.imgur.com/SbjTjNJ.jpeg",
-      "https://i.imgur.com/MDilDG0.jpeg"
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Beluq1.jpg",
+      "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Beluq2.jpg"
     ],
     address: "MGH8+R34, Sentalar, Nyuatan, West Kutai Regency, East Kalimantan",
     labelColor: "#58d68d"
@@ -270,7 +269,12 @@ let firstMarkerDelay = false;
   coords: [-0.1274239236856152, 115.45937210881907],
   desc: "Gunung S, yang juga dikenal sebagai Gunung Es, adalah sebuah destinasi wisata alam yang terletak di Kabupaten Kutai Barat, Kalimantan Timur, tepatnya di antara Kampung Tutung dan Kampung Intu Lingau di kawasan Sendawar. Gunung ini populer karena pemandangan alamnya yang indah, terutama saat matahari terbit dan terbenam, serta suasana \"Negeri di Atas Awan\" yang diciptakannya oleh hamparan awan di puncaknya. Selain itu, Gunung S juga menjadi lokasi favorit untuk olahraga paralayang.",
   type: "gunung",
-  address: "Gunung S, Kutai Barat, Kalimantan Timur",
+  images: [
+    "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Gunung1.jpeg",
+    "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Gunung2.jpeg",
+    "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Gunung3.jpeg"
+  ],
+  address: "VFC5+WQR, Tutung, Linggang Bigung, West Kutai Regency, East Kalimantan 75776",
   labelColor: "#9b59b6"
 },
 {
@@ -279,7 +283,9 @@ let firstMarkerDelay = false;
   desc: "Terletak di samping Kantor Bupati Kutai Barat, Alun-Alun Itho menjadi pusat kegiatan masyarakat sekaligus ruang terbuka hijau favorit warga. Setiap akhir pekan, alun-alun ramai dikunjungi untuk olahraga, bersantai, maupun menikmati kuliner UMKM lokal. Suasananya semakin hidup dengan pedagang kaki lima yang menjajakan camilan tradisional seperti jagung rebus, kacang rebus, hingga minuman segar. Tempat ini cocok untuk rekreasi keluarga, berkumpul bersama teman, atau sekadar menikmati sore di jantung kota Kutai Barat.",
   type: "rekreasi",
   images: [
-    // optional
+    "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Alun1.jpeg",
+    "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Alun2.jpeg",
+    "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Alun3.jpeg"
   ],
   address: "Barong Tongkok, West Kutai Regency, East Kalimantan 75777",
   labelColor: "#f1c40f"
@@ -290,9 +296,9 @@ let firstMarkerDelay = false;
   desc: "Dikenal sebagai “Lamin Enam Etnis,” TBS merupakan pusat budaya Kutai Barat yang menampilkan enam lamin (rumah adat) dari Dayak Ahoeng, Benuaq, Tanjung, Kenyah, dan etnis Melayu. Bangunan berbentuk huruf U ini didominasi kayu ulin dengan ukiran khas tiap etnis, menjadikannya destinasi wisata budaya yang memukau dan penuh nilai sejarah.",
   type: "budaya",
   images: [
-    "Tbs1.jpg",
-    "Tbs2.jpg",
-    "Tbs3.jpg"
+    "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Tbs1.jpeg",
+    "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Tbs2.jpeg",
+    "https://raw.githubusercontent.com/YOUR_GITHUB_USER/YOUR_REPO_NAME/main/Tbs3.jpeg"
   ],
   address: "QPH3+5VV, Jl. Sendawar Raya, Barong Tongkok, Kec. Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur 75777",
   labelColor: "#d35400"
@@ -620,16 +626,49 @@ function highlightMatches(name, query) {
       }
       const nameHtml = highlightMatches(loc.name, query);
       item.innerHTML = `<div class="icon-container">${createIconHTML(loc.type)}</div><span class="result-name">${nameHtml}</span>`;
-      item.addEventListener('click', () => {
+      item.addEventListener('click', async () => {
         // Remember this selection so it appears on top next time
         lastSelectedSearchName = loc.name;
         // Move this item to the top of the results immediately (visual feedback while map animates)
         resultsList.prepend(item);
-        const targetMarker = markers.find(m => m._locData.name === loc.name);
-        if (targetMarker) targetMarker.fire('click');
+
+        // Ensure markers exist so we can trigger marker click; create if needed
+        if (markers.length === 0) {
+          createAllMarkers();
+          // allow markers array to populate (createAllMarkers is synchronous)
+        }
+
+        // Try to find the marker for this location
+        const targetMarker = markers.find(m => m._locData && m._locData.name === loc.name);
+
+        if (targetMarker) {
+          // ensure target marker is added to map before firing click (in case zoom threshold removed it)
+          if (!map.hasLayer(targetMarker)) targetMarker.addTo(map);
+          // center & zoom, then trigger marker click to keep behavior consistent
+          map.flyTo(targetMarker.getLatLng(), Math.max(map.getZoom(), 14), { duration: 0.9 });
+          // small timeout so flyTo starts before click (helps UX)
+          setTimeout(() => targetMarker.fire('click'), 250);
+        } else {
+          // fallback: fly directly to coords and open sheet
+          map.flyTo(loc.coords, Math.max(map.getZoom(), 14), { duration: 0.9 });
+          showSheet(loc);
+        }
+
         hideSearchOverlay();
       });
       resultsList.appendChild(item);
+
+      // Jika ada .char-match di item => restart animasi (hanya muncul bila ada kecocokan)
+      const matches = item.querySelectorAll('.char-match');
+      if (matches && matches.length > 0) {
+        matches.forEach(m => {
+          // restart CSS animation by toggling class
+          m.classList.remove('match-animate');
+          // force reflow to allow re-adding the class
+          void m.offsetWidth;
+          m.classList.add('match-animate');
+        });
+      }
     });
   }
 
@@ -1081,18 +1120,9 @@ searchInput.addEventListener('keydown', (e) => {
   }
 
   function showSheet(loc) {
+    // remove any previously injected images and keep the images area hidden
     sheetImages.innerHTML = '';
-
-    // Generic image handling only (no special gallery for Gunung S)
-    if (loc.images && loc.images.length > 0) {
-      loc.images.forEach(imgUrl => {
-        const img = document.createElement('img');
-        img.src = imgUrl;
-        img.alt = `Gambar ${loc.name}`;
-        sheetImages.appendChild(img);
-      });
-    }
-    // if no images, sheetImages remains empty
+    sheetImages.style.display = 'none';
 
     if (loc.address) {
       sheetAddress.textContent = loc.address;
@@ -1103,6 +1133,16 @@ searchInput.addEventListener('keydown', (e) => {
 
     sheetTitle.textContent = loc.name;
     sheetDesc.textContent = loc.desc;
+
+    if (loc.images && loc.images.length > 0) {
+      loc.images.forEach(imgUrl => {
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.alt = loc.name;
+        sheetImages.appendChild(img);
+      });
+      sheetImages.style.display = 'flex';
+    }
 
     if (routeActive) {
       if (routingControl) map.removeControl(routingControl);
