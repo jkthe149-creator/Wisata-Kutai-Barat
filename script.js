@@ -388,12 +388,14 @@ document.addEventListener('DOMContentLoaded', function() {
         svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="defaultG" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#95a5a6"/></radialGradient></defs><path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#defaultG)" stroke="#242833" stroke-width="2"/><text x="16" y="22" text-anchor="middle" font-size="16" fill="#242833">📍</text></svg>`;
         break;
     }
+    // tambahkan kelas inner-type agar preview hasil pencarian tetap menampilkan warna yang benar
     return `<div class="marker-inner marker-${type}" style="width:32px;height:40px;">${svgIcon}</div>`;
   }
 
   function createCustomIcon(type) {
     const iconHTML = createIconHTML(type);
     return L.divIcon({
+      // pastikan className menyertakan tipe agar CSS .custom-marker.gunung / .custom-marker.rekreasi berlaku
       className: `custom-marker ${type}`,
       html: iconHTML,
       iconSize: [32, 32],
@@ -583,8 +585,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // --- Hapus "lastSelectedSearchName" untuk menghilangkan fitur "saved info" ---
-  // let lastSelectedSearchName = null;
+  let lastSelectedSearchName = null;
 
   // Escape HTML safe
   function escapeHtml(str) {
@@ -609,58 +610,73 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function populateSearchResults() {
     resultsList.innerHTML = '';
-    
-    // Urutkan daftar wisata agar hasil Jantur Sengkulai dan Dora sebaris dengan yang lain.
+    // Order results so the last selected item (if any) is first
     const ordered = [...wisata];
+    if (lastSelectedSearchName) {
+      const idx = ordered.findIndex(w => w.name === lastSelectedSearchName);
+      if (idx > 0) ordered.unshift(ordered.splice(idx, 1)[0]);
+    }
 
     const query = (searchInput.value || '').trim();
     const qLower = query.toLowerCase();
 
     ordered.forEach(loc => {
-      // Filter: hanya simpan item yang diawali dengan query
+      // Filter: only keep items that start with the query (when query present)
       if (query && !loc.name.toLowerCase().startsWith(qLower)) return;
-      
       const item = document.createElement('div');
+      // mark item with its type so CSS can style .char-match per type
       item.className = `search-result-item type-${loc.type}`;
-      
+      // if a labelColor is provided in data, expose it to CSS as --match-color
       if (loc.labelColor) {
         item.style.setProperty('--match-color', loc.labelColor);
       }
-      
       const nameHtml = highlightMatches(loc.name, query);
-      
-      // Ikon dan nama akan selalu sebaris, tanpa "saved info"
       item.innerHTML = `<div class="icon-container">${createIconHTML(loc.type)}</div><span class="result-name">${nameHtml}</span>`;
-      
       item.addEventListener('click', async () => {
-        // Logika untuk menaikkan ikon dan nama ke atas daftar saat diklik
-        resultsList.prepend(item); 
-        
+        // Remember this selection so it appears on top next time
+        lastSelectedSearchName = loc.name;
+        // Move this item to the top of the results immediately (visual feedback while map animates)
+        resultsList.prepend(item);
+
+        // Ensure markers exist so we can trigger marker click; create if needed
+        if (markers.length === 0) {
+          createAllMarkers();
+          // allow markers array to populate (createAllMarkers is synchronous)
+        }
+
+        // Try to find the marker for this location
         const targetMarker = markers.find(m => m._locData && m._locData.name === loc.name);
 
         if (targetMarker) {
+          // ensure target marker is added to map before firing click (in case zoom threshold removed it)
           if (!map.hasLayer(targetMarker)) targetMarker.addTo(map);
+          // center & zoom, then trigger marker click to keep behavior consistent
           map.flyTo(targetMarker.getLatLng(), Math.max(map.getZoom(), 14), { duration: 0.9 });
+          // small timeout so flyTo starts before click (helps UX)
           setTimeout(() => targetMarker.fire('click'), 250);
         } else {
+          // fallback: fly directly to coords and open sheet
           map.flyTo(loc.coords, Math.max(map.getZoom(), 14), { duration: 0.9 });
           showSheet(loc);
         }
+
         hideSearchOverlay();
       });
       resultsList.appendChild(item);
 
+      // Jika ada .char-match di item => restart animasi (hanya muncul bila ada kecocokan)
       const matches = item.querySelectorAll('.char-match');
       if (matches && matches.length > 0) {
         matches.forEach(m => {
+          // restart CSS animation by toggling class
           m.classList.remove('match-animate');
+          // force reflow to allow re-adding the class
           void m.offsetWidth;
           m.classList.add('match-animate');
         });
       }
     });
-}
-
+  }
 
   // Update highlights as user types
   searchInput.addEventListener('input', () => {
