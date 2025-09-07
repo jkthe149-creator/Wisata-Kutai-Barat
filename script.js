@@ -1,4 +1,3 @@
-// MIGRATED CODE: script.js
 // --- Animasi ikon mode peta hanya jika klik tombol Jelajahi ---
 document.addEventListener('DOMContentLoaded', function() {
   const exploreBtn = document.querySelector('.explore-btn');
@@ -314,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let routeLine = null; 
   let watchId = null;
   let gpsActive = false;
-  let routeInfoShape = null; // PERUBAHAN BARU: Variabel untuk menyimpan shape info rute
+  let routeInfoShape = null;
 
   const markerZoomThreshold = 10;
   const mapContainer = document.getElementById('map');
@@ -786,21 +785,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const distanceKm = (distance / 1000).toFixed(1);
     const timeMinutes = Math.round(distance / 1000 * 3);
 
-    // PERUBAHAN BARU: Buat shape info di atas marker
+    // Buat shape info di atas marker
     const shapeHtml = `
       <span class="route-info-line">Jarak: <strong>${distanceKm} km</strong></span>
       <span class="route-info-line">Waktu: <strong>${timeMinutes} mnt</strong></span>
   ` ;
     const routeInfoIcon = L.divIcon({
-      className: 'custom-route-info-shape', // Langsung gunakan kelas ini
+      className: 'custom-route-info-shape',
       html: shapeHtml,
-      iconAnchor: [0, 90]
- });
+      iconAnchor: [0, 95]
+    });
 
     routeInfoShape = L.marker(destinationData.coords, {
       icon: routeInfoIcon,
-    zIndexOffset: 2000
-   }).addTo(map);
+      zIndexOffset: 2000
+    }).addTo(map);
   }
 
   const routeBtn = document.querySelector('#bottom-sheet #route-btn');
@@ -952,7 +951,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function showSheet(loc) {
-    // PERUBAHAN BARU: Hapus rute dan shape saat ganti lokasi
+    // Hapus rute dan shape saat ganti lokasi
     if (routeLine) map.removeLayer(routeLine);
     if (routeInfoShape) map.removeLayer(routeInfoShape);
 
@@ -990,7 +989,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function hideSheet() {
-    // PERUBAHAN BARU: Hapus rute dan shape saat sheet ditutup
+    // Hapus rute dan shape saat sheet ditutup
     if (routeLine) map.removeLayer(routeLine);
     if (routeInfoShape) map.removeLayer(routeInfoShape);
     
