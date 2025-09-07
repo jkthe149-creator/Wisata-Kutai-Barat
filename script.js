@@ -14,14 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
       overlay.style.opacity = 0;
       overlay.style.visibility = 'hidden';
       setTimeout(() => overlay.style.display = 'none', 600);
-      // Trigger animasi ikon mode peta
       window._triggeredByExploreBtn = true;
       showMapModeModal();
     });
   }
 
   // ================== MAP INIT ==================
-  // Sembunyikan tombol GPS dan marker wisata saat awal
   const gpsBtn = document.getElementById('gps-btn');
   gpsBtn.style.display = 'none';
   let wisataMarkersVisible = false;
@@ -58,7 +56,6 @@ document.addEventListener('DOMContentLoaded', function() {
     pane: 'shadowPane'
   }).addTo(map);
 
-  // Layer group for control
   const baseLayers = {
     "Default": defaultLayer,
     "Satelit": satellite,
@@ -73,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function() {
     position: 'topright'
   }).addTo(map);
 
-  // Saat ganti mode peta, sembunyikan semua marker lalu animasikan satu per satu jika marker memang boleh tampil
   map.on('baselayerchange', async function(e) {
     if (wisataMarkersVisible) {
       hideAllMarkers();
@@ -87,14 +83,11 @@ document.addEventListener('DOMContentLoaded', function() {
   let firstMarkerDelay = false;
   function showMapModeModal() {
     mapModeModal.style.display = 'flex';
-    // Remove previous selection
     document.querySelectorAll('.map-mode-option.selected').forEach(el => el.classList.remove('selected'));
-    // Hanya animasi jika dipanggil dari klik tombol Jelajahi
     if (window._triggeredByExploreBtn) {
       setTimeout(() => mapModeModal.classList.add('show'), 10);
       window._triggeredByExploreBtn = false;
     }
-    // Disable zoom saat modal mode peta tampil
     map.scrollWheelZoom.disable();
     map.touchZoom.disable();
     map.doubleClickZoom.disable();
@@ -104,21 +97,17 @@ document.addEventListener('DOMContentLoaded', function() {
   function hideMapModeModal() {
     mapModeModal.classList.remove('show');
     setTimeout(() => { mapModeModal.style.display = 'none'; }, 350);
-    // Enable zoom kembali setelah modal mode peta ditutup
     map.scrollWheelZoom.enable();
     map.touchZoom.enable();
     map.doubleClickZoom.enable();
     map.boxZoom.enable();
     map.keyboard.enable();
   }
-  // Pilih mode peta saat klik
-
   document.querySelectorAll('.map-mode-option').forEach(opt => {
     opt.addEventListener('click', async function() {
       document.querySelectorAll('.map-mode-option').forEach(o => o.classList.remove('selected'));
       this.classList.add('selected');
       const mode = this.getAttribute('data-mode');
-      // Ganti layer
       if (mode === 'default') {
         map.eachLayer(l => { if (l !== labels && map.hasLayer(l)) map.removeLayer(l); });
         defaultLayer.addTo(map);
@@ -132,9 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
       hideMapModeModal();
       mapModeSelected = true;
       firstMarkerDelay = true;
-      // Tampilkan tombol GPS setelah mode peta dipilih
       gpsBtn.style.display = 'flex';
-      // Minta izin lokasi setelah mode peta dipilih
       requestLocationPermission();
     });
   });
@@ -142,336 +129,216 @@ document.addEventListener('DOMContentLoaded', function() {
   // ================== DATA WISATA ==================
   const wisata = [{
     name: "Jantur Mapan",
-    coords: [-0.175133, 115.624654],
+    coords: [-0.17495892410772118, 115.62464606649087],
     desc: "Air Terjun Jantur Mapan terletak sekitar 10 km dari Melak Kubar di Kampung Linggang Mapan, mudah diakses dari jalan utama Barong Tongkok-Linggang Bigung. Air terjun tingginya kurang dari 10 meter dengan volume air besar, dikelilingi pepohonan rindang dan sejuk. Terdapat dua paviliun istirahat, toilet, ruang ganti, dua ayunan kecil dengan bangku, dan produk budaya Dayak seperti anyaman keranjang (anjat) serta topi pelindung (seraung). Tiket masuk Rp5.000 per orang.",
     type: "jantur",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Mapan1.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Mapan2.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Mapan3.jpg"
-    ],
-    address: "Kampung Linggang Mapan, Kecamatan Linggang Bigung, Kabupaten Kutai Barat",
-    labelColor: "#5dade2"
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Mapan1.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Mapan2.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Mapan3.jpg"],
+    address: "Kampung Linggang Mapan, Kecamatan Linggang Bigung, Kabupaten Kutai Barat, Kalimantan Timur"
   }, {
     name: "Jantur Tabalas",
-    coords: [-0.171794, 115.570421],
+    coords: [-0.1717730816498666, 115.57041117998328],
     desc: "Jantur Tabalas merupakan air terjun di tengah hutan tropis yang lebat dan alami. Tempat ini menonjolkan keindahan alam dan sesuai untuk pengunjung yang menyukai petualangan dan kegiatan outdoor.",
     type: "jantur",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tabalas1.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tabalas2.jpg"
-    ],
-    address: "RHHC+658, Jl. Poros Tenggarong Melak, Juhan Asa, Kec. Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur 75776",
-    labelColor: "#5dade2"
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tabalas1.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tabalas2.jpg"],
+    address: "RHHC+658, Jl. Poros Tenggarong Melak, Juhan Asa, Kec. Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur 75776"
   }, {
     name: "Jantur Inar",
-    coords: [-0.298955, 115.547921],
+    coords: [-0.2989443832829239, 115.54792189532664],
     desc: "Air Terjun Jantur Inar adalah air terjun tinggi di Kutai Barat dengan hutan tropis masih asli, menawarkan pengalaman alam yang menenangkan dan petualangan. Tempat ini juga memiliki nilai budaya penting terkait kisah seorang gadis Dayak bangsawan.",
     type: "jantur",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Inar1.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Inar2.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Inar3.jpg"
-    ],
-    address: "PG2X+85V, Terajuk, Nyuatan, West Kutai Regency, East Kalimantan 75777",
-    labelColor: "#5dade2"
-  }, {
-    name: "Danau Aco",
-    coords: [-0.166611, 115.544450],
-    desc: "Danau Aco seluas 4 hektare terletak di Kampung Linggang Melapeh, Kecamatan Linggang Bigung, sekitar 20 km dari Sendawar. Nama 'Aco' berarti 'memberi' dalam bahasa Dayak Tunjung dialek Rentenuukng, danau ini dianggap sebagai pemberian alam akibat bencana di masa lalu.",
-    type: "danau",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/aco1.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/aco2.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/aco3.jpg"
-    ],
-    address: "RGMV+7QQ, Linggang Melapeh, Linggang Bigung, West Kutai Regency, East Kalimantan",
-    labelColor: "#58d68d"
-  }, {
-    name: "Danau Jempang",
-    coords: [-0.509459, 116.149478],
-    desc: "Danau Jempang merupakan danau alami terbesar di sepanjang Sungai Mahakam dengan luas sekitar 15.000 hektare dan kedalaman 7-8 meter, terletak di Kecamatan Jempang. Di danau ini bisa ditemukan berbagai burung dan ikan endemik. Di sekitar danau terdapat desa tradisional Tanjung Isuy yang masih menjaga kearifan lokal dan budaya adat istiadat.",
-    type: "danau",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Jempang1.jpeg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Jempang2.jpeg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Jempang3.jpeg"
-    ],
-    address: "F4RX+5QQ, Tanjung Isuy, Jempang, West Kutai Regency, East Kalimantan 75773",
-    labelColor: "#58d68d"
-  }, {
-    name: "Pulau Lanting",
-    coords: [-0.495314, 116.191875],
-    desc: "Pulau Lanting adalah pulau kecil dengan pemandangan laut yang indah dan suasana pantai yang tenang. Pulau ini menawarkan pengalaman menikmati alam pantai yang masih alami dan cocok untuk aktivitas santai seperti berenang.",
-    type: "pulau",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Lanting1.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Lanting2.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Lanting3.jpg"
-    ],
-    address: "Jempang, West Kutai Regency, East Kalimantan",
-    labelColor: "#ec7063"
-  }, {
-    name: "Batuq Bura Lakan Bilem",
-    coords: [-0.128331, 115.426489],
-    desc: "Batuq Bura Lakan Bilem merupakan formasi batuan unik di tengah alam yang asri. Tempat ini juga menjadi lokasi kegiatan budaya dan tradisional masyarakat setempat, memberikan nilai historis dan kultural selain keindahan alamnya.",
-    type: "sungai",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Batuq1.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Batuq2.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Batuq3.jpg"
-    ],
-    address: "VCCG+JJJ, Lakan Bilem, Nyuatan, West Kutai Regency, East Kalimantan 75776",
-    labelColor: "#48C9B0"
-  }, {
-    name: "Danau Tajan",
-    coords: [-0.069131, 115.670522],
-    desc: "Danau Tajan adalah danau alami dengan suasan yang menenangkan dan udara segar. Tempat ini populer untuk memancing dan menikmati keindahan alam serta ketenangan di sekitarnya.",
-    type: "danau",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tajan1.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tajan2.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tajan3.jpg"
-    ],
-    address: "WMJC+76, Jelemuq, Tering, West Kutai Regency, East Kalimantan",
-    labelColor: "#58d68d"
-  }, {
-    name: "Danau Beluq",
-    coords: [-0.320294, 115.515149],
-    desc: "Danau Beluq berlokasi di kampung Dempar dengan luas sekitar 25 hektare dan dikelilingi berbagai jenis kayu dan akar-akar. Jaraknya sekitar 30 km dari ibu kota Kutai Barat. Danau ini memiliki legenda suku Dayak Benuaq yang menjadi asal usul terbentuknya danau.",
-    type: "danau",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Beluq1.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Beluq2.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Beluq3.jpg"
-    ],
-    address: "MGH8+R34, Sentalar, Nyuatan, West Kutai Regency, East Kalimantan",
-    labelColor: "#58d68d"
-  }, {
-    name: "Gunung S",
-    coords: [-0.1274239236856152, 115.45937210881907],
-    desc: "Gunung S, yang juga dikenal sebagai Gunung Es, adalah sebuah destinasi wisata alam yang terletak di Kabupaten Kutai Barat, Kalimantan Timur, tepatnya di antara Kampung Tutung dan Kampung Intu Lingau di kawasan Sendawar. Gunung ini populer karena pemandangan alamnya yang indah, terutama saat matahari terbit dan terbenam, serta suasana \"Negeri di Atas Awan\" yang diciptakannya oleh hamparan awan di puncaknya. Selain itu, Gunung S juga menjadi lokasi favorit untuk olahraga paralayang.",
-    type: "gunung",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Gunung1.jpeg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Gunung2.jpeg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Gunung3.jpeg"
-    ],
-    address: "VFC5+WQR, Tutung, Linggang Bigung, West Kutai Regency, East Kalimantan 75776",
-    labelColor: "#9b59b6"
-  }, {
-    name: "Alun-Alun ITHO",
-    coords: [-0.23860145193244478, 115.6962525687145],
-    desc: "Terletak di samping Kantor Bupati Kutai Barat, Alun-Alun Itho menjadi pusat kegiatan masyarakat sekaligus ruang terbuka hijau favorit warga. Setiap akhir pekan, alun-alun ramai dikunjungi untuk olahraga, bersantai, maupun menikmati kuliner UMKM lokal. Suasananya semakin hidup dengan pedagang kaki lima yang menjajakan camilan tradisional seperti jagung rebus, kacang rebus, hingga minuman segar. Tempat ini cocok untuk rekreasi keluarga, berkumpul bersama teman, atau sekadar menikmati sore di jantung kota Kutai Barat.",
-    type: "rekreasi",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Alun1.jpeg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Alun2.jpeg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Alun3.jpeg"
-    ],
-    address: "Barong Tongkok, West Kutai Regency, East Kalimantan 75777",
-    labelColor: "#f1c40f"
-  }, {
-    name: "Taman Budaya Sendawar",
-    coords: [-0.22178726715731004, 115.70467486649088],
-    desc: "Dikenal sebagai \"Lamin Enam Etnis,\" TBS merupakan pusat budaya Kutai Barat yang menampilkan enam lamin (rumah adat) dari Dayak Ahoeng, Benuaq, Tanjung, Kenyah, dan etnis Melayu. Bangunan berbentuk huruf U ini didominasi kayu ulin dengan ukiran khas tiap etnis, menjadikannya destinasi wisata budaya yang memukau dan penuh nilai sejarah.",
-    type: "budaya",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tbs1.jpeg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tbs2.jpeg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tbs3.jpeg"
-    ],
-    address: "QPH3+5VV, Jl. Sendawar Raya, Barong Tongkok, Kec. Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur 75777",
-    labelColor: "#d35400"
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Inar1.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Inar2.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Inar3.jpg"],
+    address: "PG2X+85V, Terajuk, Nyuatan, West Kutai Regency, East Kalimantan 75777"
   }, {
     name: "Jantur Sengkulai",
-    coords: [-0.171407, 115.6132781],
+    coords: [-0.17123533922068557, 115.61586372416258],
     desc: "Jantur Sengkulai adalah destinasi wisata alam air terjun di tengah hutan yang terletak di Kabupaten Kutai Barat, Kalimantan Timur. Air terjun ini memiliki aliran air deras yang menyegarkan, terutama saat musim hujan.",
     type: "jantur",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Sengkulai1.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Sengkulai2.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Sengkulai3.jpg"
-    ],
-    address: "RJH8+C8Q, Jl. Sengkereaq Lacaq, Linggang Mapan, Kec. Linggang Bigung, Kabupaten Kutai Barat, Kalimantan Timur 75776",
-    labelColor: "#5dade2"
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Sengkulai1.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Sengkulai2.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Sengkulai3.jpg"],
+    address: "RJH8+C8Q, Jl. Sengkereaq Lacaq, Linggang Mapan, Kec. Linggang Bigung, Kabupaten Kutai Barat, Kalimantan Timur 75776"
   }, {
     name: "Jantur Dora",
-    coords: [-0.2334375, 115.5898626],
+    coords: [-0.23325511106740596, 115.59239457998318],
     desc: "Jantur Dora adalah tempat wisata air terjun yang terletak di Kalimantan Timur, Kutai Barat, tepatnya di Kampung Juhan Asa. Air terjun ini menjadi salah satu destinasi wisata alam yang populer dan banyak dikunjungi pada akhir pekan dan hari libur. Kata \"jantur\" sendiri dalam bahasa daerah Kutai Barat berarti air terjun. Jantur Dora memiliki air yang bersih berasal dari hulu perbukitan Meranga yang mengalir melalui akar-akar kayu menuju hilir sungai. Jalur akses menuju Jantur Dora cukup menantang karena jalannya menanjak dan menurun. Keindahan dan kesejukan air di Jantur Dora sangat menarik bagi para pengunjung dan penggemar wisata alam. Tidak ada biaya masuk untuk mengunjungi Jantur Dora.",
     type: "jantur",
-    images: [
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Dora1.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Dora2.jpg",
-      "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Dora3.jpg"
-    ],
-    address: "QH8R+JX, Balok, Kec. Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur",
-    labelColor: "#5dade2"
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Dora1.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Dora2.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Dora3.jpg"],
+    address: "QH8R+JX, Balok, Kec. Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur"
+  }, {
+    name: "Danau Aco",
+    coords: [-0.16659038160350229, 115.54449359532649],
+    desc: "Danau Aco seluas 4 hektare terletak di Kampung Linggang Melapeh, Kecamatan Linggang Bigung, sekitar 20 km dari Sendawar. Nama 'Aco' berarti 'memberi' dalam bahasa Dayak Tunjung dialek Rentenuukng, danau ini dianggap sebagai pemberian alam akibat bencana di masa lalu.",
+    type: "danau",
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/aco1.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/aco2.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/aco3.jpg"],
+    address: "RGMV+7QQ, Linggang Melapeh, Linggang Bigung, West Kutai Regency, East Kalimantan"
+  }, {
+    name: "Danau Jempang",
+    coords: [-0.49757637813715355, 116.18325938305965],
+    desc: "Danau Jempang merupakan danau alami terbesar di sepanjang Sungai Mahakam dengan luas sekitar 15.000 hektare dan kedalaman 7-8 meter, terletak di Kecamatan Jempang. Di danau ini bisa ditemukan berbagai burung dan ikan endemik. Di sekitar danau terdapat desa tradisional Tanjung Isuy yang masih menjaga kearifan lokal dan budaya adat istiadat.",
+    type: "danau",
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Jempang1.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Jempang2.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Jempang3.jpeg"],
+    address: "F4RX+5QQ, Tanjung Isuy, Jempang, West Kutai Regency, East Kalimantan 75773"
+  }, {
+    name: "Danau Tajan",
+    coords: [-0.06912042336958966, 115.67053353765498],
+    desc: "Danau Tajan adalah danau alami dengan suasan yang menenangkan dan udara segar. Tempat ini populer untuk memancing dan menikmati keindahan alam serta ketenangan di sekitarnya.",
+    type: "danau",
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tajan1.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tajan2.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tajan3.jpg"],
+    address: "WMJC+76, Jelemuq, Tering, West Kutai Regency, East Kalimantan"
+  }, {
+    name: "Danau Beluq",
+    coords: [-0.3202729263139051, 115.5151601799834],
+    desc: "Danau Beluq berlokasi di kampung Dempar dengan luas sekitar 25 hektare dan dikelilingi berbagai jenis kayu dan akar-akar. Jaraknya sekitar 30 km dari ibu kota Kutai Barat. Danau ini memiliki legenda suku Dayak Benuaq yang menjadi asal usul terbentuknya danau.",
+    type: "danau",
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Beluq1.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Beluq2.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Beluq3.jpg"],
+    address: "MGH8+R34, Sentalar, Nyuatan, West Kutai Regency, East Kalimantan"
+  }, {
+    name: "Pulau Lanting",
+    coords: [-0.4956150831759541, 116.19187756065084],
+    desc: "Pulau Lanting adalah pulau kecil dengan pemandangan laut yang indah dan suasana pantai yang tenang. Pulau ini menawarkan pengalaman menikmati alam pantai yang masih alami dan cocok untuk aktivitas santai seperti berenang.",
+    type: "pulau",
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Lanting1.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Lanting2.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Lanting3.jpg"],
+    address: "G53V+F2, Pulau Lanting, Jempang, West Kutai Regency, East Kalimantan 75773"
+  }, {
+    name: "Batuq Bura Lakan Bilem",
+    coords: [-0.1283261407196992, 115.42650059995286],
+    desc: "Batuq Bura Lakan Bilem merupakan formasi batuan unik di tengah alam yang asri. Tempat ini juga menjadi lokasi kegiatan budaya dan tradisional masyarakat setempat, memberikan nilai historis dan kultural selain keindahan alamnya.",
+    type: "sungai",
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Batuq1.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Batuq2.jpg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Batuq3.jpg"],
+    address: "VCCG+JJJ, Lakan Bilem, Nyuatan, West Kutai Regency, East Kalimantan 75776"
+  }, {
+    name: "Gunung S",
+    coords: [-0.12743465249493863, 115.45939356649073],
+    desc: "Gunung S, yang juga dikenal sebagai Gunung Es, adalah sebuah destinasi wisata alam yang terletak di Kabupaten Kutai Barat, Kalimantan Timur, tepatnya di antara Kampung Tutung dan Kampung Intu Lingau di kawasan Sendawar. Gunung ini populer karena pemandangan alamnya yang indah, terutama saat matahari terbit dan terbenam, serta suasana \"Negeri di Atas Awan\" yang diciptakannya oleh hamparan awan di puncaknya. Selain itu, Gunung S juga menjadi lokasi favorit untuk olahraga paralayang.",
+    type: "gunung",
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Gunung1.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Gunung2.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Gunung3.jpeg"],
+    address: "VFC5+WQR, Tutung, Linggang Bigung, West Kutai Regency, East Kalimantan 75776"
+  }, {
+    name: "Alun-Alun ITHO",
+    coords: [-0.23862117722493723, 115.69625164623564],
+    desc: "Terletak di samping Kantor Bupati Kutai Barat, Alun-Alun Itho menjadi pusat kegiatan masyarakat sekaligus ruang terbuka hijau favorit warga. Setiap akhir pekan, alun-alun ramai dikunjungi untuk olahraga, bersantai, maupun menikmati kuliner UMKM lokal. Suasananya semakin hidup dengan pedagang kaki lima yang menjajakan camilan tradisional seperti jagung rebus, kacang rebus, hingga minuman segar. Tempat ini cocok untuk rekreasi keluarga, berkumpul bersama teman, atau sekadar menikmati sore di jantung kota Kutai Barat.",
+    type: "rekreasi",
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Alun1.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Alun2.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Alun3.jpeg"],
+    address: "Barong Tongkok, West Kutai Regency, East Kalimantan 75777"
+  }, {
+    name: "Taman Budaya Sendawar",
+    coords: [-0.22185993973042262, 115.70466809882845],
+    desc: "Dikenal sebagai \"Lamin Enam Etnis,\" TBS merupakan pusat budaya Kutai Barat yang menampilkan enam lamin (rumah adat) dari Dayak Ahoeng, Benuaq, Tanjung, Kenyah, dan etnis Melayu. Bangunan berbentuk huruf U ini didominasi kayu ulin dengan ukiran khas tiap etnis, menjadikannya destinasi wisata budaya yang memukau dan penuh nilai sejarah.",
+    type: "budaya",
+    images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tbs1.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tbs2.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tbs3.jpeg"],
+    address: "QPH3+5VV, Jl. Sendawar Raya, Barong Tongkok, Kec. Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur 75777"
   }];
+
+  const labelColors = {
+      'jantur': '#5dade2',
+      'danau': '#58d68d',
+      'pulau': '#ec7063',
+      'sungai': '#48C9B0',
+      'gunung': '#9b59b6',
+      'rekreasi': '#f1c40f',
+      'budaya': '#d35400'
+  };
 
   function clearAllHighlights() {
     if (activeMarker) {
-      if (activeMarker._icon) activeMarker._icon.classList.remove('active');
-      const tooltip = activeMarker.getTooltip();
-      if (tooltip && tooltip.getElement()) {
-        tooltip.getElement().classList.remove('active');
-        tooltip.getElement().style.removeProperty('--label-active-color');
-      }
-      activeMarker = null;
+        if (activeMarker._icon) activeMarker._icon.classList.remove('active');
+        if (activeMarker.getTooltip()) {
+            activeMarker.getTooltip().getElement().classList.remove('active');
+        }
+        activeMarker = null;
     }
+    updateVisibility();
   }
 
+  // FUNGSI BARU DITAMBAHKAN KEMBALI
   function determineLabelDirection(coords, index) {
-    return index % 2 === 0 ? 'right' : 'left';
+      return index % 2 === 0 ? 'right' : 'left';
   }
 
   function createIconHTML(type) {
-    let iconColor, svgIcon;
-    switch (type) {
-      case "jantur":
-        iconColor = "#3498db";
-        svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="janturG" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#5dade2"/><stop offset="100%" stop-color="#3498db"/></radialGradient></defs><path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#janturG)" stroke="#242833" stroke-width="2"/><text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff">🌊</text></svg>`;
-        break;
-      case "danau":
-        iconColor = "#2ecc71";
-        svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="danauG" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#58d68d"/><stop offset="100%" stop-color="#2ecc71"/></radialGradient></defs><path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#danauG)" stroke="#242833" stroke-width="2"/><text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff">🏞️</text></svg>`;
-        break;
-      case "pulau":
-        iconColor = "#e74c3c";
-        svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="pulauG" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#ec7063"/><stop offset="100%" stop-color="#e74c3c"/></radialGradient></defs><path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#pulauG)" stroke="#242833" stroke-width="2"/><text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff">🏝️</text></svg>`;
-        break;
-      case "sungai":
-        iconColor = "#48C9B0";
-        svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="sungaiG" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#48C9B0"/><stop offset="100%" stop-color="#1abc9c"/></radialGradient></defs><path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#sungaiG)" stroke="#242833" stroke-width="2"/><text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff">🛶</text></svg>`;
-        break;
-      case "gunung":
-        iconColor = "#9b59b6";
-        svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="gunungG" cx="50%" cy="40%" r="60%">
-            <stop offset="0%" stop-color="#b39ddb"/>
-            <stop offset="100%" stop-color="#9b59b6"/>
-          </radialGradient>
-        </defs>
-        <path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#gunungG)" stroke="#242833" stroke-width="2"/>
-        <text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff">🏔️</text>
-      </svg>`;
-        break;
-      case "rekreasi":
-        iconColor = "#f1c40f";
-        svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="rekreasiG" cx="50%" cy="40%" r="60%">
-            <stop offset="0%" stop-color="#f1c40f"/>
-            <stop offset="100%" stop-color="#f39c12"/>
-          </radialGradient>
-        </defs>
-        <path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#rekreasiG)" stroke="#242833" stroke-width="2"/>
-        <text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff">🌳</text>
-      </svg>`;
-        break;
-      case "budaya":
-        iconColor = "#d35400";
-        svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <radialGradient id="budayaG" cx="50%" cy="40%" r="60%">
-          <stop offset="0%" stop-color="#f39c12"/>
-          <stop offset="100%" stop-color="#d35400"/>
-        </radialGradient>
-      </defs>
-      <path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#budayaG)" stroke="#242833" stroke-width="2"/>
-      <text x="16" y="22" text-anchor="middle" font-size="14" fill="#fff">🏛️</text>
-    </svg>`;
-        break;
-      default:
-        iconColor = "#95a5a6";
-        svgIcon = `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="defaultG" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#95a5a6"/></radialGradient></defs><path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#defaultG)" stroke="#242833" stroke-width="2"/><text x="16" y="22" text-anchor="middle" font-size="16" fill="#242833">📍</text></svg>`;
-        break;
-    }
-    // tambahkan kelas inner-type agar preview hasil pencarian tetap menampilkan warna yang benar
-    return `<div class="marker-inner marker-${type}" style="width:32px;height:40px;">${svgIcon}</div>`;
+      const color = labelColors[type] || '#95a5a6';
+      let icon, svgGradient;
+
+      switch (type) {
+          case 'jantur':
+              icon = '🌊';
+              svgGradient = `<radialGradient id="grad-${type}" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#5dade2"/><stop offset="100%" stop-color="#3498db"/></radialGradient>`;
+              break;
+          case 'danau':
+              icon = '🏞️';
+              svgGradient = `<radialGradient id="grad-${type}" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#58d68d"/><stop offset="100%" stop-color="#2ecc71"/></radialGradient>`;
+              break;
+          case 'pulau':
+              icon = '🏝️';
+              svgGradient = `<radialGradient id="grad-${type}" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#ec7063"/><stop offset="100%" stop-color="#e74c3c"/></radialGradient>`;
+              break;
+          case 'sungai':
+              icon = '🛶';
+              svgGradient = `<radialGradient id="grad-${type}" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#48C9B0"/><stop offset="100%" stop-color="#1abc9c"/></radialGradient>`;
+              break;
+          case 'gunung':
+              icon = '🏔️';
+              svgGradient = `<radialGradient id="grad-${type}" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#b39ddb"/><stop offset="100%" stop-color="#9b59b6"/></radialGradient>`;
+              break;
+          case 'rekreasi':
+              icon = '🌳';
+              svgGradient = `<radialGradient id="grad-${type}" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#f1c40f"/><stop offset="100%" stop-color="#f39c12"/></radialGradient>`;
+              break;
+          case 'budaya':
+              icon = '🏛️';
+              svgGradient = `<radialGradient id="grad-${type}" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#f39c12"/><stop offset="100%" stop-color="#d35400"/></radialGradient>`;
+              break;
+          default:
+              icon = '📍';
+              svgGradient = `<radialGradient id="grad-default" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#95a5a6"/></radialGradient>`;
+              break;
+      }
+
+      return `<svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>${svgGradient}</defs>
+                  <path d="M16 0C8 0 1.5 6.5 1.5 14.5C1.5 25.5 16 40 16 40C16 40 30.5 25.5 30.5 14.5C30.5 6.5 24 0 16 0Z" fill="url(#grad-${type})" stroke="#242833" stroke-width="2"/>
+                  <text x="16" y="22" text-anchor="middle" font-size="16" fill="#fff">${icon}</text>
+              </svg>`;
   }
 
   function createCustomIcon(type) {
     const iconHTML = createIconHTML(type);
     return L.divIcon({
-      // pastikan className menyertakan tipe agar CSS .custom-marker.gunung / .custom-marker.rekreasi berlaku
       className: `custom-marker ${type}`,
       html: iconHTML,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16]
+      iconSize: [32, 40],
+      iconAnchor: [16, 40]
     });
-  }
-
-  function repositionTooltip(marker) {
-    setTimeout(() => {
-      const tooltip = marker.getTooltip();
-      if (tooltip && tooltip.getElement()) {
-        const element = tooltip.getElement();
-        const direction = tooltip.options.direction;
-        
-        element.style.transform = '';
-        element.style.margin = '';
-        
-        if (direction === 'left') {
-          element.style.transform = 'translateX(-10px)';
-          element.style.marginLeft = '-8px';
-        } else {
-          element.style.transform = 'translateX(10px)';
-          element.style.marginRight = '-8px';
-        }
-      }
-    }, 50);
   }
 
   let markers = [];
   let activeMarker = null;
   let userLocationMarker = null;
   let accuracyCircle = null;
-  let routingControl = null;
-  let routeActive = false;
-  let routeLine = null;
+  let routeLine = null; 
   let watchId = null;
   let gpsActive = false;
 
-  const markerZoomThreshold = 9;
-  const labelZoomThreshold = 11;
+  const markerZoomThreshold = 10;
   const mapContainer = document.getElementById('map');
 
   function updateVisibility() {
     const currentZoom = map.getZoom();
     const isMarkerVisible = currentZoom >= markerZoomThreshold;
-    const isLabelVisible = currentZoom >= labelZoomThreshold;
 
-    markers.forEach(marker => {
-      if (isMarkerVisible) {
-        if (!map.hasLayer(marker)) {
-          map.addLayer(marker);
-          repositionTooltip(marker);
-        }
-      } else {
-        if (map.hasLayer(marker)) {
-          map.removeLayer(marker);
-        }
-      }
-        
-      const tooltip = marker.getTooltip();
-      if (tooltip && tooltip.getElement()) {
-        if (isLabelVisible) {
-          tooltip.getElement().style.display = 'block';
+     markers.forEach(marker => {
+        if (isMarkerVisible) {
+            if (!map.hasLayer(marker)) {
+                marker.addTo(map);
+            }
         } else {
-          tooltip.getElement().style.display = 'none';
+            if (map.hasLayer(marker)) {
+                map.removeLayer(marker);
+            }
         }
-      }
     });
-    
-    mapContainer.classList.toggle('labels-visible', isLabelVisible);
   }
 
   map.on('zoomend', updateVisibility);
   map.on('moveend', updateVisibility);
-
-  // Buat marker dan tooltip untuk setiap wisata
 
   function createAllMarkers() {
     markers.forEach(m => { if (map.hasLayer(m)) map.removeLayer(m); });
@@ -482,85 +349,87 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       marker._locData = loc;
       markers.push(marker);
+      
       const labelDirection = determineLabelDirection(loc.coords, index);
-      const offsetX = labelDirection === 'left' ? -20 : 20;
       marker.bindTooltip(loc.name, {
         permanent: true,
         direction: labelDirection,
-        offset: [offsetX, 0],
         className: `location-label ${loc.type}`,
-        opacity: 1
+        offset: L.point(labelDirection === 'left' ? -15 : 15, -25)
       });
+
       marker.on("click", (e) => {
         L.DomEvent.stopPropagation(e);
-        clearAllHighlights();
-        const clickedMarker = e.target;
-        clickedMarker._icon.classList.add('active');
-        const tooltip = clickedMarker.getTooltip();
-        if (tooltip && tooltip.getElement()) {
-          tooltip.getElement().classList.add('active');
-          tooltip.getElement().style.setProperty('--label-active-color', clickedMarker._locData.labelColor);
+        
+        if (activeMarker && activeMarker !== e.target) {
+            if (activeMarker._icon) {
+                activeMarker._icon.classList.remove('active');
+            }
+            if (activeMarker.getTooltip()) {
+                activeMarker.getTooltip().getElement().classList.remove('active');
+            }
         }
-        activeMarker = clickedMarker;
+        
+        activeMarker = e.target;
+        if (activeMarker._icon) {
+            activeMarker._icon.classList.add('active');
+        }
+        if (activeMarker.getTooltip()) {
+            activeMarker.getTooltip().getElement().classList.add('active');
+        }
+
+        updateVisibility();
+
         map.flyTo(loc.coords, Math.max(map.getZoom(), 14), {
           duration: 1.2
         });
         showSheet(loc);
       });
     });
-  // Tidak ada marker yang permanen, semua ikut animasi
   }
 
   function hideAllMarkers() {
-    // Semua marker dihapus dari peta, tooltip juga ikut hilang
     markers.forEach(m => {
       if (map.hasLayer(m)) map.removeLayer(m);
-      // Hilangkan tooltip manual jika masih ada di DOM
-      const tooltip = m.getTooltip && m.getTooltip();
-      if (tooltip && tooltip.getElement()) {
-        tooltip.getElement().style.display = 'none';
-      }
     });
   }
 
+  // ===== FUNGSI DIPERBARUI =====
   async function showMarkersAnimated() {
-    // Semua marker dihapus dari peta sebelum animasi
+    // Menghapus marker lama jika ada
     markers.forEach(m => {
-      if (map.hasLayer(m)) map.removeLayer(m);
-      // Hilangkan tooltip manual jika masih ada di DOM
-      const tooltip = m.getTooltip && m.getTooltip();
-      if (tooltip && tooltip.getElement()) {
-        tooltip.getElement().style.display = 'none';
-      }
+        if (map.hasLayer(m)) map.removeLayer(m);
     });
-    for (let i = 0; i < markers.length; i++) {
-      if (map.getZoom() >= markerZoomThreshold) {
-        markers[i].addTo(map);
-        repositionTooltip(markers[i]);
-        // Tampilkan tooltip jika label memang seharusnya muncul
-        const tooltip = markers[i].getTooltip && markers[i].getTooltip();
-        if (tooltip && tooltip.getElement() && map.getZoom() >= labelZoomThreshold) {
-          tooltip.getElement().style.display = 'block';
-        }
-      }
-      // Jika ini pertama kali setelah pilih mode peta, delay 2 detik untuk marker pertama
-      if (i === 0 && firstMarkerDelay) {
-        await new Promise(res => setTimeout(res, 2000));
-        firstMarkerDelay = false;
-      } else {
-        await new Promise(res => setTimeout(res, 120));
-      }
-    }
-    updateVisibility();
-  }
 
+    // Loop untuk menambahkan setiap marker ke peta
+    for (let i = 0; i < markers.length; i++) {
+        if (map.getZoom() >= markerZoomThreshold) {
+            markers[i].addTo(map);
+        }
+        // Memberi jeda waktu antar kemunculan marker
+        if (i === 0 && firstMarkerDelay) {
+            await new Promise(res => setTimeout(res, 2000));
+            firstMarkerDelay = false;
+        } else {
+            await new Promise(res => setTimeout(res, 120));
+        }
+    }
+
+    updateVisibility();
+
+    // Setelah semua marker muncul, tunggu sejenak lalu tampilkan semua label
+    setTimeout(() => {
+        document.querySelectorAll('.leaflet-tooltip.location-label').forEach(label => {
+            label.classList.add('visible');
+        });
+    }, 150); // Jeda 150ms untuk memastikan semua stabil
+  }
 
   const searchInput = document.getElementById('search-input'),
     searchOverlay = document.getElementById('search-overlay'),
     closeSearchBtn = document.getElementById('search-overlay-close'),
     resultsList = document.getElementById('search-results-list');
 
-  // tambahkan tombol "×" untuk menghapus teks pencarian di sebelah kanan input
   const searchBoxEl = document.querySelector('.search-box');
   let clearSearchBtn = null;
   if (searchBoxEl) {
@@ -569,9 +438,7 @@ document.addEventListener('DOMContentLoaded', function() {
     clearSearchBtn.className = 'search-clear-btn';
     clearSearchBtn.innerText = '×';
     clearSearchBtn.setAttribute('aria-label', 'Hapus pencarian');
-    // hidden by default; visibility toggled by JS
     clearSearchBtn.style.display = 'none';
-    // append after the input
     if (searchInput) {
       searchInput.insertAdjacentElement('afterend', clearSearchBtn);
     }
@@ -587,22 +454,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
   let lastSelectedSearchName = null;
 
-  // Escape HTML safe
   function escapeHtml(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
 
-  // Highlight only exact substring(s) that match the query (case-insensitive).
   function highlightMatches(name, query) {
-    // only highlight when query is a prefix (starts from beginning)
     if (!query) return escapeHtml(name);
     const q = query.toLowerCase();
     const lower = name.toLowerCase();
     if (!lower.startsWith(q)) {
-      // no prefix match -> return escaped original (should be filtered out already)
       return escapeHtml(name);
     }
-    // split prefix and remainder
     const prefix = name.slice(0, q.length);
     const rest = name.slice(q.length);
     return `<span class="char-match">${escapeHtml(prefix)}</span>${escapeHtml(rest)}`;
@@ -610,7 +472,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function populateSearchResults() {
     resultsList.innerHTML = '';
-    // Order results so the last selected item (if any) is first
     const ordered = [...wisata];
     if (lastSelectedSearchName) {
       const idx = ordered.findIndex(w => w.name === lastSelectedSearchName);
@@ -621,41 +482,36 @@ document.addEventListener('DOMContentLoaded', function() {
     const qLower = query.toLowerCase();
 
     ordered.forEach(loc => {
-      // Filter: only keep items that start with the query (when query present)
       if (query && !loc.name.toLowerCase().startsWith(qLower)) return;
       const item = document.createElement('div');
-      // mark item with its type so CSS can style .char-match per type
       item.className = `search-result-item type-${loc.type}`;
-      // if a labelColor is provided in data, expose it to CSS as --match-color
       if (loc.labelColor) {
         item.style.setProperty('--match-color', loc.labelColor);
       }
       const nameHtml = highlightMatches(loc.name, query);
-      item.innerHTML = `<div class="icon-container">${createIconHTML(loc.type)}</div><span class="result-name">${nameHtml}</span>`;
+      const addressText = loc.address ? loc.address : 'Alamat tidak tersedia';
+      item.innerHTML = `
+        <div class="icon-container">${createIconHTML(loc.type)}</div>
+        <div class="result-info">
+            <span class="result-name">${nameHtml}</span>
+            <span class="search-result-address">${escapeHtml(addressText)}</span>
+        </div>
+      `;
       item.addEventListener('click', async () => {
-        // Remember this selection so it appears on top next time
         lastSelectedSearchName = loc.name;
-        // Move this item to the top of the results immediately (visual feedback while map animates)
         resultsList.prepend(item);
 
-        // Ensure markers exist so we can trigger marker click; create if needed
         if (markers.length === 0) {
           createAllMarkers();
-          // allow markers array to populate (createAllMarkers is synchronous)
         }
 
-        // Try to find the marker for this location
         const targetMarker = markers.find(m => m._locData && m._locData.name === loc.name);
 
         if (targetMarker) {
-          // ensure target marker is added to map before firing click (in case zoom threshold removed it)
           if (!map.hasLayer(targetMarker)) targetMarker.addTo(map);
-          // center & zoom, then trigger marker click to keep behavior consistent
           map.flyTo(targetMarker.getLatLng(), Math.max(map.getZoom(), 14), { duration: 0.9 });
-          // small timeout so flyTo starts before click (helps UX)
           setTimeout(() => targetMarker.fire('click'), 250);
         } else {
-          // fallback: fly directly to coords and open sheet
           map.flyTo(loc.coords, Math.max(map.getZoom(), 14), { duration: 0.9 });
           showSheet(loc);
         }
@@ -664,13 +520,10 @@ document.addEventListener('DOMContentLoaded', function() {
       });
       resultsList.appendChild(item);
 
-      // Jika ada .char-match di item => restart animasi (hanya muncul bila ada kecocokan)
       const matches = item.querySelectorAll('.char-match');
       if (matches && matches.length > 0) {
         matches.forEach(m => {
-          // restart CSS animation by toggling class
           m.classList.remove('match-animate');
-          // force reflow to allow re-adding the class
           void m.offsetWidth;
           m.classList.add('match-animate');
         });
@@ -678,57 +531,48 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Update highlights as user types
   searchInput.addEventListener('input', () => {
     populateSearchResults();
-    // toggle tombol clear
     if (clearSearchBtn) {
       clearSearchBtn.style.display = searchInput.value.trim() ? 'block' : 'none';
     }
   });
 
-  // If user presses Enter (desktop or mobile Done), and the query equals a wisata name,
-  // zoom to that wisata and open the bottom sheet.
   searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' || e.keyCode === 13) {
       e.preventDefault();
-      const query = (searchInput.value || '').trim();
+      const query = (searchInput.value || '').trim().toLowerCase();
       if (!query) return;
-      const dest = wisata.find(w => w.name.toLowerCase() === query.toLowerCase());
-      if (dest) {
-        // ensure markers exist
-        if (markers.length === 0) createAllMarkers();
-        const targetMarker = markers.find(m => m._locData.name === dest.name);
+
+      const matches = wisata.filter(w => w.name.toLowerCase().startsWith(query));
+
+      if (matches.length > 1) {
+        showMultiResultSheet(matches);
+      } else if (matches.length === 1) {
+        const targetMarker = markers.find(m => m._locData.name === matches[0].name);
         if (targetMarker) {
-          // trigger marker click which handles flyTo and showSheet
           targetMarker.fire('click');
         } else {
-          // fallback: directly show sheet & flyTo
-          map.flyTo(dest.coords, Math.max(map.getZoom(), 14), { duration: 1.0 });
-          showSheet(dest);
+          map.flyTo(matches[0].coords, Math.max(map.getZoom(), 14), { duration: 1.0 });
+          showSheet(matches[0]);
         }
-        hideSearchOverlay();
-        searchInput.blur();
-        if (clearSearchBtn) clearSearchBtn.style.display = 'none';
       }
+      
+      hideSearchOverlay();
+      searchInput.blur();
+      if (clearSearchBtn) clearSearchBtn.style.display = 'none';
     }
   });
 
   function showSearchOverlay() {
-    // Rebuild results so lastSelectedSearchName gets priority
     populateSearchResults();
-
-    // update visibility tombol clear saat overlay dibuka
     if (clearSearchBtn) {
       clearSearchBtn.style.display = searchInput.value.trim() ? 'block' : 'none';
     }
-
-    // Pastikan overlay tidak menutupi input pencarian:
-    // posisikan overlay tepat di bawah input dan atur tingginya.
     try {
       const rect = searchInput.getBoundingClientRect();
-      const gap = 8; // jarak sedikit antar input dan overlay
-      const topPx = Math.max(Math.round(rect.bottom + gap), 0); // dalam px relatif viewport
+      const gap = 8;
+      const topPx = Math.max(Math.round(rect.bottom + gap), 0);
 
       searchOverlay.style.position = 'fixed';
       searchOverlay.style.left = '0';
@@ -737,28 +581,21 @@ document.addEventListener('DOMContentLoaded', function() {
       searchOverlay.style.height = `calc(100% - ${topPx}px)`;
       searchOverlay.style.zIndex = '1200';
 
-      // Pastikan input pencarian terlihat di atas overlay
       if (getComputedStyle(searchInput).position === 'static') {
         searchInput.style.position = 'relative';
       }
       searchInput.style.zIndex = '1300';
     } catch (err) {
-      // fallback: jika terjadi error, biarkan kelas .show saja
       console.warn('Gagal mengatur posisi overlay pencarian', err);
     }
 
     searchOverlay.classList.add('show');
-    // fokuskan input agar pengguna dapat langsung mengetik
     searchInput.focus();
   }
 
   function hideSearchOverlay() {
     searchOverlay.classList.remove('show');
-
-    // sembunyikan tombol clear saat overlay ditutup
     if (clearSearchBtn) clearSearchBtn.style.display = 'none';
-
-    // Reset style yang diubah supaya tidak mempengaruhi tata letak lain
     searchOverlay.style.position = '';
     searchOverlay.style.left = '';
     searchOverlay.style.right = '';
@@ -768,7 +605,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (searchInput) {
       searchInput.style.zIndex = '';
-      // jangan ubah position kembali agar tidak mengganggu layout if intentionally set elsewhere
     }
   }
 
@@ -777,11 +613,9 @@ document.addEventListener('DOMContentLoaded', function() {
   populateSearchResults();
 
   // ================== FUNGSI GPS ==================
-  // const gpsBtn = document.getElementById('gps-btn'); // Sudah dideklarasikan di atas
   const permissionModal = document.getElementById('gps-permission-modal');
   const allowGpsBtn = document.getElementById('allow-gps');
 
-  // Sembunyikan marker wisata saat awal (belum ada izin)
   hideAllMarkers();
   wisataMarkersVisible = false;
 
@@ -792,7 +626,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     permissionModal.style.display = 'flex';
-    // Disable zoom saat modal izin GPS tampil
     map.scrollWheelZoom.disable();
     map.touchZoom.disable();
     map.doubleClickZoom.disable();
@@ -802,7 +635,6 @@ document.addEventListener('DOMContentLoaded', function() {
     allowGpsBtn.addEventListener('click', () => {
       permissionModal.style.display = 'none';
       gpsBtn.classList.add('loading');
-      // Enable zoom kembali setelah modal izin GPS ditutup
       map.scrollWheelZoom.enable();
       map.touchZoom.enable();
       map.doubleClickZoom.enable();
@@ -812,7 +644,6 @@ document.addEventListener('DOMContentLoaded', function() {
       navigator.geolocation.getCurrentPosition(
         () => {
           startWatchingPosition();
-          // Setelah izin diberikan, baru tampilkan marker wisata
           wisataMarkersVisible = true;
           createAllMarkers();
           showMarkersAnimated();
@@ -921,28 +752,44 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // ================== FUNGSI RUTE ==================
-  const routeBtn = document.querySelector('#bottom-sheet #route-btn');
+  // Tambahkan fungsi utilitas untuk decode polyline
+  L.PolylineUtil = {
+    decode: function(encoded) {
+      var points = [];
+      var index = 0, len = encoded.length;
+      var lat = 0, lng = 0;
+      
+      while (index < len) {
+        var b, shift = 0, result = 0;
+        do {
+          b = encoded.charCodeAt(index++) - 63;
+          result |= (b & 0x1f) << shift;
+          shift += 5;
+        } while (b >= 0x20);
+        var dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
+        lat += dlat;
 
-  routeBtn.addEventListener('click', () => {
-    // HIDE any overlays that might block the map or interactions before showing route UI
-    ['search-overlay','map-mode-modal','gps-permission-modal','landing-overlay'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.classList.remove('show');
-        // ensure hidden regardless of how each overlay was implemented
-        el.style.display = 'none';
-        el.style.opacity = '0';
-        el.style.visibility = 'hidden';
+        shift = 0;
+        result = 0;
+        do {
+          b = encoded.charCodeAt(index++) - 63;
+          result |= (b & 0x1f) << shift;
+          shift += 5;
+        } while (b >= 0x20);
+        var dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
+        lng += dlng;
+
+        points.push([lat * 1e-5, lng * 1e-5]);
       }
-    });
+      
+      return points;
+    }
+  };
 
-    if (routeActive) {
-      if (routingControl) map.removeControl(routingControl);
-      routingControl = null;
-      routeBtn.textContent = '🗺️ Tampilkan Rute';
-      routeBtn.classList.remove('active');
-      routeActive = false;
-      return;
+  async function calculateAndShowRoute(destinationData) {
+    if (routeLine) {
+      map.removeLayer(routeLine);
+      routeLine = null;
     }
 
     if (!gpsActive || !userLocationMarker) {
@@ -951,58 +798,92 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    const currentLocName = sheetTitle.textContent;
-    const destinationData = wisata.find(w => w.name === currentLocName);
-    if (!destinationData) return;
-
     const start = userLocationMarker.getLatLng();
     const end = L.latLng(destinationData.coords[0], destinationData.coords[1]);
 
-    if (routingControl) map.removeControl(routingControl);
-
-    routingControl = L.Routing.control({
-      waypoints: [start, end],
-      routeWhileDragging: false,
-      addWaypoints: false,
-      draggableWaypoints: false,
-      fitSelectedRoutes: true,
-      lineOptions: {
-        styles: [{
-          color: '#3498db',
-          opacity: 0.9,
-          weight: 6
-        }]
-      },
-      createMarker: () => null
-    }).addTo(map);
-
-    routingControl.on('routesfound', function(e) {
-      const routes = e.routes;
-      if (!routes.length) return;
-      const summary = routes[0].summary;
-      const container = routingControl.getContainer();
-      const instructions = routingControl.getAlternativesContainer();
-
-      const distance = (summary.totalDistance / 1000).toFixed(1);
-      const time = Math.round(summary.totalTime / 60);
-
-      let customHeader = `
-          <h3>Rute ke ${destinationData.name}</h3>
-          <p style="margin: 5px 0;">Jarak: <b>${distance} km</b>, Waktu: <b>${time} menit</b></p>
-          <a href="#" class="leaflet-bar leaflet-routing-close-btn">×</a>
-        `;
-      container.innerHTML = customHeader;
-      container.appendChild(instructions);
-
-      container.querySelector('.leaflet-routing-close-btn').addEventListener('click', (ev) => {
-        ev.preventDefault();
-        routeBtn.click();
+    try {
+      // Menggunakan domain backend yang benar
+      const response = await fetch('https://wisata-kutai-barat-backend.vercel.app/api/osm/protected', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          start: [start.lat, start.lng], 
+          end: [end.lat, end.lng]
+        })
       });
-    });
 
-    routeBtn.textContent = '❌ Hapus Rute';
-    routeBtn.classList.add('active');
-    routeActive = true;
+      if (!response.ok) throw new Error(`Server error: ${response.status}`);
+
+      const routeData = await response.json();
+      
+      // Decode polyline geometry
+      const routeGeometry = L.PolylineUtil.decode(routeData.geometry);
+      const latLngs = routeGeometry.map(point => L.latLng(point[0], point[1]));
+      
+      // Buat polyline dengan style yang mencolok
+      routeLine = L.polyline(latLngs, {
+        color: '#3498db',
+        weight: 6,
+        opacity: 0.9,
+        lineJoin: 'round',
+        dashArray: '10, 10',
+        dashOffset: '0'
+      }).addTo(map);
+
+      // Animasi garis rute
+      let offset = 0;
+      const animateDash = () => {
+        offset = (offset + 1) % 20;
+        routeLine.setStyle({dashOffset: offset});
+        requestAnimationFrame(animateDash);
+      };
+      animateDash();
+
+      // Fit bounds untuk menampilkan seluruh rute
+      map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
+
+      const distanceKm = (routeData.distance / 1000).toFixed(1);
+      const timeMinutes = Math.round(routeData.duration / 60);
+
+      alert(`Rute ke ${destinationData.name}\nJarak: ${distanceKm} km\nWaktu: ${timeMinutes} menit`);
+      
+      routeBtn.textContent = '❌ Hapus Rute';
+      routeBtn.classList.add('active');
+
+    } catch (error) {
+      console.error("Gagal mengambil rute:", error);
+      alert("Gagal memuat rute. Pastikan backend berjalan dan terhubung.");
+      
+      // Fallback: buat garis lurus jika backend tidak tersedia
+      routeLine = L.polyline([start, end], {
+        color: '#3498db',
+        weight: 4,
+        opacity: 0.7,
+        dashArray: '15, 10'
+      }).addTo(map);
+      
+      map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
+      
+      // Hitung jarak dan waktu perkiraan
+      const distance = map.distance(start, end);
+      const distanceKm = (distance / 1000).toFixed(1);
+      const timeMinutes = Math.round(distance / 1000 * 3); // Asumsi 3 menit per km
+      
+      alert(`Rute perkiraan ke ${destinationData.name}\nJarak: ${distanceKm} km\nPerkiraan Waktu: ${timeMinutes} menit\n\n(Catatan: Menggunakan rute garis lurus karena server tidak tersedia)`);
+      
+      routeBtn.textContent = '❌ Hapus Rute';
+      routeBtn.classList.add('active');
+    }
+  }
+
+  const routeBtn = document.querySelector('#bottom-sheet #route-btn');
+
+  routeBtn.addEventListener('click', async () => {
+    const currentLocName = sheetTitle.textContent;
+    const destinationData = wisata.find(w => w.name === currentLocName);
+    if (!destinationData) return;
+    
+    await calculateAndShowRoute(destinationData);
     minimizeSheet();
   });
 
@@ -1024,7 +905,6 @@ document.addEventListener('DOMContentLoaded', function() {
     header.classList.add('hidden');
     headerManuallyClosed = true;
     showHeaderBtn.style.display = 'flex';
-    // Clear any typed search when header close is clicked
     if (searchInput) {
       searchInput.value = '';
       populateSearchResults();
@@ -1045,9 +925,10 @@ document.addEventListener('DOMContentLoaded', function() {
     sheetAddressContainer = document.getElementById("sheet-address-container"),
     sheetAddress = document.getElementById("sheet-address"),
     sheetHeader = document.getElementById("sheet-header"),
-    sheetCloseBtn = document.getElementById("sheet-close-btn");
+    sheetCloseBtn = document.getElementById("sheet-close-btn"),
+    sheetSingleResult = document.getElementById("sheet-single-result"),
+    sheetMultiResults = document.getElementById("sheet-multi-results");
 
-  // State management untuk bottom sheet
   const sheetStates = {
     HIDDEN: 'hidden',
     MINI: 'mini',
@@ -1068,7 +949,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function setBounds() {
     const windowH = getWindowH();
     maxTranslate = {
-      [sheetStates.HALF]: windowH - (windowH * 0.42),
+      [sheetStates.HALF]: windowH - (windowH * 0.60),
       [sheetStates.MINI]: windowH - parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--mini-height")),
       [sheetStates.FULL]: 0
     };
@@ -1085,7 +966,7 @@ document.addEventListener('DOMContentLoaded', function() {
       case sheetStates.HALF:
         sheet.classList.add('show', 'half');
         sheet.style.transform = "translateY(0)";
-        sheet.style.height = "42%";
+        sheet.style.height = "60%";
         sheet.style.visibility = 'visible';
         break;
       case sheetStates.FULL:
@@ -1102,9 +983,52 @@ document.addEventListener('DOMContentLoaded', function() {
     currentSheetState = state;
     setBounds();
   }
+  
+  function showMultiResultSheet(matches) {
+    sheetSingleResult.style.display = 'none';
+    sheetMultiResults.style.display = 'block';
+    sheetMultiResults.innerHTML = '';
+
+    matches.forEach(loc => {
+        const card = document.createElement('div');
+        card.className = 'multi-result-card';
+        
+        const imageUrl = loc.images && loc.images.length > 0 ? loc.images[0] : 'https://via.placeholder.com/90';
+
+        card.innerHTML = `
+            <img src="${imageUrl}" alt="${loc.name}" class="multi-card-image">
+            <div class="multi-card-info">
+                <h3 class="multi-card-name">${loc.name}</h3>
+                <button class="multi-card-route-btn">🗺️ Tampilkan Rute</button>
+            </div>
+        `;
+        
+        card.addEventListener('click', () => {
+            const targetMarker = markers.find(m => m._locData.name === loc.name);
+            if (targetMarker) {
+                targetMarker.fire('click');
+            } else {
+                showSheet(loc);
+            }
+        });
+
+        card.querySelector('.multi-card-route-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            calculateAndShowRoute(loc);
+            minimizeSheet();
+        });
+
+        sheetMultiResults.appendChild(card);
+    });
+
+    sheetTitle.textContent = `Hasil Pencarian (${matches.length})`;
+    setSheetState(sheetStates.FULL);
+  }
 
   function showSheet(loc) {
-    // remove any previously injected images and keep the images area hidden
+    sheetMultiResults.style.display = 'none';
+    sheetSingleResult.style.display = 'flex';
+
     sheetImages.innerHTML = '';
     sheetImages.style.display = 'none';
 
@@ -1128,35 +1052,34 @@ document.addEventListener('DOMContentLoaded', function() {
       sheetImages.style.display = 'flex';
     }
 
-    if (routeActive) {
-      if (routingControl) map.removeControl(routingControl);
-      routingControl = null;
+    if (routeLine) {
+        map.removeLayer(routeLine);
+        routeLine = null;
     }
     routeBtn.textContent = '🗺️ Tampilkan Rute';
     routeBtn.classList.remove('active');
-    routeActive = false;
 
-    // Tampilkan dalam state HALF (50%) pertama kali
     setSheetState(sheetStates.HALF);
   }
 
   function minimizeSheet() {
     setSheetState(sheetStates.MINI);
     clearAllHighlights();
+    updateVisibility();
   }
 
   function hideSheet() {
     setSheetState(sheetStates.HIDDEN);
-    if (routingControl) {
-      map.removeControl(routingControl);
-      routingControl = null;
+    if (routeLine) {
+        map.removeLayer(routeLine);
+        routeLine = null;
     }
     routeBtn.textContent = '🗺️ Tampilkan Rute';
     routeBtn.classList.remove('active');
-    routeActive = false;
     clearAllHighlights();
-
     dragging = false;
+    sheetMultiResults.style.display = 'none';
+    sheetSingleResult.style.display = 'block';
   }
 
   function startDrag(e) {
@@ -1187,22 +1110,17 @@ document.addEventListener('DOMContentLoaded', function() {
       const thresholdHalf = maxTranslate[sheetStates.HALF] * 0.6;
       
       if (currentTranslate > thresholdMini) {
-        // Drag ke bawah - sembunyikan
         hideSheet();
       } else if (currentTranslate > thresholdHalf) {
-        // Drag ke bawah - ke mode mini
         setSheetState(sheetStates.MINI);
       } else if (currentTranslate < thresholdHalf * 0.4) {
-        // Drag ke atas - ke mode full
         setSheetState(sheetStates.FULL);
       } else {
-        // Kembali ke state half
         setSheetState(sheetStates.HALF);
       }
     }
   }
 
-  // Event listeners untuk drag
   sheetHeader.addEventListener('mousedown', e => startDrag(e.clientY));
   window.addEventListener('mousemove', e => {
     dragging && moveDrag(e.clientY)
@@ -1220,25 +1138,20 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   window.addEventListener('touchend', endDrag);
 
-  // Hapus event listener untuk expand handle, expand hanya dengan drag
-
-  // Event listener untuk header click (expand dari mini)
   sheetHeader.addEventListener('click', e => {
-    // Hanya expand dari mini ke half jika klik header, bukan tombol X
     if (e.target !== sheetCloseBtn && !e.target.classList.contains('drag-handle') && currentSheetState === sheetStates.MINI) {
       setSheetState(sheetStates.HALF);
     }
   });
 
   map.on('click', function(e) {
-    // Jika klik peta (bukan marker) dan sheet sedang tampil, turunkan ke mode mini
     if (!e.originalEvent.propagatedFromMarker && sheet.classList.contains('show')) {
       setSheetState(sheetStates.MINI);
     }
   });
 
   sheetCloseBtn.addEventListener('click', function(e) {
-    e.stopPropagation(); // Mencegah event bubbling
+    e.stopPropagation();
     hideSheet();
   });
   

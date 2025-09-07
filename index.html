@@ -1,244 +1,231 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Peta Wisata Kutai Barat</title>
-  
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
-  <style>
-    /* Landing overlay styles */
-    #landing-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      width: 100vw; height: 100vh;
-      background-image: url('https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Beluq1.jpg');
-      background-size: cover;
-      background-position: center;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      color: #fff;
-      transition: opacity 0.6s cubic-bezier(.4,1.3,.5,1), visibility 0.6s;
-    }
-    #landing-overlay::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      z-index: -1;
-    }
-    #landing-overlay .container {
-      max-width: 1200px;
-      padding: 0 20px;
-      z-index: 1;
-    }
-    #landing-overlay h1 {
-      font-size: 5rem;
-      font-weight: 800;
-      margin-bottom: 20px;
-      text-transform: uppercase;
-      letter-spacing: 5px;
-      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeInUp 1.5s ease forwards 0.5s;
-      color: #ffffff;
-      position: relative;
-    }
-    #landing-overlay h1::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 4px;
-      background: linear-gradient(90deg, #FF9A3D, #FF6B6B);
-      border-radius: 2px;
-    }
-    #landing-overlay .explore-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 40px;
-      padding: 15px 40px;
-      background: linear-gradient(45deg, #FF9A3D, #FF6B6B);
-      color: white;
-      text-decoration: none;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 1.2rem;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(255, 106, 107, 0.4);
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeInUp 1.5s ease forwards 1s;
-    }
-    #landing-overlay .explore-btn i {
-      margin-left: 10px;
-      transition: transform 0.3s ease;
-    }
-    #landing-overlay .explore-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(255, 106, 107, 0.6);
-    }
-    #landing-overlay .explore-btn:hover i {
-      transform: translateX(5px);
-    }
-    #landing-overlay .subtitle {
-      font-size: 1.5rem;
-      margin-bottom: 30px;
-      font-weight: 300;
-      letter-spacing: 2px;
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeInUp 1.5s ease forwards 0.8s;
-      color: #f8f8f8;
-    }
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    @media (max-width: 768px) {
-      #landing-overlay h1 {
-        font-size: 3rem;
-        letter-spacing: 3px;
-      }
-      #landing-overlay .subtitle {
-        font-size: 1.2rem;
-      }
-      #landing-overlay .explore-btn {
-        padding: 12px 30px;
-        font-size: 1rem;
-      }
-    }
-    @media (max-width: 480px) {
-      #landing-overlay h1 {
-        font-size: 2.2rem;
-        letter-spacing: 2px;
-      }
-      #landing-overlay .subtitle {
-        font-size: 1rem;
-      }
-      #landing-overlay .explore-btn {
-        padding: 10px 25px;
-        font-size: 0.9rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peta Wisata Kutai Barat</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Landing overlay styles */
+        #landing-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            width: 100vw; height: 100vh;
+            background-image: url('https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Beluq1.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            transition: opacity 0.6s cubic-bezier(.4,1.3,.5,1), visibility 0.6s;
+        }
+        #landing-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: -1;
+        }
+        #landing-overlay .container {
+            max-width: 1200px;
+            padding: 0 20px;
+            z-index: 1;
+        }
+        #landing-overlay h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1.5s ease forwards 0.5s;
+            color: #ffffff;
+            position: relative;
+        }
+        #landing-overlay h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #FF9A3D, #FF6B6B);
+            border-radius: 2px;
+        }
+        #landing-overlay .explore-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 40px;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #FF9A3D, #FF6B6B);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 106, 107, 0.4);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1.5s ease forwards 1s;
+        }
+        #landing-overlay .explore-btn i {
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+        #landing-overlay .explore-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 106, 107, 0.6);
+        }
+        #landing-overlay .explore-btn:hover i {
+            transform: translateX(5px);
+        }
+        #landing-overlay .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            font-weight: 300;
+            letter-spacing: 2px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1.5s ease forwards 0.8s;
+            color: #f8f8f8;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @media (max-width: 768px) {
+            #landing-overlay h1 {
+                font-size: 3rem;
+                letter-spacing: 3px;
+            }
+            #landing-overlay .subtitle {
+                font-size: 1.2rem;
+            }
+            #landing-overlay .explore-btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            #landing-overlay h1 {
+                font-size: 2.2rem;
+                letter-spacing: 2px;
+            }
+            #landing-overlay .subtitle {
+                font-size: 1rem;
+            }
+            #landing-overlay .explore-btn {
+                padding: 10px 25px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div id="landing-overlay">
-    <div class="container">
-      <h1>WISATA KUTAI BARAT</h1>
-      <p class="subtitle">Keindahan Alam yang Memukau di Kalimantan Timur</p>
-      <a href="#" class="explore-btn">Jelajahi <i class="fas fa-arrow-right"></i></a>
+    <div id="landing-overlay">
+        <div class="container">
+            <h1>WISATA KUTAI BARAT</h1>
+            <p class="subtitle">Keindahan Alam yang Memukau di Kalimantan Timur</p>
+            <a href="#" class="explore-btn">Jelajahi <i class="fas fa-arrow-right"></i></a>
+        </div>
     </div>
-  </div>
 
-  <div class="header" id="header">
-    <h1>Peta Wisata Kutai Barat</h1>
-    <button id="close-header" class="close-btn">×</button>
-  </div>
-  
-  <div class="search-box">
-    <i class="fas fa-search search-icon"></i>
-    <input type="text" id="search-input" placeholder="Cari destinasi wisata...">
-  </div>
-  
-  <div id="map"></div>
-  
-  <button id="show-header-btn" class="show-header-btn">☰</button>
-  <button id="gps-btn" class="gps-btn">📍</button>
-  
-  <div class="bottom-sheet" id="bottom-sheet">
-    <div class="expand-handle"></div>
-    <div class="bottom-sheet-header" id="sheet-header">
-  <div class="drag-handle"></div>
-  <button class="sheet-expand-btn">↕️</button>
-  <h2 id="sheet-title" style="margin:0; text-align:left; font-size:20px; font-weight:700; position:absolute; left:24px; top:18px; right:auto; width:auto; max-width:60%; z-index:1;">Nama Tempat</h2>
-  <button id="sheet-close-btn" class="sheet-close-btn">×</button>
+    <div class="header" id="header">
+        <h1>Peta Wisata Kutai Barat</h1>
+        <button id="close-header" class="close-btn">×</button>
     </div>
-    <div class="bottom-sheet-content">
-      <div class="sheet-images" id="sheet-images"></div>
-      <p id="sheet-desc">Deskripsi tempat akan muncul di sini.</p>
-      <div class="location-address-container" id="sheet-address-container">
-        <i class="fas fa-map-marker-alt"></i>
-        <span class="location-address" id="sheet-address"></span>
-      </div>
-  <button id="route-btn" class="route-btn">🗺️ Tampilkan Rute</button>
+    
+    <div class="search-box">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="search-input" placeholder="Cari destinasi wisata...">
     </div>
-  </div>
-  
-  <div class="search-overlay" id="search-overlay">
-    <div class="search-overlay-header">
-      <button id="search-overlay-close" class="search-overlay-close">×</button>
+    
+    <div id="map"></div>
+    
+    <button id="show-header-btn" class="show-header-btn">☰</button>
+    <button id="gps-btn" class="gps-btn">📍</button>
+    
+    <div class="bottom-sheet" id="bottom-sheet">
+        <div class="expand-handle"></div>
+        <div class="bottom-sheet-header" id="sheet-header">
+            <div class="drag-handle"></div>
+            <button class="sheet-expand-btn">↕️</button>
+            <h2 id="sheet-title" style="margin:0; text-align:left; font-size:20px; font-weight:700; position:absolute; left:16px; top:28px; right:auto; width:auto; max-width:60%; z-index:1;">Nama Tempat</h2>
+            <button id="sheet-close-btn" class="sheet-close-btn">×</button>
+        </div>
+        <div class="bottom-sheet-content">
+            <div id="sheet-single-result">
+                <div class="sheet-images" id="sheet-images"></div>
+                <div class="sheet-details-scrollable">
+                    <p id="sheet-desc" style="padding-top: 15px; line-height: 1.6; color: #c9cede;"></p>
+                    <div id="sheet-address-container" class="location-address-container" style="display: none;">
+                         <p id="sheet-address" class="location-address"></p>
+                    </div>
+                    
+                    <button id="route-btn" class="route-btn">🗺️ Tampilkan Rute</button>
+                </div>
+            </div>
+            <div id="sheet-multi-results" style="display: none;"></div>
+        </div>
     </div>
-    <div class="search-results-list" id="search-results-list"></div>
-  </div>
-  
-  <div class="gps-permission-modal" id="gps-permission-modal">
-    <div class="gps-permission-content">
-      <h2>Akses Lokasi</h2>
-      <p>Izinkan akses lokasi untuk menampilkan posisi Anda di peta dan memberikan rute terbaik ke destinasi wisata.</p>
-      <div class="permission-buttons">
-  <button id="allow-gps" class="permission-btn allow">Izinkan</button>
-      </div>
+    
+    <div class="search-overlay" id="search-overlay">
+        <div class="search-overlay-header">
+            <button id="search-overlay-close" class="search-overlay-close">×</button>
+            <div class="drag-handle"></div>
+        </div>
+        <div class="search-results-list" id="search-results-list"></div>
     </div>
-  </div>
+    
+    <div class="gps-permission-modal" id="gps-permission-modal">
+        <div class="gps-permission-content">
+            <h2>Akses Lokasi</h2>
+            <p>Izinkan akses lokasi untuk menampilkan posisi Anda di peta dan memberikan rute terbaik ke destinasi wisata.</p>
+            <div class="permission-buttons">
+                <button id="allow-gps" class="permission-btn allow">Izinkan</button>
+            </div>
+        </div>
+    </div>
 
-  <div class="map-mode-modal" id="map-mode-modal" style="display:none;">
-  <div class="map-mode-content">
-    <h2>Pilih Mode Peta</h2>
-    <div class="map-mode-options">
-      <div class="map-mode-option" data-mode="default">
-        <img src="https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Putih.jpeg" alt="Peta Putih" width="60" style="border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.18);border:2px solid #3498db;">
-        <span>Default</span>
-      </div>
-      <div class="map-mode-option" data-mode="satellite">
-        <img src="https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Satelit.jpeg" alt="Peta Satelit" width="60" style="border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.18);border:2px solid #888;">
-        <span>Satelit</span>
-      </div>
-      <div class="map-mode-option" data-mode="dark">
-        <img src="https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Gelap.jpeg" alt="Peta Gelap" width="60" style="border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.18);border:2px solid #222;">
-        <span>Mode Gelap</span>
-      </div>
+    <div class="map-mode-modal" id="map-mode-modal" style="display:none;">
+        <div class="map-mode-content">
+            <h2>Pilih Mode Peta</h2>
+            <div class="map-mode-options">
+                <div class="map-mode-option" data-mode="default">
+                    <img src="https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Putih.jpeg" alt="Peta Putih" width="60" style="border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.18);border:2px solid #3498db;">
+                    <span>Default</span>
+                </div>
+                <div class="map-mode-option" data-mode="satellite">
+                    <img src="https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Satelit.jpeg" alt="Peta Satelit" width="60" style="border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.18);border:2px solid #888;">
+                    <span>Satelit</span>
+                </div>
+                <div class="map-mode-option" data-mode="dark">
+                    <img src="https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Gelap.jpeg" alt="Peta Gelap" width="60" style="border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.18);border:2px solid #222;">
+                    <span>Mode Gelap</span>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
-  <script src="script.js"></script>
-  <script>
-    // Tambahan efek untuk meningkatkan interaktivitas landing
-    document.addEventListener('DOMContentLoaded', function() {
-      const exploreBtn = document.querySelector('.explore-btn');
-      exploreBtn.addEventListener('mouseenter', function() {
-        this.style.background = 'linear-gradient(45deg, #FF6B6B, #FF9A3D)';
-      });
-      exploreBtn.addEventListener('mouseleave', function() {
-        this.style.background = 'linear-gradient(45deg, #FF9A3D, #FF6B6B)';
-      });
-      exploreBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const overlay = document.getElementById('landing-overlay');
-        overlay.style.opacity = 0;
-        overlay.style.visibility = 'hidden';
-        setTimeout(() => overlay.style.display = 'none', 600);
-      });
-    });
-  </script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

@@ -1,132 +1,105 @@
 /* Modal Pilih Mode Peta */
 .map-mode-modal {
-  position: fixed;
-  top: 0; left: 0; width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.7);
-  z-index: 3000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.7);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .map-mode-content {
-  background: #242833;
-  border-radius: 18px;
-  padding: 32px 24px 28px;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-  color: #fff;
-  min-width: 320px;
-  max-width: 90vw;
-  text-align: center;
+    background: #242833;
+    border-radius: 18px;
+    padding: 32px 24px 28px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    color: #fff;
+    min-width: 320px;
+    max-width: 90vw;
+    text-align: center;
 }
 .map-mode-content h2 {
-  margin-top: 0;
-  margin-bottom: 18px;
-  font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 1.5rem;
 }
 .map-mode-options {
-  display: flex;
-  gap: 22px;
-  justify-content: center;
+    display: flex;
+    gap: 22px;
+    justify-content: center;
 }
 .map-mode-option {
-  background: #23272f;
-  border-radius: 12px;
-  padding: 18px 12px 10px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
-  min-width: 90px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-  border: 2px solid transparent;
+    background: #23272f;
+    border-radius: 12px;
+    padding: 18px 12px 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+    min-width: 90px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    border: 2px solid transparent;
 }
 .map-mode-option:hover, .map-mode-option.selected {
-  background: #2d3340;
-  box-shadow: 0 4px 16px rgba(52,152,219,0.18);
-  border: 2px solid #3498db;
-  transform: translateY(-2px) scale(1.04);
+    background: #2d3340;
+    box-shadow: 0 4px 16px rgba(52,152,219,0.18);
+    border: 2px solid #3498db;
+    transform: translateY(-2px) scale(1.04);
 }
 .map-mode-option span {
-  margin-top: 10px;
-  font-size: 1.08rem;
-  font-weight: 600;
+    margin-top: 10px;
+    font-size: 1.08rem;
+    font-weight: 600;
 }
-.map-mode-illustration {
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
-  margin-bottom: 2px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.map-mode-illustration.default {
-  background: linear-gradient(135deg, #b7eaff 60%, #eaf6ff 100%);
-  border: 2px solid #3498db;
-  position: relative;
-}
-.map-mode-illustration.default::after {
-  content: '\1F30D'; /* globe emoji */
-  font-size: 2rem;
-  position: absolute;
-  left: 50%; top: 50%; transform: translate(-50%,-50%);
-}
-.map-mode-illustration.satellite {
-  background: linear-gradient(135deg, #b6b6b6 60%, #eaeaea 100%);
-  border: 2px solid #888;
-  position: relative;
-}
-.map-mode-illustration.satellite::after {
-  content: '\1F30E'; /* earth americas emoji */
-  font-size: 2rem;
-  position: absolute;
-  left: 50%; top: 50%; transform: translate(-50%,-50%);
-}
-.map-mode-illustration.dark {
-  background: linear-gradient(135deg, #23272f 60%, #444 100%);
-  border: 2px solid #222;
-  position: relative;
-}
-.map-mode-illustration.dark::after {
-  content: '\1F319'; /* crescent moon emoji */
-  font-size: 2rem;
-  position: absolute;
-  left: 50%; top: 50%; transform: translate(-50%,-50%);
-}
-/* Tombol Tampilkan Rute lebih berwarna dan menarik */
+
 .route-btn {
-  background: linear-gradient(45deg, #78FFFB, #0047ab) !important;
-  color: #fff !important;
-  border: none;
-  border-radius: 50px !important;
-  font-weight: 600;
-  font-size: 1.1rem;
-  letter-spacing: 1px;
-  text-transform: none;
-  box-shadow: 0 5px 15px rgba(63, 167, 255, 0.25);
-  padding: 12px 32px !important;
-  transition: all 0.3s cubic-bezier(0.22,0.61,0.36,1);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+    margin-left: 20px;
+    background: linear-gradient(45deg, #78FFFB, #0047ab) !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 50px !important;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-transform: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 12px 32px !important;
+    transition: all 0.25s cubic-bezier(0.22,0.61,0.36,1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
 }
+
 .route-btn:hover {
-  transform: translateY(-3px) scale(1.03);
-  box-shadow: 0 8px 24px rgba(120, 255, 251, 0.35);
-  background: linear-gradient(45deg, #0047ab, #78FFFB) !important;
+    background: linear-gradient(45deg, #89f7fe, #66a6ff) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
+
+.route-btn:active {
+    transform: translateY(0px) scale(0.98);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.route-btn.active {
+    background: #e74c3c !important;
+}
+.route-btn.active:hover {
+    background: #c0392b !important;
+}
+
 :root{
-  --mini-height: 84px; /* tinggi sheet saat mini */
-  --half-height: 50%; /* tinggi sheet saat 50% */
+    --mini-height: 105px;
+    --half-height: 60%;
 }
 *{box-sizing:border-box}
 body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 #map { height:100%; background: #1c202a; }
 
-/* Header, Search, GPS, Bottom Sheet */
 .header { position: fixed; top: 0; left: 0; right: 0; height: 60px; background: rgba(0, 0, 0, 0.85); color: white; display: flex; align-items: center; justify-content: center; z-index: 1000; transition: transform 0.3s ease; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
 .header h1 { margin: 0; font-size: 18px; font-weight: 600; text-align: center; padding: 0 50px; }
 .close-btn { position: absolute; right: 15px; background: rgba(255, 255, 255, 0.2); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.2s ease; }
@@ -139,213 +112,219 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .gps-btn.active { background:#3498db; box-shadow: 0 0 10px rgba(52, 152, 219, 0.7); }
 .gps-btn.loading { animation: pulse 1.5s infinite; }
 @keyframes pulse {
-  0% { background-color: rgba(0,0,0,0.7); }
-  50% { background-color: rgba(52, 152, 219, 0.7); }
-  100% { background-color: rgba(0,0,0,0.7); }
+    0% { background-color: rgba(0,0,0,0.7); }
+    50% { background-color: rgba(52, 152, 219, 0.7); }
+    100% { background-color: rgba(0,0,0,0.7); }
 }
 .leaflet-top.leaflet-left { top:130px !important; transition: top 0.3s ease; }
 
-/* ============== BOTTOM SHEET UPDATED ============== */
-.bottom-sheet { 
-  position:fixed; 
-  left:0; 
-  right:0; 
-  bottom:0; 
-  height: var(--half-height);
-  background:#242833; 
-  color:#fff; 
-  border-radius:16px 16px 0 0; 
-  box-shadow:0 -2px 10px rgba(0,0,0,0.4); 
-  z-index:1200;
-  display:flex; 
-  flex-direction:column; 
-  transform: translateY(100%);
-  transition: transform 0.28s cubic-bezier(0.22,0.61,0.36,1), height 0.28s cubic-bezier(0.22,0.61,0.36,1); 
-  touch-action: none; 
-  will-change: transform, height;
-  overflow: hidden;
+/* --- PERBAIKAN TOTAL BAGIAN BOTTOM SHEET --- */
+.bottom-sheet {
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    background:#242833;
+    color:#fff;
+    border-radius:16px 16px 0 0;
+    box-shadow:0 -2px 10px rgba(0,0,0,0.4);
+    z-index:1200;
+    display:flex; /* HARUS flex */
+    flex-direction:column; /* HARUS column */
+    transform: translateY(100%);
+    transition: transform 0.28s cubic-bezier(0.22,0.61,0.36,1), height 0.28s cubic-bezier(0.22,0.61,0.36,1);
+    touch-action: none;
+    will-change: transform, height;
+    overflow: hidden; /* HARUS hidden */
 }
 
 .bottom-sheet.show { visibility: visible; }
-.bottom-sheet.half { 
-  transform: translateY(0);
-  height: 42%;
+
+.bottom-sheet.half {
+    transform: translateY(0);
+    height: var(--half-height);
 }
-.bottom-sheet.full { 
-  transform: translateY(0);
-  height: 85%;
+.bottom-sheet.full {
+    transform: translateY(0);
+    height: 85%;
 }
-.bottom-sheet.mini { 
-  height: var(--mini-height);
-  transform: translateY(calc(100% - var(--mini-height)));
+.bottom-sheet.mini {
+    height: var(--mini-height);
+    transform: translateY(calc(100% - var(--mini-height)));
 }
 
-/* Expand Handle */
+.bottom-sheet-content {
+    flex: 1; /* WAJIB, agar mengisi sisa ruang */
+    display: flex; /* WAJIB, untuk mengatur anak-anaknya */
+    flex-direction: column;
+    min-height: 0; /* WAJIB, untuk mencegah bug aneh di flexbox */
+}
+
+#sheet-single-result {
+    flex: 1; /* WAJIB, agar mengisi sisa ruang di .bottom-sheet-content */
+    display: flex; /* WAJIB, untuk mengatur gambar dan area scroll */
+    flex-direction: column;
+    padding: 0 16px;
+    min-height: 0; /* WAJIB, ini adalah kunci utama agar anak-nya bisa scroll */
+}
+
+.sheet-details-scrollable {
+    flex-grow: 1; /* WAJIB, agar mengisi sisa ruang setelah gambar */
+    overflow-y: auto; /* WAJIB, INI YANG MEMBUAT SCROLL MUNCUL */
+    padding: 0 0 40px; /* Padding di bawah agar tombol rute tidak mepet */
+}
+
+.sheet-images {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+    height: 28vh;
+    max-height: 320px;
+    flex-shrink: 0; /* WAJIB, agar ukurannya tidak menyusut */
+    margin-bottom: 0;
+    padding-bottom: 0;
+    margin-top: 28px;
+    padding-left: 0;
+    padding-right: 0;
+    box-sizing: border-box;
+}
+
+.sheet-images::-webkit-scrollbar {
+    display: none;
+}
+
+.sheet-images:empty {
+    display: none;
+}
+
+.sheet-images img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    scroll-snap-align: start;
+}
+
+.sheet-details-scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+.sheet-details-scrollable::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sheet-details-scrollable::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+    border: 2px solid #242833;
+}
+/* --- AKHIR DARI PERBAIKAN TOTAL --- */
+
 .expand-handle {
-  position: absolute;
-  top: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60px;
-  height: 20px;
-  background: #242833;
-  border-radius: 10px 10px 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 1201;
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 20px;
+    background: #242833;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1201;
 }
 
 .expand-handle::after {
-  content: "";
-  width: 30px;
-  height: 4px;
-  background: rgba(255,255,255,0.3);
-  border-radius: 2px;
-  transition: background 0.2s ease;
+    content: "";
+    width: 30px;
+    height: 4px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 2px;
+    transition: background 0.2s ease;
 }
 
 .expand-handle:hover::after {
-  background: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.5);
 }
 
-.bottom-sheet-header { 
-  padding:10px; 
-  text-align:center; 
-  cursor:grab; 
-  background: transparent; 
-  border-radius: 16px 16px 0 0; 
-  user-select:none; 
-  position: relative;
-  padding-top: 20px; /* Extra space for expand handle */
+.bottom-sheet-header {
+    padding:10px;
+    text-align:center;
+    cursor:grab;
+    background: transparent;
+    border-radius: 16px 16px 0 0;
+    user-select:none;
+    position: relative;
+    padding-top: 20px;
 }
 
-.drag-handle { width:50px; height:6px; background:#7b8190; border-radius:3px; margin:6px auto 0; opacity:0.9; }
-.bottom-sheet-content { padding:14px 16px 18px; overflow-y:auto; flex:1; }
-.sheet-close-btn { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255, 255, 255, 0.1); color: #fff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease; }
+#sheet-title {
+    color: #fff;
+}
+
+.drag-handle { width:50px; height:6px; background:#7b8190; border-radius:3px; margin:-1px auto 0; opacity:0.9; }
+.sheet-close-btn { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255, 255, 255, 0.1); color: #fff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease; z-index: 2; }
 .sheet-close-btn:hover { background: rgba(255, 255, 255, 0.2); }
 .sheet-expand-btn { position: absolute; top: 12px; left: 12px; width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255, 255, 255, 0.1); color: #fff; font-size: 14px; cursor: pointer; display: none; align-items: center; justify-content: center; transition: background 0.2s ease; }
 .sheet-expand-btn:hover { background: rgba(255, 255, 255, 0.2); }
 .bottom-sheet.mini .sheet-expand-btn { display: none !important; }
 
-/* Konten berdasarkan state */
-.bottom-sheet.mini #sheet-desc, 
-.bottom-sheet.mini #sheet-desc,
-.bottom-sheet.mini .sheet-images {
-  display: none;
-}
-
-.bottom-sheet.half .sheet-images {
-  max-height: 120px;
-  overflow-y: hidden;
-}
-
-.bottom-sheet.half #sheet-desc {
-  max-height: 100px;
-  overflow-y: auto;
-}
-
-.bottom-sheet.full #sheet-desc {
-  max-height: none;
-  overflow-y: auto;
-}
-
-.bottom-sheet.full .sheet-images {
-  max-height: none;
-}
-
 .header.hidden { transform: translateY(-100%); }
 .header.hidden + #map .search-box { top: 10px; }
 .header.hidden + #map .leaflet-top.leaflet-left { top: 80px !important; }
-.bottom-sheet-content::-webkit-scrollbar { width:8px }
-.bottom-sheet-content::-webkit-scrollbar-thumb { background:#3a4050; border-radius:8px }
 
-/* ============== STYLE GALERI GAMBAR ============== */
-.sheet-images { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 12px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: #3a4050 #242833; scroll-snap-type: x mandatory; }
-.sheet-images::-webkit-scrollbar { height: 6px; }
-.sheet-images::-webkit-scrollbar-thumb { background-color: #3a4050; border-radius: 3px; }
-.sheet-images img { 
-  display: block; 
-  width: auto; 
-  height: 320px; 
-  max-height: 60vh; 
-  object-fit: cover; 
-  border-radius: 8px; 
-  scroll-snap-align: start; 
-}
-.sheet-images:empty { display: none; }
-
-/* ============== STYLE ALAMAT BARU ============== */
 .location-address-container {
-  margin-top: 15px;
-  padding-top: 0;
-  border-top: none;
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #c9cede;
-  font-size: 13px;
+    margin-top: 15px;
+    padding-top: 0;
+    border-top: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #c9cede;
+    font-size: 13px;
 }
 .location-address-container::before {
-  content: "•";
-  color: #6c7280;
-  font-size: 20px;
-  line-height: 1;
-  position: absolute;
-  left: 0;
-  top: -10px;
-  background: #242833;
-  padding: 0 5px;
-  transform: translateX(-50%);
+    content: "•";
+    color: #6c7280;
+    font-size: 20px;
+    line-height: 1;
+    position: absolute;
+    left: 0;
+    top: -10px;
+    background: #242833;
+    padding: 0 5px;
+    transform: translateX(-50%);
 }
 .location-address {
-  flex-grow: 1;
-  line-height: 1.4;
-  padding-left: 20px;
+    flex-grow: 1;
+    line-height: 1.4;
+    padding-left: 20px;
 }
 
-/* Marker custom (Ikon Wisata) */
 .custom-marker {
-  transition: transform 0.3s ease;
-  cursor: pointer;
-  overflow: visible; /* agar efek glow tidak terpotong dan tidak membentuk kotak */
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    overflow: visible;
 }
 .custom-marker > div {
-  transition: box-shadow 0.3s cubic-bezier(0.22,0.61,0.36,1), transform 0.3s cubic-bezier(0.22,0.61,0.36,1);
-  box-shadow: none;
-  background: transparent;
-  border-radius: 50%;
-  overflow: visible;
+    transition: box-shadow 0.3s cubic-bezier(0.22,0.61,0.36,1), transform 0.3s cubic-bezier(0.22,0.61,0.36,1);
+    box-shadow: none;
+    background: transparent;
+    border-radius: 50%;
+    overflow: visible;
 }
-.custom-marker.jantur > div {
-  box-shadow: none;
-}
-.custom-marker.danau > div {
-  box-shadow: none;
-}
-.custom-marker.pulau > div {
-  box-shadow: none;
-}
-.custom-marker.sungai > div {
-  box-shadow: none;
-}
+
 .custom-marker.active {
-  transform: scale(1.15);
-  z-index: 1000 !important;
+    transform: scale(1.2);
+    z-index: 1000 !important;
+    filter: none !important;
 }
 
-/* Remove marker glow: ensure active markers do not get animated box-shadow */
-.custom-marker.active > div {
-  /* disable any glow animation or box-shadow */
-  animation: none !important;
-  box-shadow: none !important;
-}
-
-/* Remove per-type active glow variables/rules
-   (If there are specific .custom-marker.active.<type> > div rules earlier,
-    delete or neutralize them. Below are overrides to be certain.) */
+.custom-marker.active > div,
 .custom-marker.active.jantur > div,
 .custom-marker.active.danau > div,
 .custom-marker.active.pulau > div,
@@ -353,70 +332,12 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .custom-marker.active.gunung > div,
 .custom-marker.active.rekreasi > div,
 .custom-marker.active.budaya > div {
-  --marker-glow: none;
-  box-shadow: none !important;
-  animation: none !important;
+    box-shadow: none !important;
+    animation: none !important;
+    filter: none !important;
+    --marker-glow: none !important;
 }
 
-/* If @keyframes marker-glow-fadein exists elsewhere, it can be left but won't be used.
-   Optionally remove that keyframes block from the file to clean up. */
-
-/* Warna label dan glow untuk Gunung & Alun-Alun (rekreasi) */
-.location-label.gunung { color: #9b59b6; }
-
-.custom-marker.active.gunung > div,
-.custom-marker.active.gunung > .marker-inner {
-  --marker-glow: 0 0 0 8px rgba(155,89,182,0.32), 0 0 16px 4px rgba(155,89,182,0.18);
-}
-
-.location-label.rekreasi { color: #f1c40f; }
-.custom-marker.active.rekreasi > div,
-.custom-marker.active.rekreasi > .marker-inner {
-  --marker-glow: 0 0 0 8px rgba(241,196,15,0.32), 0 0 16px 4px rgba(243,156,18,0.18);
-}
-
-.location-label {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 4px 8px;
-    text-align: left;
-    pointer-events: none;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 250px;
-    filter: none;
-    transition: color 0.3s ease, filter 0.3s ease, font-weight 0.3s ease;
-    display: none;
-}
-
-.labels-visible .location-label {
-    display: block;
-}
-
-.location-label.jantur { color: #5dade2; }
-.location-label.danau { color: #58d68d; }
-.location-label.pulau { color: #ec7063; }
-.location-label.sungai { color: #48C9B0; }
-.location-label.gunung { color: #9b59b6; }
-.location-label.rekreasi { color: #f1c40f; }
-.location-label.budaya { color: #d35400; }
-
-.leaflet-tooltip.location-label {
-    transform: translateX(10px);
-    margin-right: -5px;
-}
-
-.location-label.active {
-    color: var(--label-active-color) !important;
-    filter: drop-shadow(0 0 4px currentColor);
-    font-weight: 900;
-}
-
-/* Legend & Controls */
 .map-legend { position: absolute; bottom: 80px; left: 20px; z-index: 1000; background: #242833; padding: 10px; border-radius: 5px; box-shadow: 0 1px 5px rgba(0,0,0,0.4); font-size: 12px; color: white; }
 .map-legend h4 { margin: 0; font-size: 13px; color: white; }
 .legend-item { display: flex; align-items: center; margin-bottom: 5px; }
@@ -431,198 +352,139 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .leaflet-top.leaflet-right { top: 130px !important; transition: top 0.3s ease; }
 .header.hidden + #map .leaflet-top.leaflet-right { top: 80px !important; }
 
-/* Search Overlay - Default (untuk mobile) */
-.search-overlay { 
-  position: fixed; 
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%; 
-  background: #242833; 
-  z-index: 1500; 
-  display: flex; 
-  flex-direction: column; 
-  color: white; 
-  transform: translateY(100%); 
-  transition: transform 0.3s cubic-bezier(0.22,0.61,0.36,1); 
-}
-
-/* Hanya terapkan untuk mobile */
-@media (max-width: 768px) {
-  .search-overlay.show {
-    transform: translateY(0);
-  }
-}
-
-/* ============== DESKTOP SEARCH OVERLAY ============== */
-/* Untuk overlay pencarian desktop dengan ukuran dan posisi bottom sheet */
-@media (min-width: 769px) {
-  .search-overlay.desktop {
+.search-overlay {
     position: fixed;
-    top: auto !important;
-    bottom: 20px;
-    right: 20px;
-    left: auto;
-    width: 400px;
-    height: 50%; /* Tinggi langsung penuh seperti half mode */
-    border-radius: 16px 16px 0 0;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.4);
-    transform: translateY(0);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s cubic-bezier(0.22,0.61,0.36,1), 
-                visibility 0.3s cubic-bezier(0.22,0.61,0.36,1);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #242833;
+    z-index: 1500;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.22,0.61,0.36,1);
     pointer-events: none;
-  }
-  
-  .search-overlay.desktop.show {
-    opacity: 1;
-    visibility: visible;
+    opacity: 0;
+}
+
+.search-overlay.show {
     pointer-events: auto;
+    opacity: 1;
     transform: translateY(0);
-  }
-  
-  /* Header overlay pencarian desktop */
-  .search-overlay.desktop .search-overlay-header {
-    border-radius: 16px 16px 0 0;
-    padding-top: 20px; /* Space untuk drag handle */
-  }
-  
-  /* Drag handle untuk overlay pencarian desktop */
-  .search-overlay.desktop .drag-handle {
-    width: 50px;
-    height: 6px;
-    background: #7b8190;
-    border-radius: 3px;
-    margin: 6px auto 0;
-    opacity: 0.9;
-  }
-  
-  /* Tombol tutup untuk overlay pencarian desktop */
-  .search-overlay.desktop .search-overlay-close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: none;
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .search-overlay.show {
+        transform: translateY(0);
+    }
+}
+
+@media (min-width: 769px) {
+    .search-overlay.desktop {
+        position: fixed;
+        top: auto !important;
+        bottom: 20px;
+        right: 20px;
+        left: auto;
+        width: 400px;
+        height: 50%;
+        border-radius: 16px;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.4);
+        transform: translateY(0);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s cubic-bezier(0.22,0.61,0.36,1),
+                    visibility 0.3s cubic-bezier(0.22,0.61,0.36,1);
+        pointer-events: none;
+    }
+
+    .search-overlay.desktop.show {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+    .search-overlay.desktop .search-overlay-header {
+        border-radius: 16px 16px 0 0;
+        padding-top: 20px;
+    }
+
+    .search-overlay.desktop .drag-handle {
+        width: 50px;
+        height: 6px;
+        background: #7b8190;
+        border-radius: 3px;
+        margin: 6px auto 0;
+        opacity: 0.9;
+        display: block;
+    }
+}
+
+.search-icon {
+    color: white;
+    margin-right: 8px;
     cursor: pointer;
+    user-select: none;
+    font-size: 18px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: background 0.2s ease;
-  }
-  
-  .search-overlay.desktop .search-overlay-close:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
+    position: relative;
 }
 
-/* Tambahan & perbaikan CSS interaksi */
-/* Pastikan pointer pada ikon pencarian */
-.search-icon {
-  color: white;
-  margin-right: 8px;
-  cursor: pointer; /* Tambahkan ini agar bisa diklik */
-  user-select: none;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  position: relative; /* allow absolute child without altering layout */
-}
-
-/* Clear button placed inside the search icon (absolute overlay).
-   This prevents any layout shift — it does not change the icon size or position. */
 .search-icon .search-clear-btn {
-  position: absolute;
-  inset: 0; /* cover the icon area exactly */
-  display: none; /* toggled by JS */
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  border: none;
-  background: transparent; /* keep icon visible underneath if needed */
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
 }
 
-/* Hover effect that does not change layout */
 .search-icon .search-clear-btn:hover {
-  background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.06);
 }
 
-/* Pastikan input search bisa diklik */
 .search-box input {
-  border: none;
-  outline: none;
-  width: 260px;
-  background: transparent;
-  color: white;
-  font-size: 14px;
-  cursor: text; /* Ubah pointer ke text */
+    border: none;
+    outline: none;
+    width: 260px;
+    background: transparent;
+    color: white;
+    font-size: 14px;
+    cursor: text;
 }
 
-/* Pastikan tombol X pada bottom sheet bisa diinteraksi */
-.sheet-close-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease;
-  z-index: 2; /* Pastikan di atas konten lain */
+.search-result-item .result-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; 
 }
 
-/* Pastikan overlay tidak menutupi elemen lain saat tidak aktif */
-.search-overlay {
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s cubic-bezier(0.22,0.61,0.36,1);
-}
-.search-overlay.show {
-  pointer-events: auto;
-  opacity: 1;
-  transform: translateY(0);
+.search-result-address {
+    font-size: 12px;
+    color: #a0a4a8;
+    margin-top: 4px;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    max-width: 100%; 
 }
 
-/* ============== FITUR RUTE & STYLE RUTE ============== */
-.route-btn { background-color: #3498db; color: white; border: none; border-radius: 20px; padding: 10px 18px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background-color 0.2s ease; }
-.route-btn:hover { background-color: #2980b9; }
-.route-btn.active { background-color: #e74c3c; }
-.route-btn.active:hover { background-color: #c0392b; }
-
-.leaflet-routing-container { position: fixed !important; top: auto !important; bottom: 100px !important; right: 10px !important; left: auto !important; width: 320px !important; max-height: 50% !important; background: #242833 !important; color: white !important; border-radius: 8px !important; padding: 10px !important; box-shadow: 0 2px 10px rgba(0,0,0,0.4) !important; overflow-y: auto !important; z-index: 1000 !important; }
-.leaflet-routing-container h2 { display: none; }
-.leaflet-routing-container h3 { margin-top: 0; color: white; font-size: 16px; border-bottom: 1px solid #3a4050; padding-bottom: 8px; }
-.leaflet-routing-alt, .leaflet-routing-alt table { width: 100%; color: white !important; background: transparent !important; }
-.leaflet-routing-alt tr:hover { background-color: #3a4050 !important; }
-.leaflet-routing-alt::-webkit-scrollbar { width: 6px; }
-.leaflet-routing-alt::-webkit-scrollbar-thumb { background: #3a4050; border-radius: 3px; }
-.leaflet-bar a.leaflet-routing-close-btn { position: absolute; top: 5px; right: 5px; width: 24px; height: 24px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; color: white; text-align: center; line-height: 24px; font-size: 16px; text-decoration: none; }
-.leaflet-bar a.leaflet-routing-close-btn:hover { background: rgba(255, 255, 255, 0.2); }
-
-/* GPS Accuracy Circle */
 .accuracy-circle { stroke: #3498db; stroke-width: 2; stroke-opacity: 0.4; fill: #3498db; fill-opacity: 0.15; }
 
-/* GPS Permission Modal */
 .gps-permission-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); display: none; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(5px); }
 .gps-permission-content { background: #242833; border-radius: 16px; padding: 24px; max-width: 400px; width: 90%; text-align: center; color: white; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); }
 .gps-permission-content h2 { margin-top: 0; color: white; }
@@ -633,245 +495,291 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .permission-btn.deny { background: rgba(255, 255, 255, 0.1); color: white; }
 .permission-btn.deny:hover { background: rgba(255, 255, 255, 0.2); }
 
-/* Label color & active glow untuk budaya (Taman Budaya Sendawar) */
-.location-label.budaya { color: #d35400; }
-.custom-marker.active.budaya > div {
-  --marker-glow: 0 0 0 8px rgba(211,84,0,0.32), 0 0 16px 4px rgba(211,84,0,0.18);
-}
 
-/* --- Unified bottom-sheet gallery image sizing (single source of truth) --- */
-.sheet-images img {
-  display: block;
-  width: auto;
-  height: 320px;
-  max-height: 60vh;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-/* Gallery khusus untuk Gunung S (grid + responsive scroll on small screens) */
-.gallery {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  max-width: 900px;
-  margin: auto;
-}
-.gallery img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
-  display: block;
-}
-/* Gunung1 besar kiri (rasio 3:4) */
-.big {
-  grid-row: span 2;
-  aspect-ratio: 3 / 4;
-}
-/* Gunung2 & Gunung3 kanan (rasio 9:16) */
-.tall {
-  aspect-ratio: 9 / 16;
-}
-
-/* Mobile: switch gallery to horizontal scroll (snap) */
-@media (max-width: 600px) {
-  .gallery {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding: 10px;
-  }
-  .gallery img {
-    flex: 0 0 auto;
-    scroll-snap-align: center;
-  }
-  .big {
-    aspect-ratio: 3 / 4;
-    width: 70vw;
-  }
-  .tall {
-    aspect-ratio: 9 / 16;
-    width: 70vw;
-  }
-}
-
-/* ============== RESPONSIVE BOTTOM SHEET ============== */
-/* Untuk layar mobile (lebar ≤ 768px) */
 @media (max-width: 768px) {
-  .bottom-sheet {
-    width: 100%; /* Lebar penuh di mobile */
-    left: 0;
-    right: 0;
-  }
+    .bottom-sheet {
+        width: 100%;
+        left: 0;
+        right: 0;
+    }
 }
 
-/* Untuk layar desktop (lebar ≥ 769px) */
 @media (min-width: 769px) {
-  .bottom-sheet {
-    width: 400px; /* Lebar mirip mobile di desktop */
-    left: auto; /* Hapus left:50% */
-    right: 20px; /* Tambahkan right untuk posisi pojok kanan */
-    transform: translateY(100%); /* Hapus translateX(-50%) */
-  }
-  
-  .bottom-sheet.half { 
-    transform: translateY(0); /* Hapus translateX(-50%) */
-  }
-  
-  .bottom-sheet.full { 
-    transform: translateY(0); /* Hapus translateX(-50%) */
-  }
-  
-  .bottom-sheet.mini { 
-    transform: translateY(calc(100% - var(--mini-height))); /* Hapus translateX(-50%) */
-  }
+    .bottom-sheet {
+        width: 400px;
+        left: auto;
+        right: 20px;
+        transform: translateY(100%);
+    }
 
-  /* Hide the small up/down bar and drag handle when bottom-sheet is in default (half) on desktop */
-  .bottom-sheet.half .expand-handle,
-  .bottom-sheet.half .expand-handle::after,
-  .bottom-sheet.half .drag-handle {
-    display: none !important;
-    visibility: hidden !important;
-  }
+    .bottom-sheet.half,
+    .bottom-sheet.full {
+        transform: translateY(0);
+    }
+
+    .bottom-sheet.mini {
+        transform: translateY(calc(100% - var(--mini-height)));
+    }
 }
 
-/* Override: clean close button for search overlay (mobile + desktop),
-   pinned to the far right, no solid white shape — just icon text with subtle hover */
 .search-overlay .search-overlay-close,
 .search-overlay.desktop .search-overlay-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 36px;               /* slightly larger tappable area */
-  height: 36px;
-  padding: 0;
-  border: none;
-  background: transparent;   /* CLEAN: no white shape */
-  color: #ffffff;
-  font-size: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background 0.18s ease, transform 0.12s ease, color 0.18s ease;
-  z-index: 5;
-  outline: none;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.18s ease, transform 0.12s ease, color 0.18s ease;
+    z-index: 5;
+    outline: none;
 }
 
-/* subtle hover (no solid white) */
 .search-overlay .search-overlay-close:hover,
 .search-overlay.desktop .search-overlay-close:hover {
-  background: rgba(255,255,255,0.04);
-  transform: scale(1.03);
+    background: rgba(255,255,255,0.04);
+    transform: scale(1.03);
 }
 
-/* keyboard focus visible */
 .search-overlay .search-overlay-close:focus,
 .search-overlay.desktop .search-overlay-close:focus {
-  box-shadow: 0 0 0 4px rgba(255,255,255,0.06);
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.06);
 }
 
-/* Ensure the search overlay header provides enough vertical space so results
-   (icons) don't sit higher than the close button. Keep header clean. */
 .search-overlay .search-overlay-header {
-  min-height: 56px; /* reserve vertical space for the close icon */
-  padding: 10px 16px 6px 16px; /* top right bottom left */
-  box-sizing: border-box;
+    min-height: 56px;
+    padding: 10px 16px 6px 16px;
+    box-sizing: border-box;
 }
 
-/* Default results list spacing (mobile & general) */
-.search-results-list {
-  padding: 8px 12px 16px 12px; /* give breathing room from top and left */
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Each result: keep icon and name away from left edge and spaced nicely */
 .search-result-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  cursor: pointer;
-  border-bottom: 1px solid rgba(58,64,80,0.6);
-  box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #3a4050;
+    box-sizing: border-box;
 }
 
-/* Icon container fixed width so icon never touches left edge */
 .search-result-item .icon-container {
-  flex: 0 0 48px;
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 2px; /* small left offset from list padding */
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 2px;
 }
 
-/* Ensure name has left padding and does not collapse to the edge */
 .search-result-item .result-name {
-  flex: 1 1 auto;
-  padding-left: 4px;
-  word-break: break-word;
+    flex: 1 1 auto;
+    padding-left: 4px;
+    word-break: break-word;
 }
 
-/* Matched character styling (search overlay). Color taken from --match-color set by JS */
 .search-result-item .char-match {
-  color: var(--match-color, #ffffff);
-  font-weight: 800;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  transition: color 0.18s ease, text-shadow 0.18s ease, transform 0.12s ease;
-  text-decoration: none;
+    color: var(--match-color, #ffffff);
+    font-weight: 800;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: color 0.18s ease, text-shadow 0.18s ease, transform 0.12s ease;
+    text-decoration: none;
 }
 
-/* pulse keyframes used only when .match-animate is applied */
 @keyframes match-pulse {
-  0% {
-    text-shadow: 0 0 0 rgba(0,0,0,0);
-    transform: translateY(0);
-    font-weight: 700;
-  }
-  40% {
-    text-shadow: 0 0 10px var(--match-color, #fff), 0 0 18px rgba(0,0,0,0.06);
-    transform: translateY(-1px);
-    font-weight: 900;
-  }
-  100% {
-    text-shadow: 0 0 0 rgba(0,0,0,0);
-    transform: translateY(0);
-    font-weight: 700;
-  }
+    0% {
+        transform: translateY(0);
+        font-weight: 700;
+    }
+    40% {
+        transform: translateY(-1px);
+        font-weight: 900;
+    }
+    100% {
+        transform: translateY(0);
+        font-weight: 700;
+    }
 }
 
-/* only run animation when JS adds .match-animate */
 .search-result-item .char-match.match-animate {
-  animation: match-pulse 900ms ease 0s 1;
-  /* ensure bold during animation */
-  font-weight: 900;
+    animation: match-pulse 900ms ease 0s 1;
+    font-weight: 900;
 }
 
-/* Desktop: push results further down so they never overlap with close button,
-   and add a touch more left padding for desktop layout */
-@media (min-width: 769px) {
-  .search-overlay.desktop .search-results-list {
-    padding-top: 72px; /* ensure results start well below the close icon */
-    padding-left: 16px;
-    padding-right: 12px;
-  }
+#sheet-multi-results {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 40px 16px 8px 16px;
+}
+.multi-result-card {
+    display: flex;
+    gap: 12px;
+    background: rgba(45, 51, 64, 0.7);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    border: 1px solid #3a4050;
+}
+.multi-result-card:hover {
+    background: #3a4050;
+}
+.multi-card-image {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+.multi-card-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+    min-width: 0;
+}
+.multi-card-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+}
+.multi-card-route-btn {
+    background: linear-gradient(45deg, #78FFFB, #0047ab) !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 20px !important;
+    font-size: 0.8rem;
+    padding: 6px 14px !important;
+    align-self: flex-start;
+    margin-top: 8px;
+    cursor: pointer;
+}
 
-  /* slightly larger icon container on desktop for visual balance */
-  .search-overlay.desktop .search-result-item .icon-container {
-    flex: 0 0 52px;
-    width: 52px;
-    height: 52px;
-  }
+.bottom-sheet.mini .sheet-images,
+.bottom-sheet.mini #sheet-desc,
+.bottom-sheet.mini #sheet-address-container {
+    display: none !important;
+}
 
-  .search-overlay.desktop .search-result-item {
-    padding-left: 8px; /* extra left breathing room */
-    padding-right: 12px;
-  }
+.bottom-sheet.mini #sheet-title {
+    visibility: visible;
+    top: 22px !important;
+    left: 16px !important;
+    font-size: 1.05rem !important;
+    font-weight: 600 !important;
+    max-width: calc(100% - 60px) !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bottom-sheet.mini .bottom-sheet-header {
+    height: 25px;
+    padding-top: 10px;
+    cursor: pointer;
+}
+
+.bottom-sheet.mini .drag-handle {
+    display: block;
+}
+
+.bottom-sheet.mini .bottom-sheet-content {
+    height: calc(var(--mini-height) - 25px);
+    padding: 0;
+    overflow: visible;
+}
+
+.bottom-sheet.mini .sheet-details-scrollable {
+    overflow: hidden;
+    padding: 0;
+}
+
+.bottom-sheet.mini #route-btn {
+    display: inline-flex !important;
+    position: absolute;
+    top: 58px;
+    left: 16px;
+    margin: 0 !important;
+    background: linear-gradient(45deg, #78FFFB, #0047ab) !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 50px !important;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    padding: 6px 16px !important;
+    gap: 6px;
+    transition: all 0.2s ease;
+    z-index: 5;
+}
+.bottom-sheet.mini #route-btn:hover {
+    background: linear-gradient(45deg, #89f7fe, #66a6ff) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+.bottom-sheet.mini #route-btn.active,
+.bottom-sheet.mini #route-btn.active:hover {
+    background: #c0392b !important;
+}
+
+.leaflet-tooltip.location-label {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 2px !important;
+    opacity: 0;
+    transition: opacity 0.6s ease-out;
+    will-change: transform;
+}
+
+.leaflet-tooltip.location-label.visible {
+    opacity: 1;
+}
+
+.leaflet-tooltip.location-label::before {
+    content: none !important;
+}
+
+.location-label {
+    color: white;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-shadow:
+        -1.5px -1.5px 0 var(--outline-color, black),
+         1.5px -1.5px 0 var(--outline-color, black),
+        -1.5px  1.5px 0 var(--outline-color, black),
+         1.5px  1.5px 0 var(--outline-color, black);
+    transition: transform 0.2s ease, text-shadow 0.2s ease;
+}
+
+.location-label.jantur { --outline-color: #5dade2; }
+.location-label.danau { --outline-color: #58d68d; }
+.location-label.pulau { --outline-color: #ec7063; }
+.location-label.sungai { --outline-color: #48C9B0; }
+.location-label.gunung { --outline-color: #9b59b6; }
+.location-label.rekreasi { --outline-color: #f1c40f; }
+.location-label.budaya { --outline-color: #d35400; }
+
+.location-label.active {
+    transform: scale(1.1);
+    font-weight: 900 !important;
+}
+
+/* ===== MENGHILANGKAN SCROLLBAR DI HASIL PENCARIAN ===== */
+.search-results-list {
+    padding: 8px 12px 16px 12px;
+    overflow-y: hidden;
 }
