@@ -794,9 +794,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Tampilkan informasi rute di bottom sheet
     showRouteInfoInSheet(destinationData.name, distanceKm, timeMinutes);
-    
-    routeBtn.textContent = '❌ Hapus Rute';
-    routeBtn.classList.add('active');
   }
 
   // ================== TAMPILKAN INFO RUTE DI BOTTOM SHEET ==================
@@ -809,24 +806,14 @@ document.addEventListener('DOMContentLoaded', function() {
       routeInfoContainer.id = 'route-info-container';
       routeInfoContainer.className = 'route-info-container';
       routeInfoContainer.innerHTML = `
-        <div class="route-info-header">
-          <h3>Informasi Rute</h3>
-        </div>
         <div class="route-info-content">
           <div class="route-info-item">
-            <span class="route-label">Tujuan:</span>
-            <span class="route-value">${destinationName}</span>
-          </div>
-          <div class="route-info-item">
-            <span class="route-label">Jarak:</span>
+            <span class="route-label">Jarak =</span>
             <span class="route-value">${distance} km</span>
           </div>
           <div class="route-info-item">
-            <span class="route-label">Perkiraan Waktu:</span>
+            <span class="route-label">Perkiraan Waktu =</span>
             <span class="route-value">${time} menit</span>
-          </div>
-          <div class="route-note">
-            <small>Catatan: Menggunakan rute garis lurus sebagai perkiraan</small>
           </div>
         </div>
       `;
@@ -837,9 +824,8 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       // Update konten jika sudah ada
       const values = routeInfoContainer.querySelectorAll('.route-value');
-      values[0].textContent = destinationName;
-      values[1].textContent = distance + ' km';
-      values[2].textContent = time + ' menit';
+      values[0].textContent = distance + ' km';
+      values[1].textContent = time + ' menit';
       routeInfoContainer.style.display = 'block';
     }
 
