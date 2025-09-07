@@ -19,6 +19,106 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // ================== STYLE UNTUK MODAL RUTE ==================
+  const routeModalStyle = document.createElement('style');
+  routeModalStyle.textContent = `
+    .route-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .route-modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .route-modal-content {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      width: 90%;
+      max-width: 350px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      transform: translateY(-20px);
+      transition: transform 0.3s ease;
+    }
+
+    .route-modal.show .route-modal-content {
+      transform: translateY(0);
+    }
+
+    .route-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+
+    .route-modal-header h3 {
+      margin: 0;
+      color: #2c3e50;
+      font-size: 18px;
+    }
+
+    .route-modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #7f8c8d;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .route-modal-close:hover {
+      color: #e74c3c;
+    }
+
+    .route-info-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding: 8px 0;
+    }
+
+    .route-label {
+      font-weight: 600;
+      color: #34495e;
+    }
+
+    .route-value {
+      color: #2c3e50;
+      text-align: right;
+    }
+
+    .route-note {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #eee;
+      color: #7f8c8d;
+      font-size: 12px;
+      text-align: center;
+    }
+  `;
+  document.head.appendChild(routeModalStyle);
+
   // ================== MAP INIT ==================
   const gpsBtn = document.getElementById('gps-btn');
   gpsBtn.style.display = 'none';
@@ -214,14 +314,14 @@ document.addEventListener('DOMContentLoaded', function() {
   }, {
     name: "Alun-Alun ITHO",
     coords: [-0.23862117722493723, 115.69625164623564],
-    desc: "Terletak di samping Kantor Bupati Kutai Barat, Alun-Alun Itho menjadi pusat kegiatan masyarakat sekaligus ruang terbaku hijau favorit warga. Setiap akhir pekan, alun-alun ramai dikunjungi untuk olahraga, bersantai, maupun menikmati kuliner UMKM lokal. Suasananya semakin hidup dengan pedagang kaki lima yang menjajakan camilan tradisional seperti jagung rebus, kacang rebus, hingga minuman segar. Tempat ini cocok untuk rekreasi keluarga, berkumpul bersama teman, atau sekadar menikmati sore di jantung kota Kutai Barat.",
+    desc: "Terletak di samping Kantor Bupati Kutai Barat, Alun-Alun Itho menjadi pusat kegiatan masyarakat sekaligus ruang terbuka hijau favorit warga. Setiap akhir pekan, alun-alun ramai dikunjungi untuk olahraga, bersantai, maupun menikmati kuliner UMKM lokal. Suasananya semakin hidup dengan pedagang kaki lima yang menjajakan camilan tradisional seperti jagung rebus, kacang rebus, hingga minuman segar. Tempat ini cocok untuk rekreasi keluarga, berkumpul bersama teman, atau sekadar menikmati sore di jantung kota Kutai Barat.",
     type: "rekreasi",
     images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Alun1.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Alun2.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Alun3.jpeg"],
     address: "Barong Tongkok, West Kutai Regency, East Kalimantan 75777"
   }, {
     name: "Taman Budaya Sendawar",
     coords: [-0.22185993973042262, 115.70466809882845],
-    desc: "Dikenal sebagai \"Lamin Enam Etnis,\" TBS merupakan pusat budaya Kutai Barat yang menampilkan enam lamin (rumah adat) dari Dayak Ahoeng, Benuaq, Tanjung, Kenyah, dan etnis Melayu. Bangunan berbentuk huruf U ini didominasi kayu ulin dengan ukiran khas tiap etnis, menjadikannya destinasi wisata budaya yang memukau dan penuh nilai sejarah.",
+    desc: "Dikenal sebagai \"Lamin Enam Etnis,\" TBS merupakan pusat budaya Kutai Barat yang menampilkan seis lamin (rumah adat) dari Dayak Ahoeng, Benuaq, Tanjung, Kenyah, dan etnis Melayu. Bangunan berbentuk huruf U ini didominasi kayu ulin dengan ukiran khas tiap etnis, menjadikannya destinasi wisata budaya yang memukau dan penuh nilai sejarah.",
     type: "budaya",
     images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tbs1.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tbs2.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Tbs3.jpeg"],
     address: "QPH3+5VV, Jl. Sendawar Raya, Barong Tongkok, Kec. Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur 75777"
@@ -630,7 +730,7 @@ document.addEventListener('DOMContentLoaded', function() {
     map.boxZoom.disable();
     map.keyboard.disable();
 
-    allowGpsBtn.addEventListener('click', () => {
+    allowGpsBtn.addEventListener('click', () {
       permissionModal.style.display = 'none';
       gpsBtn.classList.add('loading');
       map.scrollWheelZoom.enable();
@@ -792,10 +892,77 @@ document.addEventListener('DOMContentLoaded', function() {
     const distanceKm = (distance / 1000).toFixed(1);
     const timeMinutes = Math.round(distance / 1000 * 3); // Asumsi 3 menit per km
 
-    alert(`Rute perkiraan ke ${destinationData.name}\nJarak: ${distanceKm} km\nPerkiraan Waktu: ${timeMinutes} menit\n\n(Catatan: Menggunakan rute garis lurus)`);
+    // Tampilkan modal info rute yang lebih baik
+    showRouteInfoModal(destinationData.name, distanceKm, timeMinutes);
     
     routeBtn.textContent = '❌ Hapus Rute';
     routeBtn.classList.add('active');
+  }
+
+  // ================== MODAL INFO RUTE ==================
+  function showRouteInfoModal(destinationName, distance, time) {
+    // Buat modal jika belum ada
+    let routeModal = document.getElementById('route-info-modal');
+    
+    if (!routeModal) {
+      routeModal = document.createElement('div');
+      routeModal.id = 'route-info-modal';
+      routeModal.className = 'route-modal';
+      routeModal.innerHTML = `
+        <div class="route-modal-content">
+          <div class="route-modal-header">
+            <h3>Informasi Rute</h3>
+            <button class="route-modal-close">&times;</button>
+          </div>
+          <div class="route-modal-body">
+            <div class="route-info-item">
+              <span class="route-label">Tujuan:</span>
+              <span class="route-value">${destinationName}</span>
+            </div>
+            <div class="route-info-item">
+              <span class="route-label">Jarak:</span>
+              <span class="route-value">${distance} km</span>
+            </div>
+            <div class="route-info-item">
+              <span class="route-label">Perkiraan Waktu:</span>
+              <span class="route-value">${time} menit</span>
+            </div>
+            <div class="route-note">
+              <small>Catatan: Menggunakan rute garis lurus sebagai perkiraan</small>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(routeModal);
+
+      // Tambahkan event listener untuk tombol close
+      routeModal.querySelector('.route-modal-close').addEventListener('click', () => {
+        routeModal.classList.remove('show');
+      });
+
+      // Tambahkan event listener untuk menutup modal ketika klik di luar
+      routeModal.addEventListener('click', (e) => {
+        if (e.target === routeModal) {
+          routeModal.classList.remove('show');
+        }
+      });
+
+      // Tambahkan event listener untuk escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && routeModal.classList.contains('show')) {
+          routeModal.classList.remove('show');
+        }
+      });
+    } else {
+      // Update konten modal jika sudah ada
+      const values = routeModal.querySelectorAll('.route-value');
+      values[0].textContent = destinationName;
+      values[1].textContent = distance + ' km';
+      values[2].textContent = time + ' menit';
+    }
+
+    // Tampilkan modal
+    routeModal.classList.add('show');
   }
 
   const routeBtn = document.querySelector('#bottom-sheet #route-btn');
