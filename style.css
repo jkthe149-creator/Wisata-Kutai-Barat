@@ -864,33 +864,3 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
 .bottom-sheet.mini .route-info-container {
     display: none !important;
 }
-
-/* ================== STYLE UNTUK INFO RUTE DI ATAS MARKER (DENGAN EFEK BAYANGAN) ================== */
-.custom-route-info-shape {
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-radius: 8px;
-    padding: 10px 16px;
-    color: white !important;
-    font-size: 13px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    text-align: center;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    /* EFEK BAYANGAN BARU */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 15px rgba(52, 152, 219, 0.4);
-}
-
-.route-info-line {
-    color: white !important;
-    font-weight: 500;
-}
-
-.route-info-line strong {
-    color: white !important;
-    font-weight: 700;
-}

@@ -313,7 +313,6 @@ document.addEventListener('DOMContentLoaded', function() {
   let routeLine = null; 
   let watchId = null;
   let gpsActive = false;
-  let routeInfoShape = null;
 
   const markerZoomThreshold = 10;
   const mapContainer = document.getElementById('map');
@@ -750,9 +749,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ================== FUNGSI RUTE (GARIS LURUS) ==================
   async function calculateAndShowRoute(destinationData) {
-    // Hapus rute dan shape info lama jika ada
+    // Hapus rute lama jika ada
     if (routeLine) map.removeLayer(routeLine);
-    if (routeInfoShape) map.removeLayer(routeInfoShape);
 
     if (!gpsActive || !userLocationMarker) {
       alert("Aktifkan GPS terlebih dahulu untuk menampilkan rute.");
@@ -780,26 +778,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
 
-    // Hitung jarak dan waktu
-    const distance = map.distance(start, end);
-    const distanceKm = (distance / 1000).toFixed(1);
-    const timeMinutes = Math.round(distance / 1000 * 3);
-
-    // Buat shape info di atas marker
-    const shapeHtml = `
-      <span class="route-info-line">Jarak: <strong>${distanceKm} km</strong></span>
-      <span class="route-info-line">Waktu: <strong>${timeMinutes} mnt</strong></span>
-  ` ;
-    const routeInfoIcon = L.divIcon({
-      className: 'custom-route-info-shape',
-      html: shapeHtml,
-      iconAnchor: [0, 95]
-    });
-
-    routeInfoShape = L.marker(destinationData.coords, {
-      icon: routeInfoIcon,
-      zIndexOffset: 2000
-    }).addTo(map);
   }
 
   const routeBtn = document.querySelector('#bottom-sheet #route-btn');
@@ -951,9 +929,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function showSheet(loc) {
-    // Hapus rute dan shape saat ganti lokasi
+    // Hapus rute saat ganti lokasi
     if (routeLine) map.removeLayer(routeLine);
-    if (routeInfoShape) map.removeLayer(routeInfoShape);
 
     sheetMultiResults.style.display = 'none';
     sheetSingleResult.style.display = 'flex';
@@ -989,9 +966,8 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function hideSheet() {
-    // Hapus rute dan shape saat sheet ditutup
+    // Hapus rute saat sheet ditutup
     if (routeLine) map.removeLayer(routeLine);
-    if (routeInfoShape) map.removeLayer(routeInfoShape);
     
     setSheetState(sheetStates.HIDDEN);
     clearAllHighlights();
