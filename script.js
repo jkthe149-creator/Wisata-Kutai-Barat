@@ -315,6 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
   let routeLine = null; 
   let watchId = null;
   let gpsActive = false;
+  let routeInfoShape = null; // PERUBAHAN BARU: Variabel untuk menyimpan shape info rute
 
   const markerZoomThreshold = 10;
   const mapContainer = document.getElementById('map');
@@ -751,10 +752,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // ================== FUNGSI RUTE (GARIS LURUS) ==================
   async function calculateAndShowRoute(destinationData) {
-    if (routeLine) {
-      map.removeLayer(routeLine);
-      routeLine = null;
-    }
+    // Hapus rute dan shape info lama jika ada
+    if (routeLine) map.removeLayer(routeLine);
+    if (routeInfoShape) map.removeLayer(routeInfoShape);
 
     if (!gpsActive || !userLocationMarker) {
       alert("Aktifkan GPS terlebih dahulu untuk menampilkan rute.");
@@ -765,76 +765,49 @@ document.addEventListener('DOMContentLoaded', function() {
     const start = userLocationMarker.getLatLng();
     const end = L.latLng(destinationData.coords[0], destinationData.coords[1]);
 
-    // Buat garis lurus antara lokasi pengguna dan tujuan
+    // Buat garis lurus
     routeLine = L.polyline([start, end], {
-      color: '#3498db',
-      weight: 6,
-      opacity: 0.8,
-      lineJoin: 'round',
-      dashArray: '10, 10',
-      dashOffset: '0'
+      color: '#3498db', weight: 5, opacity: 0.8, dashArray: '10, 10'
     }).addTo(map);
 
     // Animasi garis rute
     let offset = 0;
     const animateDash = () => {
+      if (!routeLine) return;
       offset = (offset + 1) % 20;
       routeLine.setStyle({dashOffset: offset});
       requestAnimationFrame(animateDash);
     };
     animateDash();
 
-    // Fit bounds untuk menampilkan seluruh rute
     map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
 
-    // Hitung jarak dan waktu perkiraan
+    // Hitung jarak dan waktu
     const distance = map.distance(start, end);
     const distanceKm = (distance / 1000).toFixed(1);
-    const timeMinutes = Math.round(distance / 1000 * 3); // Asumsi 3 menít per km
+    const timeMinutes = Math.round(distance / 1000 * 3);
 
-    // Tampilkan informasi rute di bottom sheet
-    showRouteInfoInSheet(destinationData.name, distanceKm, timeMinutes);
-  }
+    // PERUBAHAN BARU: Buat shape info di atas marker
+    const shapeHtml = `
+      <div class="custom-route-info-shape">
+          <span class="route-info-line">Jarak: <strong>${distanceKm} km</strong></span>
+          <span class="route-info-line">Waktu: <strong>${timeMinutes} mnt</strong></span>
+      </div>
+    `;
 
-  // ================== TAMPILKAN INFO RUTE DI BOTTOM SHEET ==================
-  function showRouteInfoInSheet(destinationName, distance, time) {
-    // Buat elemen untuk menampilkan info rute
-    let routeInfoContainer = document.getElementById('route-info-container');
-    
-    if (!routeInfoContainer) {
-      routeInfoContainer = document.createElement('div');
-      routeInfoContainer.id = 'route-info-container';
-      routeInfoContainer.className = 'route-info-container';
-      routeInfoContainer.innerHTML = `
-        <div class="route-info-content">
-          <div class="route-info-item">
-            <span class="route-label">Jarak =</span>
-            <span class="route-value">${distance} km</span>
-          </div>
-          <div class="route-info-item">
-            <span class="route-label">Perkiraan Waktu =</span>
-            <span class="route-value">${time} menit</span>
-          </div>
-        </div>
-      `;
-      
-      // Sisipkan setelah deskripsi
-      const sheetDesc = document.getElementById('sheet-desc');
-      sheetDesc.parentNode.insertBefore(routeInfoContainer, sheetDesc.nextSibling);
-    } else {
-      // Update konten jika sudah ada
-      const values = routeInfoContainer.querySelectorAll('.route-value');
-      values[0].textContent = distance + ' km';
-      values[1].textContent = time + ' menit';
-      routeInfoContainer.style.display = 'block';
-    }
+    const routeInfoIcon = L.divIcon({
+      className: 'route-info-icon-container', // Kontainer transparan
+      html: shapeHtml,
+      iconAnchor: [75, 65] // Anchor (x, y): x=setengah lebar, y=tinggi shape + tinggi marker
+    });
 
-    // Scroll ke info rute
-    routeInfoContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    routeInfoShape = L.marker(destinationData.coords, {
+      icon: routeInfoIcon,
+      zIndexOffset: 2000 // Pastikan selalu di atas
+    }).addTo(map);
   }
 
   const routeBtn = document.querySelector('#bottom-sheet #route-btn');
-
   routeBtn.addEventListener('click', async () => {
     const currentLocName = sheetTitle.textContent;
     const destinationData = wisata.find(w => w.name === currentLocName);
@@ -983,6 +956,10 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function showSheet(loc) {
+    // PERUBAHAN BARU: Hapus rute dan shape saat ganti lokasi
+    if (routeLine) map.removeLayer(routeLine);
+    if (routeInfoShape) map.removeLayer(routeInfoShape);
+
     sheetMultiResults.style.display = 'none';
     sheetSingleResult.style.display = 'flex';
 
@@ -1009,43 +986,19 @@ document.addEventListener('DOMContentLoaded', function() {
       sheetImages.style.display = 'flex';
     }
 
-    // Sembunyikan info rute saat menampilkan tempat baru
-    const routeInfoContainer = document.getElementById('route-info-container');
-    if (routeInfoContainer) {
-      routeInfoContainer.style.display = 'none';
-    }
-
-    if (routeLine) {
-        map.removeLayer(routeLine);
-        routeLine = null;
-    }
-    routeBtn.textContent = '🗺️ Tampilkan Rute';
-    routeBtn.classList.remove('active');
-
     setSheetState(sheetStates.HALF);
   }
 
   function minimizeSheet() {
     setSheetState(sheetStates.MINI);
-    clearAllHighlights();
-    updateVisibility();
   }
 
   function hideSheet() {
+    // PERUBAHAN BARU: Hapus rute dan shape saat sheet ditutup
+    if (routeLine) map.removeLayer(routeLine);
+    if (routeInfoShape) map.removeLayer(routeInfoShape);
+    
     setSheetState(sheetStates.HIDDEN);
-    if (routeLine) {
-        map.removeLayer(routeLine);
-        routeLine = null;
-    }
-    routeBtn.textContent = '🗺️ Tampilkan Rute';
-    routeBtn.classList.remove('active');
-    
-    // Sembunyikan info rute
-    const routeInfoContainer = document.getElementById('route-info-container');
-    if (routeInfoContainer) {
-      routeInfoContainer.style.display = 'none';
-    }
-    
     clearAllHighlights();
     dragging = false;
     sheetMultiResults.style.display = 'none';
@@ -1116,7 +1069,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   map.on('click', function(e) {
     if (!e.originalEvent.propagatedFromMarker && sheet.classList.contains('show')) {
-      setSheetState(sheetStates.MINI);
+      minimizeSheet();
     }
   });
 
