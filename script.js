@@ -310,7 +310,8 @@ document.addEventListener('DOMContentLoaded', function() {
   let activeMarker = null;
   let userLocationMarker = null;
   let accuracyCircle = null;
-  let routeLine = null; 
+  let routeLine = null;
+  let routeInfoTooltip = null; 
   let watchId = null;
   let gpsActive = false;
 
@@ -561,6 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   function showSearchOverlay() {
+    clearRouteDisplay();
     populateSearchResults();
     if (clearSearchBtn) {
       clearSearchBtn.style.display = searchInput.value.trim() ? 'block' : 'none';
@@ -734,7 +736,8 @@ document.addEventListener('DOMContentLoaded', function() {
       map.removeLayer(accuracyCircle);
       accuracyCircle = null;
     }
-
+    
+    clearRouteDisplay();
     gpsBtn.classList.remove('active');
     gpsActive = false;
   }
@@ -748,9 +751,19 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // ================== FUNGSI RUTE (GARIS LURUS) ==================
+  function clearRouteDisplay() {
+      if (routeLine) {
+          map.removeLayer(routeLine);
+          routeLine = null;
+      }
+      if (routeInfoTooltip) {
+          map.removeLayer(routeInfoTooltip);
+          routeInfoTooltip = null;
+      }
+  }
+
   async function calculateAndShowRoute(destinationData) {
-    // Hapus rute lama jika ada
-    if (routeLine) map.removeLayer(routeLine);
+    clearRouteDisplay();
 
     if (!gpsActive || !userLocationMarker) {
       alert("Aktifkan GPS terlebih dahulu untuk menampilkan rute.");
@@ -761,12 +774,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const start = userLocationMarker.getLatLng();
     const end = L.latLng(destinationData.coords[0], destinationData.coords[1]);
 
-    // Buat garis lurus
+    // Calculate distance and time
+    const distanceMeters = start.distanceTo(end);
+    const distanceKm = (distanceMeters / 1000).toFixed(1);
+
+    const avgSpeedKmh = 40; // Assume average speed of 40 km/h
+    const timeHours = distanceMeters / (1000 * avgSpeedKmh);
+    const timeMinutes = Math.round(timeHours * 60);
+    let timeString;
+    if (timeMinutes < 60) {
+        timeString = `~${timeMinutes} menit`;
+    } else {
+        const hours = Math.floor(timeMinutes / 60);
+        const minutes = timeMinutes % 60;
+        timeString = `~${hours} jam ${minutes} menit`;
+    }
+
+    // Create and add the route line
     routeLine = L.polyline([start, end], {
       color: '#3498db', weight: 5, opacity: 0.8, dashArray: '10, 10'
     }).addTo(map);
 
-    // Animasi garis rute
+    // Animate the route line
     let offset = 0;
     const animateDash = () => {
       if (!routeLine) return;
@@ -776,8 +805,21 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     animateDash();
 
-    map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
+    // Create and add the info tooltip marker
+    const tooltipContent = `<div class="route-info-tooltip">
+                              <span><i class="fas fa-road"></i> ${distanceKm} km</span>
+                              <span><i class="fas fa-clock"></i> ${timeString}</span>
+                           </div>`;
 
+    routeInfoTooltip = L.marker(end, {
+        icon: L.divIcon({
+            className: 'leaflet-div-icon',
+            html: tooltipContent,
+            iconAnchor: [80, 55] 
+        })
+    }).addTo(map);
+
+    map.fitBounds(routeLine.getBounds(), { padding: [80, 80] });
   }
 
   const routeBtn = document.querySelector('#bottom-sheet #route-btn');
@@ -929,8 +971,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function showSheet(loc) {
-    // Hapus rute saat ganti lokasi
-    if (routeLine) map.removeLayer(routeLine);
+    clearRouteDisplay();
 
     sheetMultiResults.style.display = 'none';
     sheetSingleResult.style.display = 'flex';
@@ -966,8 +1007,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function hideSheet() {
-    // Hapus rute saat sheet ditutup
-    if (routeLine) map.removeLayer(routeLine);
+    clearRouteDisplay();
     
     setSheetState(sheetStates.HIDDEN);
     clearAllHighlights();
