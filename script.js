@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }, {
     name: "Alun-Alun ITHO",
     coords: [-0.23862117722493723, 115.69625164623564],
-    desc: "Terletak di samping Kantor Bupati Kutai Barat, Alun-Alun Itho menjadi pusat kegiatan masyarakat sekaligus ruang terbuka hijau favorit warga. Setiap akhir pekan, alun-alun ramai dikunjungi untuk olahraga, bersantai, maupun menikmati kuliner UMKM lokal. Suasananya semakin hidup dengan pedagang kaki lima yang menjajakan camilan tradisional seperti jagung rebus, kacang rebus, hingga minuman segar. Tempat ini cocok untuk rekreasi keluarga, berkumpul bersama teman, atau sekadar menikmati sore di jantung kota Kutai Barat.",
+    desc: "Terletak di samping Kantor Bupati Kutai Barat, Alun-Alun Itho menjadi pusat kegiatan masyarakat sekaligus ruang terbaku hijau favorit warga. Setiap akhir pekan, alun-alun ramai dikunjungi untuk olahraga, bersantai, maupun menikmati kuliner UMKM lokal. Suasananya semakin hidup dengan pedagang kaki lima yang menjajakan camilan tradisional seperti jagung rebus, kacang rebus, hingga minuman segar. Tempat ini cocok untuk rekreasi keluarga, berkumpul bersama teman, atau sekadar menikmati sore di jantung kota Kutai Barat.",
     type: "rekreasi",
     images: ["https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Alun1.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Alun2.jpeg", "https://jkthe149-creator.github.io/Wisata-Kutai-Barat/Alun3.jpeg"],
     address: "Barong Tongkok, West Kutai Regency, East Kalimantan 75777"
@@ -248,7 +248,6 @@ document.addEventListener('DOMContentLoaded', function() {
     updateVisibility();
   }
 
-  // FUNGSI BARU DITAMBAHKAN KEMBALI
   function determineLabelDirection(coords, index) {
       return index % 2 === 0 ? 'right' : 'left';
   }
@@ -394,7 +393,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // ===== FUNGSI DIPERBARUI =====
   async function showMarkersAnimated() {
     // Menghapus marker lama jika ada
     markers.forEach(m => {
@@ -751,41 +749,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // ================== FUNGSI RUTE ==================
-  // Tambahkan fungsi utilitas untuk decode polyline
-  L.PolylineUtil = {
-    decode: function(encoded) {
-      var points = [];
-      var index = 0, len = encoded.length;
-      var lat = 0, lng = 0;
-      
-      while (index < len) {
-        var b, shift = 0, result = 0;
-        do {
-          b = encoded.charCodeAt(index++) - 63;
-          result |= (b & 0x1f) << shift;
-          shift += 5;
-        } while (b >= 0x20);
-        var dlat = ((result & 1) ? ~(result >> 1) : (result >> 1));
-        lat += dlat;
-
-        shift = 0;
-        result = 0;
-        do {
-          b = encoded.charCodeAt(index++) - 63;
-          result |= (b & 0x1f) << shift;
-          shift += 5;
-        } while (b >= 0x20);
-        var dlng = ((result & 1) ? ~(result >> 1) : (result >> 1));
-        lng += dlng;
-
-        points.push([lat * 1e-5, lng * 1e-5]);
-      }
-      
-      return points;
-    }
-  };
-
+  // ================== FUNGSI RUTE (GARIS LURUS) ==================
   async function calculateAndShowRoute(destinationData) {
     if (routeLine) {
       map.removeLayer(routeLine);
@@ -801,79 +765,37 @@ document.addEventListener('DOMContentLoaded', function() {
     const start = userLocationMarker.getLatLng();
     const end = L.latLng(destinationData.coords[0], destinationData.coords[1]);
 
-    try {
-      // Menggunakan domain backend yang benar
-      const response = await fetch('https://wisata-kutai-barat-backend.vercel.app/api/osm/protected', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          start: [start.lat, start.lng], 
-          end: [end.lat, end.lng]
-        })
-      });
+    // Buat garis lurus antara lokasi pengguna dan tujuan
+    routeLine = L.polyline([start, end], {
+      color: '#3498db',
+      weight: 6,
+      opacity: 0.8,
+      lineJoin: 'round',
+      dashArray: '10, 10',
+      dashOffset: '0'
+    }).addTo(map);
 
-      if (!response.ok) throw new Error(`Server error: ${response.status}`);
+    // Animasi garis rute
+    let offset = 0;
+    const animateDash = () => {
+      offset = (offset + 1) % 20;
+      routeLine.setStyle({dashOffset: offset});
+      requestAnimationFrame(animateDash);
+    };
+    animateDash();
 
-      const routeData = await response.json();
-      
-      // Decode polyline geometry
-      const routeGeometry = L.PolylineUtil.decode(routeData.geometry);
-      const latLngs = routeGeometry.map(point => L.latLng(point[0], point[1]));
-      
-      // Buat polyline dengan style yang mencolok
-      routeLine = L.polyline(latLngs, {
-        color: '#3498db',
-        weight: 6,
-        opacity: 0.9,
-        lineJoin: 'round',
-        dashArray: '10, 10',
-        dashOffset: '0'
-      }).addTo(map);
+    // Fit bounds untuk menampilkan seluruh rute
+    map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
 
-      // Animasi garis rute
-      let offset = 0;
-      const animateDash = () => {
-        offset = (offset + 1) % 20;
-        routeLine.setStyle({dashOffset: offset});
-        requestAnimationFrame(animateDash);
-      };
-      animateDash();
+    // Hitung jarak dan waktu perkiraan
+    const distance = map.distance(start, end);
+    const distanceKm = (distance / 1000).toFixed(1);
+    const timeMinutes = Math.round(distance / 1000 * 3); // Asumsi 3 menit per km
 
-      // Fit bounds untuk menampilkan seluruh rute
-      map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
-
-      const distanceKm = (routeData.distance / 1000).toFixed(1);
-      const timeMinutes = Math.round(routeData.duration / 60);
-
-      alert(`Rute ke ${destinationData.name}\nJarak: ${distanceKm} km\nWaktu: ${timeMinutes} menit`);
-      
-      routeBtn.textContent = '❌ Hapus Rute';
-      routeBtn.classList.add('active');
-
-    } catch (error) {
-      console.error("Gagal mengambil rute:", error);
-      alert("Gagal memuat rute. Pastikan backend berjalan dan terhubung.");
-      
-      // Fallback: buat garis lurus jika backend tidak tersedia
-      routeLine = L.polyline([start, end], {
-        color: '#3498db',
-        weight: 4,
-        opacity: 0.7,
-        dashArray: '15, 10'
-      }).addTo(map);
-      
-      map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
-      
-      // Hitung jarak dan waktu perkiraan
-      const distance = map.distance(start, end);
-      const distanceKm = (distance / 1000).toFixed(1);
-      const timeMinutes = Math.round(distance / 1000 * 3); // Asumsi 3 menit per km
-      
-      alert(`Rute perkiraan ke ${destinationData.name}\nJarak: ${distanceKm} km\nPerkiraan Waktu: ${timeMinutes} menit\n\n(Catatan: Menggunakan rute garis lurus karena server tidak tersedia)`);
-      
-      routeBtn.textContent = '❌ Hapus Rute';
-      routeBtn.classList.add('active');
-    }
+    alert(`Rute perkiraan ke ${destinationData.name}\nJarak: ${distanceKm} km\nPerkiraan Waktu: ${timeMinutes} menit\n\n(Catatan: Menggunakan rute garis lurus)`);
+    
+    routeBtn.textContent = '❌ Hapus Rute';
+    routeBtn.classList.add('active');
   }
 
   const routeBtn = document.querySelector('#bottom-sheet #route-btn');
