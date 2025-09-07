@@ -881,6 +881,7 @@ body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, 
     gap: 2px;
     min-width: 120px;
     text-align: center;
+    transform: translate(-50%, -115%);
 }
 
 .route-info-line {

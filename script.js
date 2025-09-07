@@ -795,7 +795,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const routeInfoIcon = L.divIcon({
       className: 'custom-route-info-shape', // Langsung gunakan kelas ini
       html: shapeHtml,
-    iconAnchor: [120, 85] // Posisi tengah-atas
+      iconAnchor: [60, 45]
  });
 
     routeInfoShape = L.marker(destinationData.coords, {
