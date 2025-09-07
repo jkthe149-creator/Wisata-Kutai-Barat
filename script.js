@@ -789,11 +789,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // PERUBAHAN BARU: Buat shape info di atas marker
     const shapeHtml = `
-      <div class="custom-route-info-shape">
-          <span class="route-info-line">Jarak: <strong>${distanceKm} km</strong></span>
-          <span class="route-info-line">Waktu: <strong>${timeMinutes} mnt</strong></span>
-      </div>
-    `;
+    <div class="custom-route-info-shape" style="color: white;">
+        <span class="route-info-line">Jarak: <strong>${distanceKm} km</strong></span>
+        <span class="route-info-line">Waktu: <strong>${timeMinutes} mnt</strong></span>
+    </div>
+  `;
+
 
     const routeInfoIcon = L.divIcon({
       className: 'route-info-icon-container', // Kontainer transparan
