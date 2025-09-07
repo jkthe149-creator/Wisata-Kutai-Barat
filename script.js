@@ -789,23 +789,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // PERUBAHAN BARU: Buat shape info di atas marker
     const shapeHtml = `
-    <div class="custom-route-info-shape" style="color: white;">
-        <span class="route-info-line">Jarak: <strong>${distanceKm} km</strong></span>
-        <span class="route-info-line">Waktu: <strong>${timeMinutes} mnt</strong></span>
-    </div>
-  `;
-
-
+      <span class="route-info-line">Jarak: <strong>${distanceKm} km</strong></span>
+      <span class="route-info-line">Waktu: <strong>${timeMinutes} mnt</strong></span>
+  ` ;
     const routeInfoIcon = L.divIcon({
-      className: 'route-info-icon-container', // Kontainer transparan
+      className: 'custom-route-info-shape', // Langsung gunakan kelas ini
       html: shapeHtml,
-      iconAnchor: [75, 65] // Anchor (x, y): x=setengah lebar, y=tinggi shape + tinggi marker
-    });
+    iconAnchor: [60, 85] // Posisi tengah-atas
+ });
 
     routeInfoShape = L.marker(destinationData.coords, {
       icon: routeInfoIcon,
-      zIndexOffset: 2000 // Pastikan selalu di atas
-    }).addTo(map);
+    zIndexOffset: 2000
+   }).addTo(map);
   }
 
   const routeBtn = document.querySelector('#bottom-sheet #route-btn');
