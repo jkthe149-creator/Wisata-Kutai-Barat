@@ -1,3 +1,4 @@
+// MIGRATED CODE: script.js
 // --- Animasi ikon mode peta hanya jika klik tombol Jelajahi ---
 document.addEventListener('DOMContentLoaded', function() {
   const exploreBtn = document.querySelector('.explore-btn');
@@ -61,8 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
     "Satelit": satellite,
     "Mode Gelap": darkLayer
   };
-
-  defaultLayer.addTo(map);
 
   const layerControl = L.control.layers(baseLayers, {
     "Label Jalan & Lokasi": labels
@@ -795,7 +794,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const routeInfoIcon = L.divIcon({
       className: 'custom-route-info-shape', // Langsung gunakan kelas ini
       html: shapeHtml,
-      iconAnchor: [60, 45]
+      iconAnchor: [0, 90]
  });
 
     routeInfoShape = L.marker(destinationData.coords, {
