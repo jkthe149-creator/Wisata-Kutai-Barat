@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peta Wisata Kutai Barat</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+  <style>
+    :root{
+      --mini-height: 84px; /* tinggi sheet saat mini */
+      --medium-height: 70%; /* tinggi sheet saat medium (full) */
+    }
+    *{box-sizing:border-box}
+    body, html { margin:0; padding:0; height:100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    #map { height:100%; background: #1c202a; }
+    /* Header, Search, GPS, Bottom Sheet */
+    .header { position: fixed; top: 0; left: 0; right: 0; height: 60px; background: rgba(0, 0, 0, 0.85); color: white; display: flex; align-items: center; justify-content: center; z-index: 1000; transition: transform 0.3s ease; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+    .header h1 { margin: 0; font-size: 18px; font-weight: 600; text-align: center; padding: 0 50px; }
+    .close-btn { position: absolute; right: 15px; background: rgba(255, 255, 255, 0.2); border: none; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; transition: all 0.2s ease; }
+    .close-btn:hover { background: rgba(255, 255, 255, 0.3); transform: scale(1.1); }
+    .search-box { position:absolute; top:70px; left:50%; transform:translateX(-50%); z-index:1100; background:rgba(0,0,0,0.7); border-radius:20px; padding:8px 15px; transition: top 0.3s ease; display: flex; align-items: center; backdrop-filter: blur(5px); box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+    .search-box input { border:none; outline:none; width:260px; background:transparent; color:white; font-size:14px; cursor: pointer;}
+    .search-box input::placeholder { color:#ccc; }
+    .search-icon { color: white; margin-right: 8px; }
+    .gps-btn { position:absolute; bottom:20px; right:20px; z-index:1100; background:rgba(0,0,0,0.7); color:white; border-radius:50%; cursor:pointer; transition: all 0.3s ease; user-select:none; display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; font-size: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+    .gps-btn:hover { background:rgba(0,0,0,0.8); transform: scale(1.05); }
+    .gps-btn.active { background:#3498db; box-shadow: 0 0 10px rgba(52, 152, 219, 0.7); }
+    .gps-btn.loading { animation: pulse 1.5s infinite; }
+    @keyframes pulse {
+      0% { background-color: rgba(0,0,0,0.7); }
+      50% { background-color: rgba(52, 152, 219, 0.7); }
+      100% { background-color: rgba(0,0,0,0.7); }
+    }
+    .leaflet-top.leaflet-left { top:130px !important; transition: top 0.3s ease; }
+    .bottom-sheet { position:fixed; left:0; right:0; bottom:0; background:#242833; color:#fff; border-radius:16px 16px 0 0; box-shadow:0 -2px 10px rgba(0,0,0,0.4); z-index:1200; display:flex; flex-direction:column; transform: translateY(100%); transition: transform 0.28s cubic-bezier(0.22,0.61,0.36,1); touch-action: none; will-change: transform; }
+    .bottom-sheet.show { visibility: visible; }
+    .bottom-sheet-header { padding:10px; text-align:center; cursor:grab; background: transparent; border-radius: 16px 16px 0 0; user-select:none; position: relative; }
+    .drag-handle { width:50px; height:6px; background:#7b8190; border-radius:3px; margin:6px auto 0; opacity:0.9; }
+    .bottom-sheet-content { padding:14px 16px 18px; overflow-y:auto; flex:1; }
+    .sheet-close-btn { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%; border: none; background: rgba(255, 255, 255, 0.1); color: #fff; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s ease; z-index: 10; }
+    .sheet-close-btn:hover { background: rgba(255, 255, 255, 0.2); }
+    
+    .bottom-sheet.full { 
+      height: var(--medium-height);
+      transform: translateY(calc(100% - var(--medium-height))); 
+    }
+    .bottom-sheet.mini { 
+      height: var(--mini-height); 
+      transform: translateY(calc(100% - var(--mini-height))); 
+    }
+
+    .bottom-sheet.mini #sheet-desc, .bottom-sheet.mini .route-btn, .bottom-sheet.mini #sheet-address-container, .bottom-sheet.mini .image-gallery-wrapper { display:none; } /* Sembunyikan semua konten saat mini */
+    .bottom-sheet.mini #sheet-title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .header.hidden { transform: translateY(-100%); }
+    .header.hidden + #map .search-box { top: 10px; }
+    .header.hidden + #map .leaflet-top.leaflet-left { top: 80px !important; }
+    .bottom-sheet-content::-webkit-scrollbar { width:8px }
+    .bottom-sheet-content::-webkit-scrollbar-thumb { background:#3a4050; border-radius:8px }
+
+    /* STYLE GALERI GAMBAR & MODAL */
+    .image-gallery-wrapper {
+      width: 100%;
+      overflow-x: scroll;
+      cursor: grab;
+      user-select: none;
+      margin: 12px 0;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .image-gallery-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+    .image-gallery-wrapper.grabbing { cursor: grabbing; }
+    .image-gallery-container {
+      height: 240px;
+    }
+    .gallery-container-inner {
+      display: flex;
+      gap: 8px;
+      height: 100%;
+    }
+    .gallery-main-img {
+      flex-shrink: 0;
+      width: 60vw;
+      height: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .gallery-side-stack {
+      flex-shrink: 0;
+      width: 45vw;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .gallery-side-img {
+      flex: 1;
+      min-height: 0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .gallery-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+      background-color: #3a4050;
+      transition: transform 0.2s ease;
+    }
+    .gallery-img:hover { transform: scale(1.03); }
+    .image-modal {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+    .image-modal.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-content {
+      max-width: 90vw;
+      max-height: 90vh;
+      transform: scale(0.8);
+      transition: transform 0.3s ease;
+    }
+    .image-modal.show .modal-content {
+      transform: scale(1);
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 24px;
+      color: white;
+      cursor: pointer;
+      background: rgba(0,0,0,0.5);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Marker custom (Ikon Wisata) */
+    .custom-marker { transition: transform 0.3s ease; cursor: pointer; }
+    .custom-marker > div {
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .custom-marker.active {
+        transform: scale(1.15);
+        z-index: 1000 !important;
+    }
+    .custom-marker.active > div {
+        box-shadow: 0 0 14px 4px var(--icon-color, #fff); /* Efek GLOW */
+    }
+    
+    .location-label {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        color: white;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 4px 8px;
+        text-align: left;
+        pointer-events: none;
+        text-shadow: 0 1px 4px rgba(0,0,0,1), 0 0 6px rgba(0,0,0,1);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 250px;
+    }
+    
+    .location-label.jantur { color: #5dade2; }
+    .location-label.danau { color: #58d68d; }
+    .location-label.pulau { color: #ec7063; }
+    .location-label.sungai { color: #48C9B0; }
+    
+    .location-label.active {
+        font-weight: 800;
+        text-shadow: 0 0 8px currentColor, 0 0 10px currentColor;
+    }
+    
+    .location-label {
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+    .labels-visible .location-label {
+        visibility: visible;
+        opacity: 1;
+    }
+    .location-label.active {
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    /* Legend & Controls */
+    .map-legend { position: absolute; bottom: 80px; left: 20px; z-index: 1000; background: #242833; padding: 10px; border-radius: 5px; box-shadow: 0 1px 5px rgba(0,0,0,0.4); font-size: 12px; color: white; }
+    .map-legend h4 { margin: 0 0 8px 0; font-size: 13px; color: white; }
+    .legend-item { display: flex; align-items: center; margin-bottom: 5px; }
+    .legend-icon { width: 20px; height: 20px; margin-right: 8px; display: flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 12px; }
+    .leaflet-control-zoom, .leaflet-control-layers { border: none !important; background: #242833 !important; box-shadow: 0 1px 5px rgba(0,0,0,0.4) }
+    .leaflet-control-zoom a, .leaflet-control-layers-toggle { background-color: #242833 !important; color: white !important; border: none !important; }
+    .leaflet-control-zoom a { border-bottom: 1px solid #3a4050 !important; }
+    .leaflet-control-zoom a:last-child { border-bottom: none !important; }
+    .leaflet-control-zoom a:hover, .leaflet-control-layers:hover { background-color: #3a4050 !important; }
+    .leaflet-control-layers-expanded { background: #242833 !important; color: white !important; }
+    .show-header-btn { position: fixed; top: 10px; right: 10px; z-index: 1000; background: rgba(0, 0, 0, 0.7); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; display: none; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+    
+    .leaflet-top.leaflet-right {
+      top: 130px !important;
+      transition: top 0.3s ease;
+    }
+    .header.hidden + #map .leaflet-top.leaflet-right {
+      top: 80px !important;
+    }
+    
+    /* Search Overlay */
+    .search-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #242833; z-index: 1500; display: flex; flex-direction: column; color: white; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.22,0.61,0.36,1);
+    }
+    .search-overlay.show { transform: translateY(0); }
+    .search-overlay-header { padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #3a4050; }
+    .search-overlay-header h2 { margin: 0; font-size: 18px; }
+    .search-overlay-close { background: rgba(255, 255, 255, 0.1); border: none; color: white; width: 32px; height: 32px; border-radius: 50%; font-size: 16px; cursor: pointer; }
+    .search-results-list { flex: 1; overflow-y: auto; }
+    .search-result-item { display: flex; align-items: center; padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #3a4050; transition: background-color 0.2s ease; }
+    .search-result-item:hover { background-color: #3a4050; }
+    .search-result-item .icon-container { margin-right: 15px; flex-shrink: 0; }
+    .search-result-details { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 8px; }
+    .search-result-name { font-size: 16px; font-weight: 600; flex-shrink: 0; }
+    .search-result-desc { font-size: 14px; color: #aeb9d1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .search-results-list::-webkit-scrollbar { width: 8px; }
+    .search-results-list::-webkit-scrollbar-thumb { background: #3a4050; border-radius: 8px; }
+    /* FITUR RUTE & STYLE RUTE */
+    .route-btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.2s ease;
+    }
+    .route-btn:hover {
+      background-color: #2980b9;
+    }
+    
+    .route-btn.active {
+      background-color: #e74c3c;
+    }
+    
+    .route-btn.active:hover {
+      background-color: #c0392b;
+    }
+    
+    .leaflet-routing-container {
+      position: fixed !important;
+      top: auto !important;
+      bottom: 100px !important;
+      right: 10px !important;
+      left: auto !important;
+      width: 320px !important;
+      max-height: 50% !important;
+      background: #242833 !important;
+      color: white !important;
+      border-radius: 8px !important;
+      padding: 10px !important;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4) !important;
+      overflow-y: auto !important;
+      z-index: 1000 !important;
+    }
+    
+    .leaflet-routing-container h2 { display: none; }
+    .leaflet-routing-container h3 {
+      margin-top: 0;
+      color: white;
+      font-size: 16px;
+      border-bottom: 1px solid #3a4050;
+      padding-bottom: 8px;
+    }
+    
+    .leaflet-routing-alt, .leaflet-routing-alt table {
+      width: 100%;
+      color: white !important;
+      background: transparent !important;
+    }
+    .leaflet-routing-alt tr:hover {
+        background-color: #3a4050 !important;
+    }
+    
+    .leaflet-routing-alt::-webkit-scrollbar { width: 6px; }
+    .leaflet-routing-alt::-webkit-scrollbar-thumb { background: #3a4050; border-radius: 3px; }
+    
+    .leaflet-bar a.leaflet-routing-close-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 24px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      color: white;
+      text-align: center;
+      line-height: 24px;
+      font-size: 16px;
+      text-decoration: none;
+    }
+    .leaflet-bar a.leaflet-routing-close-btn:hover { background: rgba(255, 255, 255, 0.2); }
+    
+    /* GPS Accuracy Circle */
+    .accuracy-circle {
+      stroke: #3498db;
+      stroke-width: 2;
+      stroke-opacity: 0.4;
+      fill: #3498db;
+      fill-opacity: 0.15;
+    }
+    
+    /* GPS Permission Modal */
+    .gps-permission-modal {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85); display: none; /* Initially hidden */
+      align-items: center; justify-content: center; z-index: 2000;
+      backdrop-filter: blur(5px);
+    }
+    .gps-permission-content {
+      background: #242833; border-radius: 16px; padding: 24px;
+      max-width: 400px; width: 90%; text-align: center; color: white;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+    .gps-permission-content h2 { margin-top: 0; color: white; }
+    .gps-permission-content p { margin-bottom: 24px; color: #c9cede; line-height: 1.5; }
+    .permission-buttons { display: flex; gap: 12px; justify-content: center; }
+    .permission-btn { padding: 12px 24px; border: none; border-radius: 24px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+    .permission-btn.allow { background: #3498db; color: white; }
+    .permission-btn.allow:hover { background: #2980b9; }
+    .permission-btn.deny { background: rgba(255, 255, 255, 0.1); color: white; }
+    .permission-btn.deny:hover { background: rgba(255, 255, 255, 0.2); }
+    
+    @media (max-width: 768px) {
+      .search-box { width: 90%; max-width: 300px; } .search-box input { width: 100%; }
+      .map-legend { bottom: 70px; left: 10px; padding: 8px; }
+      .location-label { font-size: 11px; }
+      .show-header-btn { display: flex; }
+      .leaflet-routing-container {
+        width: calc(100% - 20px) !important;
+        left: 10px !important;
+        right: 10px !important;
+        bottom: 90px !important;
+      }
+      .gps-permission-content { width: 85%; padding: 20px; }
+      .permission-buttons { flex-direction: column; }
+      .search-result-details { flex-direction: column; align-items: flex-start; gap: 2px; }
+      .search-result-desc { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header" id="header"><h1>Peta Wisata Kutai Barat</h1><button class="close-btn" id="close-header">✕</button></div>
+  <button class="show-header-btn" id="show-header-btn">⬆</button>
+  <div id="map"></div>
+  <div class="search-box"><div class="search-icon">🔍</div><input type="text" id="search-input" placeholder="Cari lokasi wisata" readonly></div>
+  <div class="gps-btn" id="gps-btn" title="Lokasi Saya">📍</div>
+  <div class="map-legend">
+    <h4>Kategori Wisata</h4>
+    <div class="legend-item"><div class="legend-icon" style="background-color: #3498db; color: white;">🌊</div><span>Air Terjun (Jantur)</span></div>
+    <div class="legend-item"><div class="legend-icon" style="background-color: #2ecc71; color: white;">🏞️</div><span>Danau</span></div>
+    <div class="legend-item"><div class="legend-icon" style="background-color: #e74c3c; color: white;">🏝️</div><span>Pulau</span></div>
+    <div class="legend-item"><div class="legend-icon" style="background-color: #48C9B0; color: white;">🛶</div><span>Sungai</span></div>
+  </div>
+  <div class="bottom-sheet" id="bottom-sheet" aria-live="polite">
+    <div class="bottom-sheet-header" id="sheet-header"><div class="drag-handle"></div><button class="sheet-close-btn" id="sheet-close-btn">✕</button></div>
+    <div class="bottom-sheet-content" id="sheet-content">
+      
+      <h3 id="sheet-title" style="margin:0;">Judul Lokasi</h3>
+      <button class="route-btn" id="route-btn">🗺️ Tampilkan Rute</button>
+      <div id="gallery-placeholder"></div>
+      <div id="sheet-address-container" style="display: flex; align-items: flex-start; gap: 8px; margin-top: 12px;">
+        <span style="font-size: 18px; color: #7b8190; margin-top: 1px;">📍</span>
+        <p id="sheet-address" style="margin:0; color:#aeb9d1; font-size: 14px; line-height:1.4;">Alamat lengkap akan muncul di sini.</p>
+      </div>
+      <p id="sheet-desc" style="margin:15px 0 0 0; padding-top:15px; border-top: 1px solid #3a4050; color:#c9cede; line-height:1.5;">Deskripsi lokasi muncul di sini...</p>
+      </div>
+  </div>
+  <div class="image-modal" id="image-modal">
+    <span class="modal-close" id="modal-close-btn">&times;</span>
+    <img class="modal-content" id="modal-image">
+  </div>
+  <div class="search-overlay" id="search-overlay">
+    <div class="search-overlay-header">
+      <h2>Cari lokasi wisata</h2>
+      <button class="search-overlay-close" id="search-overlay-close">✕</button>
+    </div>
+    <div class="search-results-list" id="search-results-list"></div>
+  </div>
+  <div class="gps-permission-modal" id="gps-permission-modal">
+    <div class="gps-permission-content">
+      <h2>Akses Lokasi Diperlukan</h2>
+      <p>Aplikasi ini memerlukan akses ke lokasi Anda untuk menampilkan posisi Anda di peta dan memberikan rute yang akurat ke destinasi wisata.</p>
+      <div class="permission-buttons">
+        <button class="permission-btn allow" id="allow-gps">Izinkan Akses Lokasi</button>
+        <button class="permission-btn deny" id="deny-gps">Nanti Saja</button>
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+  <script>
+    // ================== MAP INIT ==================
+    const indonesiaBounds = [[-11.0, 94.0],[6.0, 141.0]];
+    const map = L.map('map',{ 
+      center: [-0.2, 115.6], zoom: 9, minZoom: 4, maxZoom: 18, 
+      maxBounds: indonesiaBounds, maxBoundsViscosity: 1.0, 
+      zoomAnimation: true, zoomAnimationThreshold: 4 
+    });
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    const satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution:'Tiles © Esri' });
+    const labels = L.tileLayer('https://cartodb-basemaps-a.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}{r}.png', { 
+      attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a> & Carto', pane: 'shadowPane'
+    }).addTo(map);
+    
+    L.control.layers({"Default": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'), "Satelit": satellite}, {"Label Jalan & Lokasi": labels}, { position: 'topright' }).addTo(map);
+    
+    // ================== DATA WISATA ==================
+    const wisata = [
+      {name:"Jantur Mapan", coords:[-0.175133, 115.624654], desc:"Air terjun indah dengan kolam alami yang jernih, dikelilingi oleh hutan lebat.", type: "jantur", address: "RJFF+WVM, Jalan Sengkereaq Lacaaq Kampung, Linggang Mapan, Kec. Linggang Bigung, Kabupaten Kutai Barat, Kalimantan Timur 75776"},
+      {
+        name:"Jantur Sengkulai", 
+        coords:[-0.171224, 115.615799], 
+        desc:"Dikenal sebagai 'Tangga Bidadari' karena formasi bebatuannya yang berundak-undak.", 
+        type: "jantur", 
+        address: "RJH8+C8Q, Jl. Sengkereaq Lacaq, Linggang Mapan, Kec. Linggang Bigung, Kabupaten Kutai Barat, Kalimantan Timur 75776",
+        images: [
+          "https://i.imgur.com/k7oXZ5p.jpeg",
+          "https://i.imgur.com/JHKoztR.jpeg",
+          "https://i.imgur.com/HMbIXBj.jpeg"
+        ]
+      },
+      {name:"Jantur Dora", coords:[-0.233265, 115.592426], desc:"Air terjun tersembunyi yang menawarkan ketenangan dan keasrian alam pedalaman.", type: "jantur", address: "QH8R+JX, Balok, Kec. Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur"},
+      {name:"Jantur Tabalas", coords:[-0.171794, 115.570421], desc:"Memiliki debit air yang deras dengan panorama hutan tropis yang masih sangat alami.", type: "jantur", address: "RHHC+658, Jl. Poros Tenggarong Melak, Juhan Asa, Kec. Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur 75776"},
+      {name:"Jantur Inar", coords:[-0.298955, 115.547921], desc:"Spot wisata populer dengan beberapa tingkatan air terjun dan area piknik yang nyaman.", type: "jantur", address: "PG2X+85V, Terajuk, Nyuatan, Kabupaten Kutai Barat, Kalimantan Timur 75777"},
+      {name:"Danau Aco", coords:[-0.166611, 115.544450], desc:"Danau vulkanik di dataran tinggi dengan air berwarna kebiruan yang menenangkan.", type: "danau", address: "RGMV+7QQ, Linggang Melapeh, Linggang Bigung, Kabupaten Kutai Barat, Kalimantan Timur"},
+      {name:"Danau Jempang Tanjung Isuy", coords:[-0.509459, 116.149478], desc:"Danau terluas di Kutai Barat, kaya akan budaya Dayak dan rumah terapung.", type: "danau", address: "F4RX+5QQ, Tanjung Isuy, Jempang, Kabupaten Kutai Barat, Kalimantan Timur 75773"},
+      {name:"Pulau Lanting", coords:[-0.495314, 116.191875], desc:"Desa terapung unik di tengah Danau Jempang dengan kehidupan masyarakat tradisional.", type: "pulau", address: "Jempang, Kabupaten Kutai Barat, Kalimantan Timur"},
+      {name:"Batuq Bura Lakan Bilem", coords:[-0.128331, 115.426489], desc:"Formasi batuan karst alami di tepi sungai yang dipercaya memiliki nilai sakral.", type: "sungai", address: "VCCG+JJJ, Lakan Bilem, Nyuatan, Kabupaten Kutai Barat, Kalimantan Timur 75776"},
+      {name:"Wisata Air Hemaq Beniung", coords:[-0.165157, 115.681563], desc:"Pemandian alam dengan air sungai yang sangat jernih dan menyegarkan di tengah hutan.", type: "danau", address: "RMMJ+VJ4, Juaq Asa, Barong Tongkok, Kabupaten Kutai Barat, Kalimantan Timur 75776"},
+      {name:"Danau Tajan", coords:[-0.069131, 115.670522], desc:"Danau kecil yang eksotis, seringkali tertutup kabut tipis pada pagi hari.", type: "danau", address: "WMJC+76, Jelemuq, Tering, Kabupaten Kutai Barat, Kalimantan Timur"},
+      {name:"Danau Beluq", coords:[-0.320294, 115.515149], desc:"Danau terpencil dengan air jernih berwarna hijau toska, cocok untuk mencari ketenangan.", type: "danau", address: "MGH8+R34, Sentalar, Nyuatan, Kabupaten Kutai Barat, Kalimantan Timur"}
+    ];
+    function createIconHTML(type) {
+      let html, bgColor;
+      switch(type) {
+        case "jantur": html = "🌊"; bgColor = "#3498db"; break;
+        case "danau": html = "🏞️"; bgColor = "#2ecc71"; break;
+        case "pulau": html = "🏝️"; bgColor = "#e74c3c"; break;
+        case "sungai": html = "🛶"; bgColor = "#48C9B0"; break;
+        default: html = "📍"; bgColor = "#95a5a6"; break;
+      }
+      return `<div style="background-color: ${bgColor}; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; border: 2px solid white;">${html}</div>`;
+    }
+    function createCustomIcon(type) {
+      const iconHTML = createIconHTML(type);
+      return L.divIcon({ className: 'custom-marker', html: iconHTML, iconSize: [32, 32], iconAnchor: [16, 16] });
+    }
+    let markers = [];
+    let activeMarker = null;
+    let userLocationMarker = null;
+    let accuracyCircle = null;
+    let routingControl = null;
+    let routeActive = false;
+    let watchId = null;
+    let gpsActive = false;
+    
+    function clearAllHighlights() {
+        if (activeMarker) {
+            if (activeMarker._icon) activeMarker._icon.classList.remove('active');
+            const tooltip = activeMarker.getTooltip();
+            if (tooltip && tooltip.getElement()) tooltip.getElement().classList.remove('active');
+            activeMarker = null;
+        }
+    }
+    
+    wisata.forEach((loc)=>{
+      const marker = L.marker(loc.coords, {icon: createCustomIcon(loc.type)}).addTo(map);
+      marker._locData = loc;
+      markers.push(marker);
+      
+      marker.bindTooltip(loc.name, {
+          permanent: true, direction: 'right', offset: [20, 0], className: `location-label ${loc.type}`
+      });
+      
+      marker.on("click",(e)=>{
+        L.DomEvent.stopPropagation(e);
+        clearAllHighlights();
+        
+        const clickedMarker = e.target;
+        clickedMarker._icon.classList.add('active');
+        const tooltip = clickedMarker.getTooltip();
+        if (tooltip && tooltip.getElement()) tooltip.getElement().classList.add('active');
+        activeMarker = clickedMarker;
+        map.flyTo(loc.coords, Math.max(map.getZoom(), 14), { duration: 1.2 });
+        showSheet(loc);
+      });
+    });
+    const labelZoomThreshold = 11;
+    const mapContainer = document.getElementById('map');
+    function updateLabelVisibility() {
+        mapContainer.classList.toggle('labels-visible', map.getZoom() >= labelZoomThreshold);
+    }
+    map.on('zoomend', updateLabelVisibility);
+    updateLabelVisibility();
+    
+    const searchInput = document.getElementById('search-input'),
+          searchOverlay = document.getElementById('search-overlay'),
+          closeSearchBtn = document.getElementById('search-overlay-close'),
+          resultsList = document.getElementById('search-results-list');
+    function populateSearchResults() {
+      resultsList.innerHTML = '';
+      wisata.forEach(loc => {
+        const item = document.createElement('div');
+        item.className = 'search-result-item';
+        item.innerHTML = `
+            <div class="icon-container">${createIconHTML(loc.type)}</div>
+            <div class="search-result-details">
+                <span class="search-result-name">${loc.name}</span>
+                <span class="search-result-desc">${loc.desc}</span>
+            </div>
+        `;
+        item.addEventListener('click', () => {
+          const targetMarker = markers.find(m => m._locData.name === loc.name);
+          if (targetMarker) {
+            targetMarker.fire('click');
+          }
+          hideSearchOverlay();
+        });
+        resultsList.appendChild(item);
+      });
+    }
+    function showSearchOverlay() { searchOverlay.classList.add('show'); }
+    function hideSearchOverlay() { searchOverlay.classList.remove('show'); }
+    searchInput.addEventListener('click', showSearchOverlay);
+    closeSearchBtn.addEventListener('click', hideSearchOverlay);
+    populateSearchResults();
+    // ================== FUNGSI GPS ==================
+    const gpsBtn = document.getElementById('gps-btn');
+    const permissionModal = document.getElementById('gps-permission-modal');
+    const allowGpsBtn = document.getElementById('allow-gps');
+    const denyGpsBtn = document.getElementById('deny-gps');
+    
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        permissionModal.style.display = 'flex';
+      }, 1000);
+    });
+    
+    function requestLocationPermission() {
+      if (!navigator.geolocation) {
+        alert("Browser Anda tidak mendukung geolocation");
+        return;
+      }
+      
+      permissionModal.style.display = 'none';
+      gpsBtn.classList.add('loading');
+      
+      navigator.geolocation.getCurrentPosition(
+        () => { startWatchingPosition(); },
+        (error) => {
+          gpsBtn.classList.remove('loading');
+          handleLocationError(error);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+    
+    function startWatchingPosition() {
+      if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+      
+      const options = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 };
+      
+      watchId = navigator.geolocation.watchPosition(handlePositionUpdate, handleLocationError, options);
+      
+      gpsActive = true;
+      gpsBtn.classList.remove('loading');
+      gpsBtn.classList.add('active');
+    }
+    
+    function handlePositionUpdate(position) {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+      const accuracy = position.coords.accuracy;
+      const userLatLng = [lat, lon];
+      
+      if (lat < indonesiaBounds[0][0] || lat > indonesiaBounds[1][0] || lon < indonesiaBounds[0][1] || lon > indonesiaBounds[1][1]) {
+        console.warn("Lokasi di luar batas Indonesia, mengabaikan update");
+        return;
+      }
+      
+      if (!userLocationMarker) {
+        const gpsIcon = L.divIcon({
+          className: 'custom-marker',
+          html: '<div style="background-color:#1abc9c;width:28px;height:28px;border-radius:50%;border:2px solid white; box-shadow: 0 0 10px #1abc9c;"></div>',
+          iconSize: [28, 28], 
+          iconAnchor: [14, 14]
+        });
+        
+        userLocationMarker = L.marker(userLatLng, {icon: gpsIcon, zIndexOffset: 1000}).addTo(map);
+        accuracyCircle = L.circle(userLatLng, { radius: accuracy, className: 'accuracy-circle' }).addTo(map);
+        map.flyTo(userLatLng, 15);
+      } else {
+        userLocationMarker.setLatLng(userLatLng);
+        accuracyCircle.setLatLng(userLatLng).setRadius(accuracy);
+      }
+    }
+    
+    function handleLocationError(error) {
+      gpsBtn.classList.remove('active', 'loading');
+      gpsActive = false;
+      stopWatchingPosition();
+      
+      if (error.code === error.PERMISSION_DENIED) {
+        console.log("Akses lokasi ditolak oleh pengguna");
+      } else {
+        alert("Tidak bisa mendapatkan lokasi. Pastikan GPS Anda aktif.");
+      }
+    }
+    
+    function stopWatchingPosition() {
+      if (watchId !== null) {
+        navigator.geolocation.clearWatch(watchId);
+        watchId = null;
+      }
+      
+      if (userLocationMarker) {
+        map.removeLayer(userLocationMarker);
+        userLocationMarker = null;
+      }
+      
+      if (accuracyCircle) {
+        map.removeLayer(accuracyCircle);
+        accuracyCircle = null;
+      }
+      
+      gpsBtn.classList.remove('active');
+      gpsActive = false;
+    }
+    
+    gpsBtn.addEventListener('click', () => {
+      if (gpsActive) {
+        stopWatchingPosition();
+      } else {
+        requestLocationPermission();
+      }
+    });
+    
+    allowGpsBtn.addEventListener('click', requestLocationPermission);
+    denyGpsBtn.addEventListener('click', () => { permissionModal.style.display = 'none'; });
+    // ================== FUNGSI RUTE ==================
+    const routeBtn = document.getElementById('route-btn');
+    
+    routeBtn.addEventListener('click', () => {
+      if (routeActive) {
+        if (routingControl) map.removeControl(routingControl);
+        routingControl = null;
+        routeBtn.textContent = '🗺️ Tampilkan Rute';
+        routeBtn.classList.remove('active');
+        routeActive = false;
+        return;
+      }
+      if (!gpsActive || !userLocationMarker) {
+        alert("Aktifkan GPS terlebih dahulu untuk menampilkan rute.");
+        if (!gpsActive) gpsBtn.click();
+        return;
+      }
+      const currentLocName = sheetTitle.textContent;
+      const destinationData = wisata.find(w => w.name === currentLocName);
+      if (!destinationData) return;
+      const start = userLocationMarker.getLatLng();
+      const end = L.latLng(destinationData.coords[0], destinationData.coords[1]);
+      if (routingControl) map.removeControl(routingControl);
+      routingControl = L.Routing.control({
+        waypoints: [start, end],
+        routeWhileDragging: false,
+        addWaypoints: false,
+        draggableWaypoints: false,
+        fitSelectedRoutes: true,
+        lineOptions: { styles: [{color: '#3498db', opacity: 0.9, weight: 6}] },
+        createMarker: () => null
+      }).addTo(map);
+      
+      routingControl.on('routesfound', function(e) {
+          const routes = e.routes;
+          if (!routes.length) return;
+          const summary = routes[0].summary;
+          const container = routingControl.getContainer();
+          const instructions = routingControl.getAlternativesContainer();
+          const distance = (summary.totalDistance / 1000).toFixed(1);
+          const time = Math.round(summary.totalTime / 60);
+          let customHeader = `
+            <h3>Rute ke ${destinationData.name}</h3>
+            <p style="margin: 5px 0;">Jarak: <b>${distance} km</b>, Waktu: <b>${time} menit</b></p>
+            <a href="#" class="leaflet-bar leaflet-routing-close-btn">×</a>
+          `;
+          container.innerHTML = customHeader;
+          container.appendChild(instructions);
+          container.querySelector('.leaflet-routing-close-btn').addEventListener('click', (ev) => {
+            ev.preventDefault();
+            routeBtn.click();
+          });
+      });
+      routeBtn.textContent = '❌ Hapus Rute';
+      routeBtn.classList.add('active');
+      routeActive = true;
+      minimizeSheet();
+    });
+    
+    // ================== FUNGSI HEADER ==================
+    const header=document.getElementById("header"), showHeaderBtn=document.getElementById("show-header-btn");
+    let headerTimeout, headerManuallyClosed=false;
+    
+    map.on('movestart',()=>{ header.classList.add('hidden'); clearTimeout(headerTimeout); });
+    map.on('moveend',()=>{
+      headerTimeout=setTimeout(()=> { if(!headerManuallyClosed) header.classList.remove('hidden'); },1500);
+    });
+    document.getElementById('close-header').addEventListener('click',function(){
+      header.classList.add('hidden'); headerManuallyClosed=true; showHeaderBtn.style.display='flex';
+    });
+    document.getElementById('show-header-btn').addEventListener('click',function(){
+      header.classList.remove('hidden'); headerManuallyClosed=false; showHeaderBtn.style.display='none';
+    });
+    
+    // ================== FUNGSI BOTTOM SHEET ==================
+    const sheet=document.getElementById("bottom-sheet"),
+          sheetTitle=document.getElementById("sheet-title"),
+          sheetDesc=document.getElementById("sheet-desc"),
+          sheetAddress=document.getElementById("sheet-address"),
+          sheetHeader=document.getElementById("sheet-header"),
+          sheetCloseBtn=document.getElementById("sheet-close-btn"),
+          galleryPlaceholder = document.getElementById('gallery-placeholder');
+    const imageModal = document.getElementById('image-modal');
+    const modalImage = document.getElementById('modal-image');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    function openModal(src) {
+      modalImage.src = src;
+      imageModal.classList.add('show');
+    }
+    function closeModal() {
+      imageModal.classList.remove('show');
+    }
+    
+    modalCloseBtn.addEventListener('click', closeModal);
+    imageModal.addEventListener('click', (e) => {
+      if (e.target === imageModal) closeModal();
+    });
+    
+    let dragging=false,startY=0,startTranslate=0,currentTranslate=0,maxTranslate=0, minTranslate = 0;
+    
+    function getWindowH(){ return window.innerHeight||document.documentElement.clientHeight; }
+    
+    function setBounds(){ 
+      const miniHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--mini-height"));
+      const mediumHeight = getWindowH() * parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--medium-height"))/100;
+      const windowHeight = getWindowH();
+      minTranslate = windowHeight - mediumHeight;
+      maxTranslate = windowHeight - miniHeight;
+    }
+    
+    function showSheet(loc){
+      sheetTitle.textContent = loc.name;
+      sheetDesc.textContent = loc.desc;
+      sheetAddress.textContent = loc.address;
+      
+      galleryPlaceholder.innerHTML = '';
+      if (loc.images && loc.images.length > 0) {
+          const galleryWrapper = document.createElement('div');
+          galleryWrapper.className = 'image-gallery-wrapper';
+          
+          const galleryContainer = document.createElement('div');
+          galleryContainer.className = 'image-gallery-container';
+
+          const images = loc.images;
+          
+          if (images.length >= 3) {
+              const innerContainer = document.createElement('div');
+              innerContainer.className = 'gallery-container-inner';
+              innerContainer.innerHTML = `
+                <div class="gallery-main-img">
+                  <img src="${images[0]}" class="gallery-img" alt="${loc.name} 1">
+                </div>
+                <div class="gallery-side-stack">
+                  <div class="gallery-side-img">
+                    <img src="${images[1]}" class="gallery-img" alt="${loc.name} 2">
+                  </div>
+                  <div class="gallery-side-img">
+                    <img src="${images[2]}" class="gallery-img" alt="${loc.name} 3">
+                  </div>
+                </div>
+              `;
+              galleryContainer.appendChild(innerContainer);
+          } else {
+              const innerContainer = document.createElement('div');
+              innerContainer.className = 'gallery-container-inner';
+              loc.images.forEach((imgSrc, index) => {
+                  const imgWrapper = document.createElement('div');
+                  imgWrapper.style.height = '100%';
+                  imgWrapper.style.width = 'auto';
+                  imgWrapper.style.aspectRatio = '3/4';
+                  imgWrapper.innerHTML = `<img src="${imgSrc}" class="gallery-img" alt="${loc.name} ${index + 1}">`;
+                  innerContainer.appendChild(imgWrapper);
+              });
+              galleryContainer.appendChild(innerContainer);
+          }
+          
+          galleryWrapper.appendChild(galleryContainer);
+          galleryPlaceholder.appendChild(galleryWrapper);
+          
+          galleryWrapper.querySelectorAll('.gallery-img').forEach(img => {
+            img.addEventListener('click', () => openModal(img.src));
+          });
+          
+          let isDown = false, startX, scrollLeft;
+          const start = (e) => { isDown = true; galleryWrapper.classList.add('grabbing'); startX = (e.pageX || e.touches[0].pageX) - galleryWrapper.offsetLeft; scrollLeft = galleryWrapper.scrollLeft; };
+          const end = () => { isDown = false; galleryWrapper.classList.remove('grabbing'); };
+          const move = (e) => { if (!isDown) return; e.preventDefault(); const x = (e.pageX || e.touches[0].pageX) - galleryWrapper.offsetLeft; const walk = (x - startX) * 2; galleryWrapper.scrollLeft = scrollLeft - walk; };
+          galleryWrapper.addEventListener('mousedown', start);
+          galleryWrapper.addEventListener('mouseleave', end);
+          galleryWrapper.addEventListener('mouseup', end);
+          galleryWrapper.addEventListener('mousemove', move);
+          galleryWrapper.addEventListener('touchstart', start, { passive: false });
+          galleryWrapper.addEventListener('touchend', end);
+          galleryWrapper.addEventListener('touchmove', move, { passive: false });
+      }
+
+      if (routeActive) {
+          if (routingControl) map.removeControl(routingControl);
+          routingControl = null;
+      }
+      routeBtn.textContent = '🗺️ Tampilkan Rute';
+      routeBtn.classList.remove('active');
+      routeActive = false;
+      
+      sheet.classList.add('show','full'); 
+      sheet.classList.remove("mini");
+      sheet.style.transition="transform 0.28s cubic-bezier(0.22,0.61,0.36,1)";
+      setBounds();
+      sheet.style.transform=`translateY(${minTranslate}px)`;
+      currentTranslate=minTranslate; 
+    }
+    
+    function minimizeSheet(){
+      sheet.classList.add('show',"mini"); 
+      sheet.classList.remove("full");
+      sheet.style.transition="transform 0.26s cubic-bezier(0.22,0.61,0.36,1)";
+      setBounds();
+      sheet.style.transform=`translateY(${maxTranslate}px)`;
+      currentTranslate=maxTranslate; 
+      clearAllHighlights();
+    }
+    
+    function hideSheet(){
+      sheet.classList.remove('show','full',"mini");
+      sheet.style.transform="translateY(100%)";
+      if (routingControl) {
+        map.removeControl(routingControl);
+        routingControl = null;
+      }
+      routeBtn.textContent = '🗺️ Tampilkan Rute';
+      routeBtn.classList.remove('active');
+      routeActive = false;
+      clearAllHighlights();
+    }
+    
+    function startDrag(e){
+      if(sheet.classList.contains('show')){
+        dragging=true; 
+        startY=e;
+        setBounds();
+        const t=window.getComputedStyle(sheet).transform;
+        startTranslate=t&&"none"!==t?parseFloat(t.split(',')[5])||0:sheet.classList.contains("mini")?maxTranslate:minTranslate;
+        sheet.style.transition="none"; 
+      }
+    }
+    
+    function moveDrag(e){
+      if(dragging){
+        let n=startTranslate+(e-startY);
+        currentTranslate = Math.max(minTranslate, Math.min(n, maxTranslate));
+        sheet.style.transform=`translateY(${currentTranslate}px)`;
+      }
+    }
+    
+    function endDrag(){
+      if(dragging){
+        dragging=false;
+        sheet.style.transition="transform 0.26s cubic-bezier(0.22,0.61,0.36,1)";
+        
+        const snapPoint = (minTranslate + maxTranslate) / 2;
+        
+        if(currentTranslate > maxTranslate * 0.95) {
+             hideSheet();
+        } else if(currentTranslate > snapPoint) {
+             minimizeSheet();
+        } else {
+            const targetMarker = markers.find(m => m._locData.name === sheetTitle.textContent);
+            if (targetMarker) {
+              clearAllHighlights();
+              activeMarker = targetMarker;
+              activeMarker._icon.classList.add('active');
+              const tooltip = activeMarker.getTooltip();
+              if (tooltip && tooltip.getElement()) tooltip.getElement().classList.add('active');
+              showSheet(targetMarker._locData);
+            }
+        }
+      }
+    }
+    
+    sheetHeader.addEventListener('mousedown',e=>startDrag(e.clientY));
+    window.addEventListener('mousemove',e=>{dragging&&moveDrag(e.clientY)});
+    window.addEventListener('mouseup',endDrag);
+    sheetHeader.addEventListener('touchstart',e=>{e.touches.length>0&&startDrag(e.touches[0].clientY)},{passive:true});
+    window.addEventListener('touchmove',e=>{dragging&&e.touches.length>0&&moveDrag(e.touches[0].clientY)},{passive:true});
+    window.addEventListener('touchend',endDrag);
+    
+    map.on('click',()=>{
+      if(sheet.classList.contains('show')) {
+        hideSheet();
+      }
+    });
+    
+    sheetCloseBtn.addEventListener('click',hideSheet);
+    
+    sheetHeader.addEventListener('click',e=>{
+      if(e.target!==sheetCloseBtn&&sheet.classList.contains("mini")){
+        const targetMarker = markers.find(m => m._locData.name === sheetTitle.textContent);
+        if (targetMarker) {
+          map.flyTo(targetMarker.getLatLng(), Math.max(map.getZoom(), 14), { duration: 1.2 });
+          clearAllHighlights();
+          activeMarker = targetMarker;
+          activeMarker._icon.classList.add('active');
+          const tooltip = activeMarker.getTooltip();
+          if (tooltip && tooltip.getElement()) tooltip.getElement().classList.add('active');
+          showSheet(targetMarker._locData);
+        }
+      }
+    });
+    
+    window.addEventListener('resize', setBounds);
+    setBounds();
+  </script>
+</body>
+</html>
